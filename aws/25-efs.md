@@ -35,13 +35,14 @@ sudo mount -t efs fs-abcd123456789ef0 efs/
 
 ## 在 Lambda 上掛載 EFS
 
-Lambda 上也能掛載 EFS。**但是 Lambda 必須放在 VPC 底下**。
+Lambda 上也能掛載 EFS。
+**但是 Lambda 必須放在 VPC 底下**，並透過 Access Point 來存取 EFS。
 下面以 Terraform 為例，建立一個 EFS 並掛載到 Lambda。
 
-以 Terraform 為例。首先建立一個 EFS。
+以 Terraform 為例。首先建立一個 EFS 與 Access Point。
 
 ```hcl
-resource "aws_efs_file_system" "efs_for_lambda" {
+resource "aws_efs_file_system" "for_lambda" {
   performance_mode = "generalPurpose"
   encrypted        = true
 
@@ -50,21 +51,30 @@ resource "aws_efs_file_system" "efs_for_lambda" {
   }
 }
 
-resource "aws_efs_mount_target" "alpha" {
-  file_system_id  = aws_efs_file_system.efs_for_lambda.id
-  subnet_id       = aws_subnet.private.id
-  security_groups = [aws_security_group.egress_only.id]
+resource "aws_efs_backup_policy" "policy" {
+  file_system_id = aws_efs_file_system.for_lambda.id
+
+  backup_policy {
+    status = "ENABLED"
+  }
 }
 
-resource "aws_efs_access_point" "access_point_for_lambda" {
-  file_system_id = aws_efs_file_system.efs_for_lambda.id
+resource "aws_efs_mount_target" "for_lambda" {
+  file_system_id  = aws_efs_file_system.for_lambda.id
+  subnet_id       = data.aws_subnet.private.id
+  security_groups = [aws_security_group.allow_internal_access_to_efs.id]
+}
+
+resource "aws_efs_access_point" "for_lambda" {
+  file_system_id = aws_efs_file_system.for_lambda.id
 
   root_directory {
-    path = "/lambda"
+    path = var.root_directory
+
     creation_info {
       owner_gid   = 1000
       owner_uid   = 1000
-      permissions = "777"
+      permissions = "755"
     }
   }
 
@@ -74,6 +84,14 @@ resource "aws_efs_access_point" "access_point_for_lambda" {
   }
 }
 ```
+
+Lambda 在存取 EFS 中的檔案時，**會以 Access Point 設定的 UID (User ID) 與 GID (Group ID) 來判斷是否擁有對檔案的權限**。
+
+> For Amazon EFS, file system objects (that is, files, directories, and so on) are owned by a single owner and a single group.
+> Amazon EFS uses the mapped numeric IDs to check permissions when a user attempts to access a file system object.
+
+所以如果你想用 Lambda 存取 EFS 中用 EC2 建立的檔案，
+可以將 UID 與 GID 都設定為 1000，即 EC2 預設使用者的 UID 與 GID。
 
 接下來在 Lambda 中掛載 EFS。
 
@@ -107,7 +125,7 @@ resource "aws_lambda_function" "web_lambda_function" {
 
   # 掛載 EFS，注意掛載路徑必須是 /mnt 開頭
   file_system_config {
-    arn              = aws_efs_access_point.access_point_for_lambda.arn
+    arn              = aws_efs_access_point.for_lambda.arn
     local_mount_path = "/mnt/efs"
   }
 }
@@ -126,3 +144,4 @@ resource "aws_lambda_function" "web_lambda_function" {
 - [Wikipedia - 網路檔案系統](https://zh.wikipedia.org/zh-tw/%E7%BD%91%E7%BB%9C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F)
 - [Mounting on Amazon EC2 Linux instances using the EFS mount helper](https://docs.aws.amazon.com/efs/latest/ug/mounting-fs-mount-helper-ec2-linux.html)
 - [Amazon Elastic File System (Amazon EFS) Now Supports NFSv4 Lock Upgrading and Downgrading](https://aws.amazon.com/about-aws/whats-new/2017/03/amazon-elastic-file-system-amazon-efs-now-supports-nfsv4-lock-upgrading-and-downgrading/)
+- [Configuring file system access for Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html)
