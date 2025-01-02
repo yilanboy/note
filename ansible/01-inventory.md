@@ -88,13 +88,13 @@ ansible web_servers -i inventory.ini -m ping
 
 `web_servers` 是 inventory 中的 group 名稱，你可以輸入 host 名稱，也可以使用 `all` 來指定所有的 host。
 
-`-i` 參數用來指定 inventory 的檔案路徑
+`-i` 參數用來指定 inventory 的檔案路徑。
 
 `-m` 代表要執行的模組，這裡使用的是 `ping` 模組。
 
 ## 搭配 SSH Config
 
-應該有很多人會透過設定 SSH Config `~/.ssh/config` 來管理 SSH 的連線設定，
+應該有很多人會透過設定 SSH Config `~/.ssh/config` 來管理 SSH 的連線設定。
 
 Ansible 是可以與 SSH Config 一起使用的，假設我們有一個 SSH Config 如下：
 
