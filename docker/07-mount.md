@@ -30,10 +30,30 @@ Docker 中只會看同一個 [inode](https://zh.wikipedia.org/zh-tw/Inode) 檔�
 
 **它只會注意舊的 inode 檔案內容有沒有變化**。
 
-有些更新操作可以避免檔案 inode 發生變化，例如：
+簡單做的小實驗，建立一個新的檔案 `plain.txt`，並查看這個檔案的 inode，
+然後使用 vim 修改這個檔案，修改完後再次查看這個檔案的 inode，你會發現 inode 發生變化。
 
 ```bash
-echo 'append a new line' >> plain.text
+touch plain.txt
+
+# Use -i flag to print the file's file serial number (inode number).
+ls -i
+
+# Result:
+# 262219571 plain.txt
+
+# Use vim to update plain.txt, for example, adding 'Hello world!',
+# then check inode again
+ls -i
+
+# Result:
+# 262220007 plain.txt
+```
+
+有些更新操作可以避免檔案的 inode 發生變化，例如：
+
+```bash
+echo 'append a new line' >> plain.txt
 ```
 
 或是使用 VSCode 修改檔案也能避免檔案 inode 發生變化。
