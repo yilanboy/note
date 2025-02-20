@@ -271,3 +271,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 > [!NOTE]
 >
 > `Box<dyn Error>` 被稱為 **trait 物件** (trait object)。可以暫時將 `Box<dyn Error>` 理解為任何類型的錯誤。
+
+## 讓函式回傳 `Result<T, E>` 是 Rust 的最佳實踐？
+
+不一定，但如果你寫的函式是有高機率發生錯誤的話，回傳 `Result<T, E>` 是一個良好的習慣，
+這清楚表明這個函式是有可能會發生錯誤的，呼叫之後應該要考慮錯誤發生的情況並進行處理。
+
+詳細請參考這篇 [Stack Overflow 提問](https://stackoverflow.com/questions/70855252/is-it-a-good-practice-to-always-return-a-resultt-e-from-functions)。
+
