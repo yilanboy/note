@@ -46,6 +46,16 @@ Lambda 上可以掛 EFS (Elastic File System)，讓其擁有持久性的儲存�
 - EFS 檔案系統的安全群組中必須允許傳入 NFS 通訊 (連接埠 2049)
 - 在 Lambda 上掛載檔案系統的位置，以 **「/mnt/」開頭。例如「/mnt/lambda」**。
 
+## SnapStart
+
+當 SnapStart 開啟時，`Init` 階段會在上傳新版本的函式時觸發，觸發後會將準備好的環境快照起來。
+這樣函式下次執行時，就可以直接執行。
+
+## Preserved Concurrency
+
+Preserved Concurrency 會在你修改設定時觸發，觸發後會初始化執行環境。
+Lambda 會確保你每次調用函式時，執行環境始終是準備好的狀態。
+
 ## 使用 AWS CLI 更新 Lambda 的環境變數
 
 在 AWS CLI 中可以透過以下指令取得 Lambda Function 的設定。
@@ -114,3 +124,4 @@ aws lambda update-function-configuration \
 ## 參考資料
 
 - [如何建立正確的 EFS 存取點組態，以使用 Lambda 函數掛載我的檔案系統？](https://repost.aws/zh-Hant/knowledge-center/efs-mount-with-lambda-function)
+- [Understanding the Lambda execution environment lifecycle](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html)
