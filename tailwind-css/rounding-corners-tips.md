@@ -6,14 +6,14 @@ Tailwind CSS 的作者最近開始要製作一系列的影片 - Build UIs that d
 在網頁設計中，有一種設計相當常見，就是一個元素包住另外一個元素，並擁有各自的 `border-radius` 樣式。
 
 ```html
-<div class="... rounded-4xl p-3">
+<div class="... rounded-4xl p-3"> 
   <div class="... rounded-3xl">
     <!-- Your content -->
   </div>
 </div>
 ```
 
-比較有經驗的開發者知道，裡面的元素，他使用的 `border-radius` 必須比外面的元素小。
+比較有經驗的開發者知道，裡面的元素，它使用的 `border-radius` 必須比外面的元素小。
 因此可以看到外面的元素使用 `rounded-4xl`，裡面的元素使用 `rounded-3xl`。
 
 根據 Tailwind CSS 的作者所說，雖然肉眼上看樣式效果相當正常，
@@ -21,7 +21,8 @@ Tailwind CSS 的作者最近開始要製作一系列的影片 - Build UIs that d
 
 ## 裡面元素的邊框圓角設定
 
-根據 Tailwind CSS 的作者所說，裡面元素的邊框圓角設定，**應該是外面元素的邊框圓角 (border-radius) 設定減去外面元素的內邊距 (padding) 設定**。
+根據 Tailwind CSS 的作者所說，裡面元素的邊框圓角設定，
+**應該是外面元素的邊框圓角 (border-radius) 設定減去外面元素的內邊距 (padding) 設定**。
 
 因此裡面元素的 Class Name 應該修改成以下的方式。
 
