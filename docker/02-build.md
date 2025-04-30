@@ -30,7 +30,7 @@ docker buildx ls
 
 顯示結果如下，`*` 表示預設使用的 builder
 
-```bash
+```text
 NAME/NODE     DRIVER/ENDPOINT STATUS                         BUILDKIT PLATFORMS
 default *     docker          default default                running  20.10.22 linux/arm64, linux/amd64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6
 desktop-linux docker          desktop-linux desktop-linux    running  20.10.22 linux/arm64, linux/amd64, linux/riscv64, linux/ppc64le, linux/s390x, linux/386, linux/arm/v7, linux/arm/v6
