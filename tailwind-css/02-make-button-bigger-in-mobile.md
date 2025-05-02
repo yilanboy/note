@@ -27,13 +27,11 @@ Tailwind CSS 的作者提供了一個很酷的方式。
   class="relative flex size-6 items-center justify-center rounded-md transition hover:bg-zinc-900/15"
   aria-label="Toggle navigation"
 >
-  <!-- 在 button 裡面加上一個大一點的 span 標籤 -->
-  <!-- 這可以讓按鈕在不改變大小與設計的狀況下，讓點擊範圍大一點 -->
+  <!-- 在 button 裡面加上一個大一點的 span 標籤，尺寸為 size-12 -->
   <!-- 透過 absolute 絕對定位，讓 span 不影響其他元素的排版 -->
-  <!-- 透過 top-1/2 left-1/2 -translate-1/2 實現置中的效果  -->
-  <span
-    class="absolute top-1/2 left-1/2 size-12 -translate-1/2 [@media(pointer:fine)]:hidden"
-  ></span>
+  <!-- 使用 top-1/2 left-1/2 -translate-1/2 實現置中的效果  -->
+  <!-- 這可以讓按鈕在不改變大小與設計的狀況下，讓點擊範圍大一點 -->
+  <span class="absolute top-1/2 left-1/2 size-12 -translate-1/2"></span>
   <!-- ... -->
 </button>
 ```
@@ -48,7 +46,7 @@ Tailwind CSS 的作者提供了一個很酷的方式。
 ## 要不要顯示 `<span>` 應該是要用螢幕大小來判斷嗎？
 
 實際上並不是，**應該是根據用戶是否是使用手指來觸控才對**。
-CSS 本身提供了一個語法，可以判斷用戶是不是使用滑鼠游標來瀏覽網頁。
+CSS 本身提供了一個語法，可以判斷用戶是使用滑鼠游標還是使用手指觸控來瀏覽網頁。
 
 ```css
 /* 如果用戶是使用滑鼠游標，就顯示以下的效果 */
@@ -62,8 +60,8 @@ CSS 本身提供了一個語法，可以判斷用戶是不是使用滑鼠游標�
 }
 ```
 
-在 Tailwind CSS 中，雖然沒有 `pinter` 的 Variant Class Name，
-但我們可以使用 Tailwind CSS 提供的客製化 Variant 功能。
+在 Tailwind CSS 中，雖然沒有提供 `pointer` 的 Variant Class Name，
+但我們可以使用 Tailwind CSS 的客製化 Variant 功能。
 
 ```html
 <!-- 使用 [@media(pointer:fine)]:hidden，當用戶使用滑鼠游標時，隱藏 span -->
