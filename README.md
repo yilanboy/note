@@ -58,3 +58,6 @@
 20. [Git](./git/README.md)
 21. [Vim](./vim/README.md)
 22. [Warp](./warp/README.md)
+23. [Tailwind CSS](./tailwind-css/README.md)
+24. [Web](./web/README.md)
+25. [TypeScript](./typescript/README.md)

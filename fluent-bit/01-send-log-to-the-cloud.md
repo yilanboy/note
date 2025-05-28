@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Fluent Bit
+nav_order: 1
+---
+
 # Send Your Container Log to the Cloud
 
 ## Background

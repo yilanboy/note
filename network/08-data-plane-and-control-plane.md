@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Network
+nav_order: 8
+---
+
 # Data Plane 與 Control Plane
 
 TL;DR。Data Plane (資料平面) 講的是資料傳輸的部分，讓封包從一個點傳送到另外一個點。

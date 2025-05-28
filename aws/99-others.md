@@ -66,11 +66,6 @@ nav_order: 99
 - AWS DataSync 的主要用途是在本地資料中心和 AWS 存儲服務之間實現快速、安全、可靠的數據傳輸。它特別適用於一次性的大規模數據遷移、雲中數據處理以及遠程備份等場景
 - DataSync 將資料送往 S3 後可以直接設定 Tier，不需要額外設定 lifecycle 等時間到才轉 tier
 
-## Elastic Container Service (ECS)
-
-- ECS Task 如果要掛上 IAM role，需要在 task 中設定 `taskRoleArn`
-- `EnableTaskIAMRole` 是用在 windows based 的 task 設定
-
 ## Elastic K8s Service (EKS)
 
 - 使用 AWS 代管的 EKS 平台，好處是避免過度依賴雲端，想搬家隨時可以搬家，只要其他雲端支援 K8s 即可

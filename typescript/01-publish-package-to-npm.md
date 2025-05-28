@@ -1,3 +1,9 @@
+---
+layout: default
+parent: TypeScript
+nav_order: 1
+---
+
 # 發佈一個由 TypeScript 寫成的套件
 
 最近用 TypeScript 寫了一個前端套件推送到 NPM 上面，除了自己讓自己使用，也分享給別人使用。
@@ -43,27 +49,25 @@ type: (commonjs) module
 
 ```json
 {
-    "name": "example-package",
-    "version": "0.0.1",
-    "description": "An example npm package",
-    "keywords": [
-        "example",
-    ],
-    "homepage": "https://github.com/yilanboy/example-package#readme",
-    "bugs": {
-        "url": "https://github.com/yilanboy/example-package/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/yilanboy/example-package.git"
-    },
-    "license": "MIT",
-    "author": "yilanboy",
-    "type": "module",
-    "main": "dist/index.js",
-    "scripts": {
-        "test": "vitest"
-    }
+  "name": "example-package",
+  "version": "0.0.1",
+  "description": "An example npm package",
+  "keywords": ["example"],
+  "homepage": "https://github.com/yilanboy/example-package#readme",
+  "bugs": {
+    "url": "https://github.com/yilanboy/example-package/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yilanboy/example-package.git"
+  },
+  "license": "MIT",
+  "author": "yilanboy",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "vitest"
+  }
 }
 ```
 
@@ -85,38 +89,31 @@ node_modules/.bin/tsc --init
 
 ```json
 {
-    "compilerOptions": {
-        /* Base Options: */
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "target": "es2022",
-        "allowJs": true,
-        "resolveJsonModule": true,
-        "moduleDetection": "force",
-        "isolatedModules": true,
-        "verbatimModuleSyntax": true,
-        /* Strictness */
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true,
-        /* If transpiling with TypeScript: */
-        "module": "NodeNext",
-        "outDir": "dist",
-        "sourceMap": true,
-        /* if you're building for a library: */
-        "declaration": true,
-        /* If your code run in the DOM: */
-        "lib": [
-            "es2022",
-            "dom",
-            "dom.iterable"
-        ]
-    },
-    "include": [
-        "src/**/*"
-    ]
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    /* If transpiling with TypeScript: */
+    "module": "NodeNext",
+    "outDir": "dist",
+    "sourceMap": true,
+    /* if you're building for a library: */
+    "declaration": true,
+    /* If your code run in the DOM: */
+    "lib": ["es2022", "dom", "dom.iterable"]
+  },
+  "include": ["src/**/*"]
 }
-
 ```
 
 `include` 代表需要編譯哪個目錄下的 TypeScript 檔案，`outDir` 代表會將編譯後的 JavaScript 檔案放在哪裡。
@@ -152,10 +149,10 @@ dist/
 
 ```json
 {
-    /* ... */
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts"
-    /* ... */
+  /* ... */
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts"
+  /* ... */
 }
 ```
 
@@ -163,13 +160,13 @@ dist/
 
 ```json
 {
-    /* ... */
-    "scripts": {
-        "test": "vitest",
-        "build": "tsc",
-        "dev": "tsc --watch"
-    }
-    /* ... */
+  /* ... */
+  "scripts": {
+    "test": "vitest",
+    "build": "tsc",
+    "dev": "tsc --watch"
+  }
+  /* ... */
 }
 ```
 
@@ -238,19 +235,19 @@ npm view --json
 
 ```json
 {
-    /* ... */
-    "time": {
-        "created": "2025-01-15T08:20:13.194Z",
-        "modified": "2025-01-21T03:49:51.769Z",
-        "1.0.0": "2025-01-07T10:37:07.072Z",
-        "1.0.1": "2025-01-07T10:45:59.308Z",
-        "1.0.2": "2025-01-07T13:46:38.976Z",
-        "1.0.3": "2025-01-07T14:04:26.164Z",
-        "0.0.1": "2025-01-15T08:20:13.369Z",
-        "0.0.2": "2025-01-17T04:58:30.219Z",
-        "0.0.3": "2025-01-17T05:03:49.809Z",
-    }
-    /* ... */
+  /* ... */
+  "time": {
+    "created": "2025-01-15T08:20:13.194Z",
+    "modified": "2025-01-21T03:49:51.769Z",
+    "1.0.0": "2025-01-07T10:37:07.072Z",
+    "1.0.1": "2025-01-07T10:45:59.308Z",
+    "1.0.2": "2025-01-07T13:46:38.976Z",
+    "1.0.3": "2025-01-07T14:04:26.164Z",
+    "0.0.1": "2025-01-15T08:20:13.369Z",
+    "0.0.2": "2025-01-17T04:58:30.219Z",
+    "0.0.3": "2025-01-17T05:03:49.809Z"
+  }
+  /* ... */
 }
 ```
 

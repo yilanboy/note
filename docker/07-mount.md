@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Docker
+nav_order: 7
+---
+
 # Mount
 
 在 Docker 中，你可以透過 `--mount` 來將主機上的某個資料夾掛載到 Docker 容器中。

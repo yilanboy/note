@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Laravel
+nav_order: 3
+---
+
 # 在 Laravel 中實作密碼金鑰登入
 
 這篇文章接續我的上一篇文章 — [實作密碼金鑰登入的筆記](https://docfunc.com/posts/169/實作密碼金鑰登入的筆記-post)。

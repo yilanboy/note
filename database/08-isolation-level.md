@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Database
+nav_order: 8
+---
+
 # Isolation Level
 
 ## 什麼是隔離級別 (Isolation Level)？
@@ -47,5 +53,5 @@ Serializable 是最嚴格的隔離級別，它保證一個交易在同一個交�
 
 ## 參考資料
 
-- [Isolation (database systems)](https://en.wikipedia.org/wiki/Isolation_(database_systems)
-- [Transaction Isolation Levels](https://www.postgresql.org/docs/17/transaction-iso.html
+- [事務隔離](https://zh.wikipedia.org/zh-tw/%E4%BA%8B%E5%8B%99%E9%9A%94%E9%9B%A2)
+- [Transaction Isolation Levels](https://www.postgresql.org/docs/17/transaction-iso.html)

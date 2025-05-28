@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Rust
+nav_order: 41
+---
+
 # `RefCell<T>` 與內部可變性模式
 
 因為 Rust 編譯器較為保守的關係，

@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Tailwind CSS
+nav_order: 1
+---
+
 # 利用科學與 CSS 變數來設定邊框圓角
 
 Tailwind CSS 的作者最近開始製作一系列的影片 - Build UIs that don't suck，
@@ -6,7 +12,7 @@ Tailwind CSS 的作者最近開始製作一系列的影片 - Build UIs that don'
 在網頁設計中，有一種設計相當常見，就是一個元素包住另外一個元素，並擁有各自的 `border-radius` 樣式。
 
 ```html
-<div class="... rounded-4xl p-3"> 
+<div class="... rounded-4xl p-3">
   <div class="... rounded-3xl">
     <!-- Your content -->
   </div>

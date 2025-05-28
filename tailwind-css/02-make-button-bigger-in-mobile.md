@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Tailwind CSS
+nav_order: 2
+---
+
 # 讓按鈕在移動設備上更大一些
 
 在桌面設備上，網頁中的一些按鈕設計可能會小一點 (可能是為了設計 or 好看)，
