@@ -33,8 +33,10 @@ Layer 可以給多個 Function 重復使用，當 Function 會解壓縮 Layer �
 Lambda 可以放置在 VPC 底下，讓 Lambda 其他服務放在一起並在私有網路底下快速的存取它們，
 例如 ElastiCache 與 RDS (Relational Database Service)。
 
-但要注意放在 VPC 底下的 Lambda 無法對外部發送請求，因為 Lambda 不具備 Public IP 也無法綁定一個 Public IP。
-所以必須要再加上一個 NAT 來讓 Lambda 與外部互通。
+但要注意放在 VPC 底下的 Lambda 無法對網際網路發送請求，因為 Lambda 不具備 Public IP 也無法綁定一個 Public IP。
+所以必須要再加上一個 NAT 來讓 Lambda 訪問網際網路。
+
+如果想要讓 API Gateway 觸發在 VPC 底下的 Lambda，也需要 NAT。
 
 ## Persistent Storage with EFS
 
