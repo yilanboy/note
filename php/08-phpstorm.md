@@ -35,3 +35,4 @@ PHPStorm 中的快捷鍵 `Cmd + Shift + A` 與 MacOS 的快捷鍵會產生衝突
 ## 參考資料
 
 - [Formatting code: getting aligned array setups](https://www.reddit.com/r/phpstorm/comments/17apa05/formatting_code_getting_aligned_array_setups/)
+- [Cmd+Shift+A hotkey opens Terminal with "apropos" search instead of the Find Action dialog](https://intellij-support.jetbrains.com/hc/en-us/articles/360005137400-Cmd-Shift-A-hotkey-opens-Terminal-with-apropos-search-instead-of-the-Find-Action-dialog)
