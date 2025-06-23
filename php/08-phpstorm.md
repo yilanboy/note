@@ -29,6 +29,8 @@ PHPStorm 為 Jetbrains 推出的 PHP IDE，是寫 PHP 的好幫手，這裡記�
 | `Ctrl` + `G`    | 選取相同的字段         |
 | `Ctrl` + `Ctrl` | Run anythings          |
 | `Shift` + `F4`  | 開啟當前頁面的浮動視窗 |
+| `Cmd` + `[`     | 跳回之前的位置         |
+| `F3`            | 將該行加入書籤         |
 
 ## 系統設定
 
