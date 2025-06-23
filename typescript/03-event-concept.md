@@ -28,7 +28,7 @@ nav_order: 3
     function (event) {
       console.log("父元素捕獲階段");
     },
-    { capture: true },
+    { capture: true }
   );
 
   child.addEventListener(
@@ -36,7 +36,7 @@ nav_order: 3
     function (event) {
       console.log("子元素捕獲階段");
     },
-    { capture: true },
+    { capture: true }
   );
 
   parent.addEventListener("click", function (event) {
@@ -111,7 +111,7 @@ form.addEventListener("submit", function (event) {
     function (event) {
       console.log("父元素捕獲階段");
     },
-    { capture: true },
+    { capture: true }
   );
 
   child.addEventListener(
@@ -120,7 +120,7 @@ form.addEventListener("submit", function (event) {
       console.log("子元素捕獲階段");
       event.stopPropagation(); // 在捕獲階段停止事件傳播
     },
-    { capture: true },
+    { capture: true }
   );
 
   parent.addEventListener("click", function (event) {
