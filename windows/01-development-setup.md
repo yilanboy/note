@@ -43,13 +43,25 @@ winget install -e -id Git.Git
 
 > `-e` 表示安裝最新的穩定版本，`-id` 表示安裝指定的套件。
 
+初始設定。
+
+```powershell
+git config --global user.name "Allen"
+git config --global user.email "allen@email.com"
+```
+
 因為 Windows OS 預設使用 CRLF 當作換行 (End of Line, EOL)，
 在使用 `git clone` 時，會自動將檔案轉換成 CRLF 格式，
 如果你不喜歡的話，記得在 Git 的 global 設定中要將 `core.autocrlf` 設定為 `false`。
 
 ```powershell
 git config --global core.autocrlf false
+git config --global core.eol lf
 ```
+
+## 設定 Windows Terminal
+
+在設定「互動」底下，將「自動將選取項目複製到剪貼簿」勾選。
 
 ## 設定 VS Code
 
