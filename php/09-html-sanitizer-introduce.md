@@ -83,7 +83,7 @@ $unsafePostContents = "...";
 $safePostContents = $htmlSanitizer->sanitize($unsafePostContents);
 ```
 
-除了 `allowStaticElements()` 你也可以使用 `allowSafeElements()`，這個基礎規則會連 CSS（CSS Injection）與點擊劫持（Click-Jacking）都過濾掉。
+基礎規則除了 `allowStaticElements()`，你也可以使用 `allowSafeElements()`。這個基礎規則會連 CSS（CSS Injection）與點擊劫持（Click-Jacking）都過濾掉。
 
 ```php
 $config = new HtmlSanitizerConfig->allowSafeElements();
@@ -107,7 +107,7 @@ $config = new HtmlSanitizerConfig
     ->forceAttribute(element: 'a', attribute: 'target', value: '_blank');
 ```
 
-如果你想要的元素會被過濾掉，你可以使用 `allowElement` 避免它被過濾掉。
+如果你想要的元素會被過濾掉，你可以使用 `allowElement()` 避免它被過濾掉。
 
 ```php
 $config = new HtmlSanitizerConfig
@@ -129,7 +129,7 @@ $config = new HtmlSanitizerConfig
 
 > 這裡選擇關掉上限的原因是我已經使用 Laravel Validation 來限制字元長度的最大值了。
 
-改用 HTML Sanitizer 後，我的新的過濾設定如下：
+改用 HTML Sanitizer 後的過濾設定如下：
 
 ```php
 public static function sanitizeHtml(string $html): string
@@ -150,7 +150,7 @@ public static function sanitizeHtml(string $html): string
 }
 ```
 
-看起來比原本 HTML Purifier 精簡非常多。
+看起來比原本 HTML Purifier 精簡非常多，超讚。
 
 ## 參考資料
 
