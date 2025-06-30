@@ -4,72 +4,68 @@ parent: Fluent Bit
 nav_order: 1
 ---
 
-# Send Your Container Log to the Cloud
+# 將容器日誌發送到雲端
 
-## Background
+## 背景
 
-In cloud network generation 2, we use Docker to run the FRRouting service.
+我們使用 Docker 來運行 FRRouting 服務。我們想要將 FRRouting 的 Logs 放上雲端上儲存，避免 Logs 因為機器崩潰而遺失。
 
-That comes with a problem:
+## 如何將日誌發送到雲端？
 
-**If VM crash, we lose all the logs**.
-
-## How to Send Logs to the Cloud?
-
-- Docker can use different type of logging driver, default is `json-file`.
+- Docker 可以使用不同類型的日誌驅動程式，預設是 `json-file`。
 
   ```bash
-  # Check the default logging driver
+  # 檢查預設的日誌驅動程式
   docker info --format '{{.LoggingDriver}}'
   ```
 
-- Except `json-file`, Docker also support `awslogs`, `fluentd`, `journald`, `syslog`, etc.
+- 除了 `json-file`，Docker 也支援 `awslogs`、`fluentd`、`journald`、`syslog` 等。
 
-- Based on `syslog` driver, we can use Fluent Bit to send logs to the cloud.
+- 基於 `syslog` 驅動程式，我們可以使用 Fluent Bit 將日誌發送到雲端。
 
-## What is Fluent Bit?
+## 什麼是 Fluent Bit？
 
-Fluent Bit is a lightweight and high-performance log processor and forwarder.
+Fluent Bit 是一個輕量級且高效能的日誌處理器和轉發器。
 
-## Data Pipeline
+## 資料管道
 
-Fluent Bit has multiple plugins, including **input**, **output**, **parser**,and **filter** plugins.
+Fluent Bit 有多個外掛程式，包括 **輸入**、**輸出**、**解析器** 和 **過濾器** 外掛程式。
 
-A input plugin collects logs from a source, and then sends them to an output plugin. This process is called a **pipeline**.
+輸入外掛程式從來源收集日誌，然後將它們發送到輸出外掛程式。這個過程稱為 **管道**。
 
-## Input Plugins
+## 輸入外掛程式
 
-One of the most important features of Fluent Bit is its input plugins.
+Fluent Bit 最重要的功能之一是它的輸入外掛程式。
 
-Fluent Bit can collect logs from different sources, such as:
+Fluent Bit 可以從不同來源收集日誌，例如：
 
 - Syslog
-- Files
+- 檔案
 - HTTP
-- And 40 more...
+- 還有 40 多種...
 
-## Syslog Input Plugin
+## Syslog 輸入外掛程式
 
-Fluent Bit can collect logs from syslog.
+Fluent Bit 可以從 syslog 收集日誌。
 
 ```yaml
 pipeline:
   inputs:
     - name: syslog
-      mode: udp # use UDP can decouple log driver and others container
+      mode: udp # 使用 UDP 可以將日誌驅動程式與其他容器解耦
       listen: 0.0.0.0
       port: 5140
-      parser: logfmt # Syslog must be specify a parser
+      parser: logfmt # Syslog 必須指定一個解析器
       buffer_chunk_size: 1M
       buffer_max_size: 6M
       tag: docker-syslog-driver
 ```
 
-## Parsers Plugins
+## 解析器外掛程式
 
-Fluent Bit can parse logs from different formats.
+Fluent Bit 可以解析不同格式的日誌。
 
-There is no built-in parser for FRRouting logs, but we can use the `regex` parser to parse the logs.
+FRRouting 日誌沒有內建的解析器，但我們可以使用 `regex` 解析器來解析日誌。
 
 ```text
 [PARSER]
@@ -80,23 +76,23 @@ There is no built-in parser for FRRouting logs, but we can use the `regex` parse
     Time_Format %Y/%m/%d %H:%M:%S
 ```
 
-## Output Plugins
+## 輸出外掛程式
 
-Fluent Bit can send logs to different destinations, such as:
+Fluent Bit 可以將日誌發送到不同的目的地，例如：
 
 - AWS S3
-- Azure Storage Account
+- Azure 儲存體帳戶
 - Elasticsearch
-- And 40 more...
+- 還有 40 多種...
 
-## S3 Output Plugin
+## S3 輸出外掛程式
 
-Fluent Bit can send logs to AWS S3.
+Fluent Bit 可以將日誌發送到 AWS S3。
 
 ```yaml
 outputs:
   - name: s3
-    match: "*" # All inputs will be sent to S3
+    match: "*" # 所有輸入都會發送到 S3
     bucket: log-collection
     region: us-west-2
     total_file_size: 1M
@@ -104,9 +100,3 @@ outputs:
     s3_key_format: /${HOSTNAME}/$TAG/%Y/%m/%d/%H-%M-%S-$UUID.json
     s3_key_format_tag_delimiters: .-
 ```
-
-## Demo
-
-- Send docker logs to AWS S3
-- Send docker logs to Azure Storage Account
-  - How to customize the path on Azure Storage Account
