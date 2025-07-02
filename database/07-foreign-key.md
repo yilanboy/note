@@ -38,6 +38,6 @@ $table->foreignId('parent_id')
 
 > MySQL requires that foreign key columns be indexed; if you create a table with a foreign key constraint but no index on a given column, an index is created.
 
-相反的，PostgreSQL 與 SQLite 並不會這個做，可以參考[PostgreSQL 文件](https://www.postgresql.org/docs/current/ddl-constraints.html)的說明。
+相反的，PostgreSQL 與 SQLite 並不會這麼做，可以參考[PostgreSQL 文件](https://www.postgresql.org/docs/current/ddl-constraints.html)的說明。
 
 > Because this is not always needed, and there are many choices available on how to index, the declaration of a foreign key constraint does not automatically create an index on the referencing columns.
