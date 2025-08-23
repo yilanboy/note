@@ -18,6 +18,6 @@ Set-Alias -Name "art" -Value "php artisan"
 
 ```powershell
 function art {
-    & php artisan
+    & php artisan $args
 }
 ```
