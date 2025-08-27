@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Azure
+nav_order: 8
+---
+
 # Private Link Service
 
 Private Link Service 能讓不同區域的 VNet 透過 Azure 的私有線路安全地存取 Azure 的 PaaS 服務，例如 Azure Storage 和 SQL Database。
