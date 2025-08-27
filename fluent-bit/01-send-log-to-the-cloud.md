@@ -55,7 +55,7 @@ pipeline:
       mode: udp # 使用 UDP 可以將日誌驅動程式與其他容器解耦
       listen: 0.0.0.0
       port: 5140
-      parser: logfmt # Syslog 必須指定一個解析器
+      parser: frr # Syslog 必須指定一個解析器
       buffer_chunk_size: 1M
       buffer_max_size: 6M
       tag: docker-syslog-driver
@@ -97,6 +97,17 @@ outputs:
     region: us-west-2
     total_file_size: 1M
     upload_timeout: 1m
-    s3_key_format: /${HOSTNAME}/$TAG/%Y/%m/%d/%H-%M-%S-$UUID.json
+    s3_key_format: /$TAG/%Y/%m/%d/%H-%M-%S-$UUID.json
     s3_key_format_tag_delimiters: .-
 ```
+
+`s3_key_format` 可以設定上傳到 S3 的路徑，在路徑中可以使用一些特殊語法。
+
+例如使用 `%Y`、`%m`、`%d` 這些格式來設定日期。也可以使用 `$UUID` 來產生亂碼避免檔案名稱重複。
+
+除此之外，路徑中也能使用 `$TAG` 來取得輸入的標籤資訊。`s3_key_format_tag_delimiters` 可以設定要用什麼符號來切分標籤，
+上面設定 `.-`。意思就是標籤會使用 `.` 與 `-` 來切割字串。
+
+例如輸入標籤是 `this-is-an-input-tag`，那麼切分出來就會是 `['this', 'is', 'an', 'input', 'tag']`。
+
+這時候 `$TAG` 為 `this-is-an-input-tag`，`$TAG[0]` 為 `this`，`$TAG[1]` 為 `is`，以此類推。
