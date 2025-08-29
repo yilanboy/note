@@ -61,3 +61,5 @@
 23. [Tailwind CSS](./tailwind-css/README.md)
 24. [Web](./web/README.md)
 25. [TypeScript](./typescript/README.md)
+26. [Fluent Bit](./fluent-bit/README.md)
+27. [Zed](./zed/README.md)
