@@ -4,101 +4,101 @@ parent: Svelte
 nav_order: 1
 ---
 
-# Reactivity
+# Svelte 5 的即時反應 (Reactivity)
 
-## Assignment
+Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大。核心概念是使用 `$state` 來宣告反應性狀態。
 
-Svelte 擁有強大的即時反應功能，用於保持 DOM 與應用程序狀態同步。舉個例，響應事件。
+## 使用 `$state` 的基本即時反應
+
+要創建一個反應性變數，你可以使用 `$state` 來初始化它。對此變數的任何更改都將自動觸發 DOM 的更新。
 
 ```svelte
 <script>
-  let count = 0;
+  let count = $state(0);
 
   function increment() {
-    // event handler code goes here
     count += 1;
   }
 </script>
 
-<button>
+<button onclick={increment}>
   Clicked {count}
   {count === 1 ? 'time' : 'times'}
 </button>
 ```
 
-Svelte 的反應性是**基於賦值 (assignment)** 的，只要賦值給一個變數，Svelte 就會自動更新 DOM (Document Object Model)。
+在 Svelte 5 中，即時反應不再是**基於賦值 (assignment)**。相反地，`$state` 創建了一個 Svelte 會追蹤的訊號 (signal)。當訊號的值發生變化時，Svelte 就會知道要更新什麼。
 
-## Declarations
+## 使用 `$derived` 的衍生狀態
 
-只要 component 的 state 發生變化，Svelte 會自動更新 DOM。
-
-有時候你希望某個 component state 會是另外一個 state 經過計算處理後的結果，這時候你可以使用 `$:` 來宣告。
+有時候，你會希望某個狀態是依賴於其他狀態計算而來的。你可以使用 `$derived` 來創建一個計算值，當其依賴項發生變化時，它會自動重新計算。
 
 ```svelte
 <script>
-  let count = 0;
-  $: doubled = count * 2;
+  let count = $state(0);
+  let doubled = $derived(count * 2);
 </script>
-```
 
-> 雖然 `$:` 看上去有點奇怪，但這其實是一個合法的 JavaScript 語法。
+<button onclick={() => count++}>
+  Count: {count}
+</button>
 
-之後我們就可以在 HTML 中使用 `doubled` 這個變數。
-
-```svelte
 <p>{count} doubled is {doubled}</p>
 ```
 
-> 請注意，反應式聲明和語句將在其他程式碼之後，但在呈現 component markup 之前執行。
+## 使用 `$effect` 來根據狀態變化執行程式碼
 
-## Statement
-
-除了宣告變數之外，你也可以在 `$:` 中使用 JavaScript 的陳述句 (statement)。
+要在狀態變化時執行某些程式碼，你可以使用 `$effect`。這對於日誌記錄、數據獲取或與瀏覽器 API 互動等操作非常有用。當內部的反應性值發生變化時，`$effect` 裡的程式碼將會重新執行。
 
 ```svelte
 <script>
-  let count = 0;
+  let count = $state(0);
 
-  $: if (count >= 10) {
-    alert(`count is dangerously high!`);
-    count = 9;
+	$effect(() => {
+    // 每當 'count' 變化時，這段程式碼就會執行
+		console.log(`The count is now ${count}`);
+
+		if (count > 10) {
+			alert(`Count is dangerously high!`);
+		}
+	});
+</script>
+
+<button onclick={() => count++}>
+  Count: {count}
+</button>
+```
+
+## 更新陣列和物件
+
+有了 Svelte 5 的 runes，更新陣列和物件變得更加直觀。因為 `$state` 創建了深層的、具反應性的物件，所以你可以直接使用標準的變異方法，如 `.push()`、`.pop()`、`.splice()` 等，即時反應將如預期般運作。
+
+你不再需要重新賦值變數來觸發更新。
+
+```svelte
+<script>
+  let numbers = $state([1, 2, 3]);
+
+  function addNumber() {
+    // 這在 Svelte 5 中會觸發即時反應
+    numbers.push(numbers.length + 1);
+  }
+
+  function removeLast() {
+    // 這也同樣有效
+    numbers.pop();
   }
 </script>
+
+<button onclick={addNumber}>
+  Add a number
+</button>
+
+<button onclick={removeLast}>
+  Remove last number
+</button>
+
+<p>Numbers: {numbers.join(', ')}</p>
 ```
 
-## Updating Arrays and Objects
-
-因為 Svelte 的即時反應功能是基於賦值的，所以如果你想要更新陣列或物件，你必須要重新賦值。而不是使用 `push`、`pop`、`shift`、`unshift`、`splice`、`sort`、`reverse` 這些方法。
-
-```svelte
-<script>
-let numbers = [1, 2, 3];
-
-function addNumber() {
-  // it will not trigger reactivity
-  numbers.push(numbers.length + 1);
-}
-</script>
-```
-
-如果想要更新陣列，你可以這麼使用。
-
-```svelte
-<script>
-let numbers = [1, 2, 3];
-
-function addNumber() {
-  // it will trigger reactivity
-  numbers = [...numbers, numbers.length + 1];
-}
-
-function removeNumber() {
-  // this line will remove the last element, but it won't trigger reactivity
-  numbers = numbers.slice(0, -1);
-  // it will trigger reactivity
-  numbers = numbers
-}
-</script>
-```
-
-一個簡單的經驗法則：更新的變量的名稱必須出現在賦值的左側。
+與舊版 Svelte 相比，這大大簡化了狀態管理。
