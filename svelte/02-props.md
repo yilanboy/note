@@ -8,15 +8,15 @@ nav_order: 2
 
 ## Declaring Props
 
-如果你需要將變數從父 component 傳遞到子 component，你可以在子元件使用 `export` 關鍵字來宣告一個 `name` prop：
+如果你需要將變數從父元件傳遞到子元件，你可以在子元件使用 `$props` 關鍵字來宣告子元件的 Props：
 
 ```svelte
 <script>
-    export let name;
+  let { name } = $props;
 </script>
 ```
 
-然後你就可以在父 component 中使用 `name="world"` 將 `world` 傳入子 component 中：
+然後你就可以在父元件中使用 `name="world"` 將 `world` 傳入子元件中：
 
 ```svelte
 <script>
@@ -28,26 +28,23 @@ nav_order: 2
 
 ## Default Values
 
-你可以在宣告 prop 的時候指定預設值：
+你可以在宣告 Props 的時候指定預設值：
 
 ```svelte
 <script>
-    export let name = 'world';
+  let { name = 'world' } = $props;
 </script>
 ```
 
 ## Spread Props
 
-假設我們有一個 component 叫做 `PackageInfo`，它有四個 props：`name`、`speed`、`version`、`website`。
+假設我們有一個元件叫做 `PackageInfo`，它有四個 Props：`name`、`speed`、`version`、`website`。
 
 ```svelte
 <script>
-    export let name;
-    export let speed;
-    export let version;
-    export let website;
+  let { name, speed, version, website } = $props;
 
-    $: href = `https://www.npmjs.com/package/${name}`;
+  let href = $derived(`https://www.npmjs.com/package/${name}`);
 </script>
 
 <p>
@@ -56,18 +53,18 @@ nav_order: 2
 </p>
 ```
 
-你可以使用下面的方式將這四個 props 傳入子 component：
+你可以使用下面的方式將這四個 Props 傳入子元件：
 
 ```svelte
 <script>
-    import PackageInfo from './PackageInfo.svelte';
+  import PackageInfo from './PackageInfo.svelte';
 
-    const pkg = {
-        name: 'svelte',
-        speed: 'blazing',
-        version: 4,
-        website: 'https://svelte.dev'
-    };
+  const pkg = {
+    name: 'svelte',
+    speed: 'blazing',
+    version: 4,
+    website: 'https://svelte.dev'
+  };
 </script>
 
 <PackageInfo
@@ -77,7 +74,7 @@ nav_order: 2
 />
 ```
 
-也可以使用 `...` 來將物件的所有屬性傳入子 component：
+也可以使用 `...` 來將物件的所有屬性傳入子元件：
 
 ```svelte
 <PackageInfo {...pkg} />

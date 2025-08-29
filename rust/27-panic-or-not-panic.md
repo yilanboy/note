@@ -34,6 +34,12 @@ let home: IpAddr = "127.0.0.1".parse().unwrap()
 
 有可能會導致有害的狀態應該使用 `panic!`，有害狀態指的是協議或是不可變性被打破的狀態，例如無效的值。
 
+> 什麼是不可變性 (invariant)？
+>
+> 不可變性是指某些條件在程式執行期間必須始終保持為真的規則。
+> 例如，假設我們有一個表示年齡的變數，我們可以定義一個不可變性條件，該條件規定年齡必須始終為非負數。
+> 如果程式碼嘗試將年齡設置為負數，這將違反不可變性條件，可能會導致程式出現錯誤或不一致的行為。
+
 有害狀態不包含**預期會偶爾發生的錯誤**。
 
 當錯誤是可以被預期時，使用 `Result` 會比 `panic!` 更合適。
@@ -46,7 +52,7 @@ let home: IpAddr = "127.0.0.1".parse().unwrap()
 
 ```rust
 loop {
-    // --snip--
+    // 省略
 
     let guess: i32 = match guess.trim().parse() {
         Ok(num) => num,
@@ -59,7 +65,8 @@ loop {
     }
 
     match guess.cmp(&secret_number) {
-    // --snip--
+        // 省略
+    };
 }
 ```
 
@@ -98,3 +105,7 @@ impl Guess {
 Rust 的類型系統中，`Result` 列舉表示操作可能會失敗，調用者可以自行處理成功或失敗的狀況。
 
 在適當的情境下，使用 `panic!` 和 `Result` 可讓程式在面對不可避免的錯誤時更為可靠。
+
+## 參考資料
+
+- [Using unwrap() in Rust is Okay](https://burntsushi.net/unwrap/#what-is-a-runtime-invariant)
