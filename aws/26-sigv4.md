@@ -1,3 +1,9 @@
+---
+layout: default
+parent: AWS
+nav_order: 26
+---
+
 # SigV4
 
 AWS Signature Version 4 (SigV4) 是 AWS 用於對 API 請求進行身份驗證的協議，不論是 AWS CLI 還是 AWS SDK（例如 Python Boto3），都是使用 SigV4 進行身份驗證並授權對 AWS 資源的操作。
