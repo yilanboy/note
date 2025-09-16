@@ -155,7 +155,7 @@ BGP 有一套選路規則 (Path Selection Rules)，當收到多條路由時，�
 - AS Path 越短，優先權越高。
 - AS Path 可以避免回路 (loop)，因為如果收到的路由中有自己的 AS 編號，代表這個路由是回到自己的 AS，會被捨棄。
 
-## Origin
+### Origin
 
 Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
 
@@ -165,7 +165,7 @@ Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
 
 如果通過以上三種方式學到相同 BGP 路由前綴，那麼優先選擇順序是 IGP > EGP > Incomplete。
 
-## MED (Multi-Exit Discriminator)
+### MED (Multi-Exit Discriminator)
 
 - 預設值為 0，數值越小，優先權越高。
 - MED 僅在兩個 AS 之間傳遞，收到 MED 的 AS 不會將 MED 傳遞給其他 AS。

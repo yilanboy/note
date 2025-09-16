@@ -40,7 +40,7 @@ Private Link Service 是服務端，負責將服務（如 Load Balancer、VM、P
 
 ## 架構圖說明（文字版）
 
-```
+```text
 不同區域 VM ──> Private Endpoint ──> Private Link Service ──> Load Balancer ──> Metrics VM ──> AMP
 ```
 
