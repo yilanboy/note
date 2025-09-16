@@ -34,7 +34,7 @@ const modal = new Modal({
 modal.open();
 ```
 
-之前為了好玩曾經用 (TypeScript 幫程式碼區塊寫了一個複製程式碼的按鈕)[https://docfunc.com/posts/64/使用-typescript-寫一個複製程式碼的按鈕-post]。這次我也想用 TypeScript 來寫一個互動視窗。
+之前為了好玩曾經用 [TypeScript 幫程式碼區塊寫了一個複製程式碼的按鈕](https://docfunc.com/posts/64/使用-typescript-寫一個複製程式碼的按鈕-post)。這次我也想用 TypeScript 來寫一個互動視窗。
 
 ## 來寫個互動視窗
 
