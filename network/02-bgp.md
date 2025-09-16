@@ -114,6 +114,63 @@ router bgp 34512
 neighbor 192.168.12.1 router-map R1-FILTER in
 ```
 
+## BGP 選路規則
+
+BGP 有一套選路規則 (Path Selection Rules)，當收到多條路由時，會根據這些規則來選擇最佳路由。
+
+- Preferred Value (較高的優先權值)
+- Local Preference (較高的本地優先權)
+- 優選本地路由 (本地宣告的路由優於別人傳播的路由)
+- AS Path (較短的 AS Path)
+- Origin
+- MED
+
+每個規則可以記住三個點。
+
+- 預設值 (Default)，例如 Preferred Value 預設值為 0，Local Preference 預設值為 100。
+- 傳達範圍。Preferred Value 只影響本地路由，Local Preference 只影響本地 AS。
+- 作用方式，數值越大，優先權越高，還是數值越小，優先權越高
+
+### Preferred Value
+
+- 預設值為 0，數值越高，優先權越高。
+- 可以使用 Route Policy 來設定 Preferred Value，讓不同的路由走不同的路。
+
+### Local Preference
+
+- 預設值為 100，數值越高，優先權越高。範圍為本地 AS，不影響其他 AS。
+- 從 eBGP 鄰居收到的路由，Local Preference 不會被帶入本地 AS，所以查看路由表會發現 Local Preference 的值都是 空值。
+- 路由傳給 iBGP 鄰居時，如果 Local Preference 為空值，則會帶上預設值 100 並傳給 iBGP 鄰居。
+- 如果路由有設定 Local Preference，只有在收到空值的 Local Preference 時，才會去覆蓋 Local Preference。
+- 可以使用 Route Policy 來設定 Local Preference，讓不同的路由走不同的路。
+
+### 優選本地路由
+
+- 本地宣告的路由優於別人傳播的路由。
+- 可以使用 `network` 指令來宣告本地路由。
+
+### AS Path
+
+- 默認穿越過一個 AS 後，會打上一個 AS Path。
+- AS Path 越短，優先權越高。
+- AS Path 可以避免回路 (loop)，因為如果收到的路由中有自己的 AS 編號，代表這個路由是回到自己的 AS，會被捨棄。
+
+## Origin
+
+Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
+
+- IGP (Interior Gateway Protocol)：代表路由是從 IGP (例如 OSPF、RIP) 宣告的，優先權最高，符號為 `i`。
+- EGP (Exterior Gateway Protocol)：代表路由是從 EGP 宣告的，優先權次之，符號為 `e`。
+- Incomplete：代表路由是從其他方式 (例如 static route) 宣告的，優先權最低，符號為 `?`。
+
+如果通過以上三種方式學到相同 BGP 路由前綴，那麼優先選擇順序是 IGP > EGP > Incomplete。
+
+## MED (Multi-Exit Discriminator)
+
+- 預設值為 0，數值越小，優先權越高。
+- MED 僅在兩個 AS 之間傳遞，收到 MED 的 AS 不會將 MED 傳遞給其他 AS。
+- MED 在同一個 AS 內會互相傳遞，但出了 AS 就會拿掉。
+
 ## 參考資料
 
 - [什麼是 BGP？ | 解釋 BGP 路由](https://www.cloudflare.com/zh-tw/learning/security/glossary/what-is-bgp/)
