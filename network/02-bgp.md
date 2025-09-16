@@ -176,3 +176,4 @@ Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
 - [什麼是 BGP？ | 解釋 BGP 路由](https://www.cloudflare.com/zh-tw/learning/security/glossary/what-is-bgp/)
 - [About Border Gateway Protocol (BGP)](<https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/dynamicrouting/bgp_about_c.html?tocpath=Fireware%7CConfigure%20Network%20Settings%7CRoutes%20and%20Routing%7CAbout%20Border%20Gateway%20Protocol%20(BGP)%7C_____0>)
 - [Prefix List and Route Maps with BGP](https://www.youtube.com/watch?v=ozDa2agSIXc)
+- [FRRouting BGP Documentation](https://docs.frrouting.org/en/latest/bgp.html)
