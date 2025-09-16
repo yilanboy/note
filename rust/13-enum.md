@@ -3,6 +3,7 @@ layout: default
 parent: Rust
 nav_order: 13
 ---
+
 # 列舉 (Enum)
 
 用來定義一組有意義的資料類型。
