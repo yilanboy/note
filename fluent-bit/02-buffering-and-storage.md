@@ -19,15 +19,19 @@ Fluent Bit 提供兩種緩衝模式來處理資料，分別是**記憶體緩衝�
 
 為了避免反壓，Fluent Bit 提供了 `mem_buf_limit` 與 `storage.max_chunks_up` 這兩個參數來限制輸入的資料量。
 
-如果輸入的資料量達到了 `mem_buf_limit`，那麼 Fluent Bit 就不會在輸入更多的資料。並印出 `[warn] [input] {input name or alias} paused (mem buf overlimit)` 日誌。
+對於某些輸入外掛，暫停處理資料可能會導致資料遺失，例如 tcp 輸入，而 tail 輸入則不會有這個問題，它可以先暫停一會兒，再從上次的地方繼續處理資料。
 
-對於某些輸入套件，暫停處理資料可能會導致資料遺失，例如 tcp 輸入，而 tail 輸入則不會有這個問題，它可以先暫停一會兒，再從上次的地方繼續處理資料。
+## Chunks
 
-## `mem_buf_limit` 與 `storage.max_chunks_up` 的差別是什麼？
+當輸入外掛收到紀錄，會將紀錄打包在一起變成 _Chunk_，Chunk 的大小預設為 2 MB。
+根據設定的不同，Fluent Bit 的引擎會決定要將 Chunk 放在哪裡，但預設都是放在記憶體中。
 
-`mem_buf_limit` 是針對每個輸入的記憶體緩衝區限制，適用於記憶體緩衝模式；`storage.max_chunks_up` 則是服務層級限制，規範使用檔案系統儲存時，記憶體中可同時存取的檔案系統支援區塊數量上限。詳細說明：
+## 記憶體緩衝
 
-- `mem_buf_limit` 僅適用於輸入採用預設記憶體緩衝模式（`storage.type memory`）時。此設定限制輸入在暫停前可追加的記憶體上限（部分輸入可能因此面臨資料遺失風險）。
+如果沒有調整設定，所有的 Chunk 都會放在記憶體。
+
+為了避免反壓導致記憶體使用率過高，你可以在輸入外掛上使用 `mem_buf_limit` 來限制記憶體使用率，
+當輸入外掛觸發記憶體限制，就會被暫停（pause），等資料被轉送出去後，記憶體空間空出來才會恢復（resume）。
 
 ```yaml
 pipeline:
@@ -40,7 +44,25 @@ pipeline:
       mem_buf_limit: 50MB
 ```
 
-- storage.max_chunks_up 設定於 `service` 區段，用於控制啟用 `storage.type filesystem` 時，記憶體中可維持「上傳」狀態的區塊數量上限。此設定限制所有活躍檔案系統區塊的總記憶體使用量；當達到上限時，Fluent Bit 可繼續將緩衝資料寫入磁碟（或在啟用 `storage.pause_on_chunks_overlimit` 時暫停輸入）。
+如果輸入的資料量達到了 `mem_buf_limit`，那麼 Fluent Bit 就不會在輸入更多的資料。並印出 `[warn] [input] {input name or alias} paused (mem buf overlimit)` 日誌。
+
+> `mem_buf_limit` 只有在 `storage.type` 設定為 `memory` 時才會啟用。
+
+## 記憶體緩衝搭配檔案系統緩衝
+
+可以將 `storage.type` 設定為 `filesystem` 來啟用檔案系統緩衝，但這同時也會使 `mem_buf_limit` 設定失效。
+
+記憶體與檔案系統緩衝機制並非互斥。在輸入外掛啟用檔案系統緩衝功能，可以同時提升效能與資料安全性。
+
+啟用檔案系統緩衝，在建立 Chunk 的時候，Fluent Bit 的引擎會在將資料儲存在記憶體，但同時也會使用記憶體映射（mmap）將一模一樣的資料儲存在檔案系統上。**新建立的 Chunk 在記憶體中處於活躍狀態，同時在檔案系統中又有備份**，這種狀態可以稱爲 `up`，說明 Chunk 已經載入記憶體，並準備好轉送出去了。反之，只存在檔案系統上且沒有載入記憶體的 Chunk，這種狀態稱為 `down`。
+
+Fluent Bit 預設記憶體內可以有 128 個狀態為 `up` 的 Chunk，每個 Chunk 的上限是 2MB，所以總共是 256 MB。
+
+`storage.max_chunks_up` 可以設定記憶體能有幾個 `up` 狀態的 Chunk，預設為 128。
+
+當輸入外掛的 `up` Chunk 數量達到上限，輸入外掛並不會被暫停，而是將 Chunk 儲存在檔案系統上，這些 Chunk 的狀態為 `down`。等到 `up` Chunk 被轉送出去，`down` 狀態的 Chunk 才會被載入記憶體中，變成 `up` 狀態。
+
+`storage.max_chunks_up` 設定於 `service` 區段。
 
 ```yaml
 service:
