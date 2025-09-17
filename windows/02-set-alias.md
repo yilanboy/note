@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Windows
+nav_order: 2
+---
+
 # 設定指令的 Alias
 
 在 Linux 的 Bash 中，你可以用 `alias` 來設定指令的別名。

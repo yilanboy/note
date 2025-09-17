@@ -3,6 +3,7 @@ layout: default
 parent: Rust
 nav_order: 7
 ---
+
 # 所有權 (Ownership)
 
 所有權為 Rust 最獨特的功能，這讓 Rust 不需要垃圾回收就可以保障記憶體安全。

@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Zed
+nav_order: 1
+---
+
 # Zed 設定
 
 一般設定。
