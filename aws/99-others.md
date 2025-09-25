@@ -39,11 +39,6 @@ nav_order: 99
 - 資料來源與轉換後資料的目的地都可以設定成 S3
 - AWS Glue 的 ETL 工作 支援 job bookmark 功能，可以從上次的工作繼續往下做
 
-## AWS Athena
-
-- 可以直接搜尋 S3 上的資料，使用 SQL 查詢
-- 查詢前可以使用 AWS Glue 先產出資料的 schema
-
 ## AWS Lake Formation
 
 - AWS Lake Formation 可以整合多個帳號的 S3 資料，並交給 Athena、Redshift 與 EMR 分析資料用
