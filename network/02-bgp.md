@@ -124,6 +124,9 @@ BGP 有一套選路規則 (Path Selection Rules)，當收到多條路由時，�
 - AS Path (較短的 AS Path)
 - Origin
 - MED
+- EBGP 路由優於 IBGP 路由
+- BGP 下一跳 IGP Metric 較小的路由
+- 以上全部相同，則為等價路由
 
 每個規則可以記住三個點。
 
@@ -170,6 +173,10 @@ Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
 - 預設值為 0，數值越小，優先權越高。
 - MED 僅在兩個 AS 之間傳遞，收到 MED 的 AS 不會將 MED 傳遞給其他 AS。
 - MED 在同一個 AS 內會互相傳遞，但出了 AS 就會拿掉。
+
+### EBGP 路由優先於 IBGP 路由
+
+- 當收到相同的路由前綴時，EBGP 的路由優先於 IBGP 的路由。
 
 ## 參考資料
 
