@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Fitness
+nav_order: 1
+---
+
 # 減脂
 
 想要減脂的話，最重要的是創造熱量赤字，也就是消耗的熱量要多於攝取的熱量。
