@@ -126,7 +126,7 @@ $config = new HtmlSanitizerConfig
 ```
 
 > 字元長度的計算使用 `strlen()`。
-
+>
 > 這裡選擇關掉上限的原因是我已經使用 Laravel Validation 來限制字元長度的最大值了。
 
 改用 HTML Sanitizer 後的過濾設定如下：
@@ -158,4 +158,4 @@ public static function sanitizeHtml(string $html): string
 - [HTML Sanitizer API](https://wicg.github.io/sanitizer-api/)
 - [HTML Purifier Customize](http://htmlpurifier.org/docs/enduser-customize.html)
 - [https://aszx87410.github.io/beyond-xss/ch3/css-injection/](https://aszx87410.github.io/beyond-xss/ch3/css-injection/)
-- [不識廬山真面目：Clickjacking 點擊劫持攻擊 ](https://blog.huli.tw/2021/09/26/what-is-clickjacking/#clickjacking-%E6%94%BB%E6%93%8A%E5%8E%9F%E7%90%86)
+- [不識廬山真面目：Clickjacking 點擊劫持攻擊](https://blog.huli.tw/2021/09/26/what-is-clickjacking/#clickjacking-%E6%94%BB%E6%93%8A%E5%8E%9F%E7%90%86)
