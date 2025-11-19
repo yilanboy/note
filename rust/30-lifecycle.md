@@ -25,10 +25,12 @@ Rust 的生命週期設計是為了避免迷途參考的產生。
     {
         let x = 5;
         r = &x;
+        // x 在這個作用域結束後就會被釋放
+        // 導致 r 變成一個懸垂引用
     }
 
     // error[E0597]: `x` does not live long enough
-    // 這裡會有 "活得不夠久" 的錯誤， x 已經被釋放，但 r 仍然引用著 x 的記憶體空間
+    // 這裡會有 "x 活得不夠久" 的錯誤， x 已經被釋放，但 r 仍然引用著 x 的記憶體空間
     println!("r: {}", r);
 }
 ```
@@ -101,12 +103,17 @@ fn main() {
 
 ```rust
 fn main() {
-    let string1 = String::from("long string is long");
+    let string1 = String::from("xyz");
     let result;
 
     {
-        let string2 = String::from("xyz");
+        // 這裡的 string2 是比較長的字串
+        // 所以可以預期 result 會指向 string2
+        let string2 = String::from("longer string");
         result = longest(string1.as_str(), string2.as_str());
+
+        // !Oops! string2 在這個作用域結束後就會被釋放
+        // result 會變成一個懸垂引用
     }
 
     // error[E0597]: `string2` does not live long enough

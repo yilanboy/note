@@ -29,6 +29,8 @@ mod tests {
 
 `#[test]` 詮釋會指出這是一個測試函式。而 `assert_eq!` 則是一個斷言巨集，如果兩個參數不相等，則會產生一個錯誤訊息。
 
+> `#[cfg(test)]` 當中的 `cfg` 代表「configuration」，這個詮釋會告訴 Rust 編譯器，只有在執行測試時才會編譯這個模組。
+
 可以使用 `cargo test` 來執行專案中全部測試。
 
 ```text
