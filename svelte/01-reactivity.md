@@ -54,14 +54,14 @@ Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大
 <script>
   let count = $state(0);
 
-	$effect(() => {
+  $effect(() => {
     // 每當 'count' 變化時，這段程式碼就會執行
-		console.log(`The count is now ${count}`);
+    console.log(`The count is now ${count}`);
 
-		if (count > 10) {
-			alert(`Count is dangerously high!`);
-		}
-	});
+    if (count > 10) {
+      alert(`Count is dangerously high!`);
+    }
+  });
 </script>
 
 <button onclick={() => count++}>
