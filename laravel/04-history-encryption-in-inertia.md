@@ -34,7 +34,7 @@ Inertia.js 的作者想了不少解決方案，例如將頁面訪問紀錄儲存
 INERTIA_ENCRYPT_HISTORY=true
 ```
 
-或是在 `bootstrap/app.php` 中，將 ` EncryptHistoryMiddleware::class` 設定為全局中介軟體（Global Middleware）。
+或是在 `bootstrap/app.php` 中，將 `EncryptHistoryMiddleware::class` 設定為全局中介軟體（Global Middleware）。
 
 ```php
 use Inertia\EncryptHistoryMiddleware;

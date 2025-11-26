@@ -140,12 +140,7 @@ window.Tagify = Tagify;
 因為 v3 底層改為使用 [alpine.js](https://alpinejs.dev/)，你也可以考慮使用 alpine.js 的語法
 
 ```html
-<div
-  x-data
-  x-init="
-        new Tagify($refs.tags);
-    "
->
+<div x-data x-init="new Tagify($refs.tags);">
   <div wire:ignore>
     <input type="text" x-ref="tags" />
   </div>
