@@ -1,3 +1,9 @@
+---
+layout: default
+parent: TypeScript
+nav_order: 6
+---
+
 # 使用 TypeScript 實作防抖函式 (Debounce Function)
 
 使用防抖函式（debounce function）可以有效地控制高頻率事件的觸發次數，例如在使用者調整視窗大小或輸入文字時。
