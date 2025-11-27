@@ -83,7 +83,7 @@ impl PaymentProcessor for PayPal {
 }
 ```
 
-你有兩中方式來使用這些 Trait，一是使用**泛型**，二是使用 **Trait 物件**。
+你有兩種方式來使用這些 Trait，一是使用**泛型**，二是使用 **Trait 物件**。
 
 首先是使用泛型的方式：
 
@@ -216,6 +216,114 @@ model!(Product);
 ## 簡潔的 `main.rs`
 
 盡可能讓 `main.rs` 保持簡潔。主要邏輯寫在 `lib.rs`，並在 `main.rs` 中重複使用這些邏輯。
+
+```text
+├── Cargo.lock
+├── Cargo.toml
+└── src
+    ├── lib.rs
+    └── main.rs
+```
+
+當你的專案越來越大時，`lib.rs` 可以進一步拆分成多個模組檔案，讓程式碼更有組織性。
+
+```text
+├── Cargo.lock
+├── Cargo.toml
+└── src
+    ├── command.rs
+    ├── lib.rs
+    ├── main.rs
+    └── storage.rs
+```
+
+在 `lib.rs` 中匯入這些模組：
+
+```rust
+pub mod command;
+mod storage;
+```
+
+如果你時常 `import` 某個常用的模組，例如 `use std::fs`，你可以考慮新建一個檔案 `prelude.rs`，並在模組中匯入它：
+
+```text
+├── Cargo.lock
+├── Cargo.toml
+└── src
+    ├── command.rs
+    ├── lib.rs
+    ├── main.rs
+    ├── prelude.rs
+    └── storage.rs
+```
+
+```rust
+// prelude.rs
+pub use std::fs;
+pub use std::io::{self, Read, Write};
+```
+
+```rust
+// lib.rs
+mod prelude;
+```
+
+```rust
+// command.rs and storage.rs
+use crate::prelude::*;
+```
+
+## Control Visibility
+
+注意有哪些模組是真的需要公開的，並且使用 `pub(crate)`、`pub(super)` 或 `pub(self)` 來限制模組的可見範圍，這樣可以減少外部對內部實作的依賴，提升模組的封裝性。
+
+```rust
+// command 模組是公開的，可以被外部使用，但是注意！這不代表裡面的所有函式都是公開的
+// 想要讓 command 模組裡的函式公開，需要在函式前面加上 pub 關鍵字
+pub mod command;
+mod storage;
+mod prelude;
+```
+
+```rust
+mod storage {
+    pub(crate) fn save_data() {
+        // 只能在當前 crate 中使用
+    }
+
+    pub(self) fn load_data() {
+        // 只能在當前模組中使用
+    }
+}
+mod command {
+    mod command_children {
+        pub(super) fn execute_command() {
+            // 只能在父模組中使用
+        }
+    }
+}
+```
+
+## Cargo Workspace
+
+當你有多個相關的 Rust 專案時，可以考慮使用 Cargo Workspace 來管理這些專案。這樣可以共用相同的依賴，並且更方便地進行版本控制。
+
+```text
+my_workspace/
+├── Cargo.toml
+├── project_a/
+│   └── src/
+│       └── main.rs
+└── project_b/
+    └── src/
+        └── main.rs
+```
+
+```toml
+# my_workspace/Cargo.toml
+[workspace]
+members = ["project_a", "project_b"]
+```
 
 ## 參考資料
 
