@@ -325,6 +325,231 @@ my_workspace/
 members = ["project_a", "project_b"]
 ```
 
+## Type Driven Design
+
+如何結構化你的程式碼，讓 Rust 的編譯器幫助你捕捉更多的錯誤，是非常重要的。這樣可以減少在執行時遇到的問題，提升程式的穩定性。
+
+### Parse Constructors
+
+下面的結構體有個常見的錯誤，`email` 是字串，但沒有任何限制條件。
+
+```rust
+struct User {
+    email: String,
+    is_verified: bool,
+}
+```
+
+這樣的設計可能會導致無效的 email 被傳入，進而引發錯誤。我們可以透過建立一個新的型別 `Email`，並且在建構時進行驗證，來避免這個問題。
+
+```rust
+struct Email(String);
+
+impl Email {
+    fn parse(s: &str) -> Result<Self, String> {
+        if s.contains('@') {
+            Ok(Email(s.to_string()))
+        } else {
+            Err(format!("Invalid email: {}", s))
+        }
+    }
+}
+
+struct User {
+    email: Email,
+    is_verified: bool,
+}
+```
+
+### Type-State Pattern
+
+除了 email，我們也可以使用 Type-State Pattern 來確保某些狀態只能在特定條件下存在。
+
+以剛剛的 `User` 為例，`is_verified` 只是個單純的布林值，如果我們不小心將它設為 `true`，但實際上使用者並沒有通過驗證，這會導致邏輯錯誤。
+
+我們可以定義兩個不同的型別 `UnverifiedUser` 和 `VerifiedUser`，來表示使用者的不同狀態。
+
+```rust
+struct UnverifiedUser {
+    email: Email,
+}
+
+impl UnverifiedUser {
+    // 這裡透過 self，確保只能從未驗證的使用者轉換成已驗證的使用者
+    // 因為 self 的所有權會被移動，因此無法再使用未驗證的使用者
+    fn verify(self) -> VerifiedUser {
+        VerifiedUser {
+            email: self.email,
+        }
+    }
+}
+
+struct VerifiedUser {
+    email: Email,
+}
+
+impl VerifiedUser {
+    fn send_email(&self, msg: &str) {
+        println!("Sending email to {}: {}", (self.email).0, msg);
+    }
+}
+
+fn main() {
+    // 使用 Type-State Pattern 來確保只有已驗證的使用者才能發送電子郵件
+    let email = Email::parse("user@example.com").unwrap();
+    let unverified_user = UnverifiedUser { email };
+    let verified_user = unverified_user.verify();
+    verified_user.send_email("Welcome!");
+}
+```
+
+## Clippy
+
+使用 Clippy 來檢查你的 Rust 程式碼，找出潛在的問題和改進建議。Clippy 是 Rust 官方提供的靜態分析工具，可以幫助你寫出更好的程式碼。
+
+```rust
+#![deny(warnings)] // 將所有警告視為錯誤
+#![deny(clippy::redundant_clone)] // 禁止不必要的 clone 操作
+#![deny(clippy::unwrap_used)] // 禁止使用 unwrap 方法
+
+fn main() {
+    let name = String::from("Alice");
+
+    let greeting = format!("Hello {}", name.clone()); // ❌ 這行會被 Clippy 檢查出來，因為 clone 是不必要的
+
+    let parsed = "123".parse::<i32>().unwrap(); // ❌ 這行也會被 Clippy 檢查出來，因為 unwrap 可能會導致 panic
+
+    let numbers = vec![1, 2, 3]; // ❌ 應該使用 array 而不是 vector
+
+    let mut sum = 0;
+
+    for i in 0..numbers.len() { // ❌ 應該使用迭代器來遍歷集合
+        sum += numbers[i];
+    }
+
+    println!("Greeting: {}, Parsed number: {}, Sum: {}", greeting, parsed, sum);
+    calculate_result(10); // ❌ 這行會被 Clippy 檢查出來，因為回傳值沒有被使用
+}
+
+#[must_use]
+fn calculate_result(value: i32) -> i32 {
+    value * 2
+}
+```
+
+你可以使用 Clippy 的指令來修正部分錯誤，例如不必要的 Clone 與使用 Vector 建立 Array。
+
+其餘錯誤開發者也能很好的根據提示處理。
+
+```bash
+clippy fix
+```
+
+````rust
+```rust
+fn main() {
+    let name = String::from("Alice");
+
+    let greeting = format!("Hello {}", name); // ✅ clippy fix 指令可以幫助你移除不必要的 Clone
+
+    let parsed = "123".parse::<i32>().expect("Failed to parse number"); // ✅ 我們需要修改成 expect，醒目的告訴開發者哪裡有問題
+
+    let numbers = [1, 2, 3]; // ✅ clippy fix 指令可以幫助你修改成 array
+
+    let mut sum = 0;
+
+    for numbers in &numbers { // ✅ 修改成使用迭代器
+        sum += numbers[i];
+    }
+
+    println!("Greeting: {}, Parsed number: {}, Sum: {}", greeting, parsed, sum);
+    let _ = calculate_result(10); // ✅ 使用回傳值
+}
+````
+
+## Rust Format
+
+你可以使用 `rustfmt` 來排版你的程式碼風格，使團隊的程式碼風格保持一致。
+
+在專案底下，你可以建立 `rustfmt.toml` 來設定 `rustfmt` 的程式碼風格。
+
+```toml
+# 使用空白字元，而非使用 Tab
+hard_tabs = false
+
+# 每一行的最長長度
+max_width = 120
+
+# 根據字母排序 imports
+group_imports = "StdExternalCrate"
+reorder_imports = true
+reorder_modules = true
+
+# 如何處理列表的尾隨逗號
+trailing_comma = "Vertical"
+
+# 將來自同一個 crate 的導入合併到單個 use 語句中。相反，來自不同 Crate 的導入被分成單獨的語句。
+imports_granularity = "Crate"
+struct_field_align_threshold = 20
+
+ident_style = "Block"
+fn_call_width = 80
+```
+
+更多設定可以參考[文件](https://rust-lang.github.io/rustfmt/?version=main&search=)。
+
+## Rust Toolchain
+
+你可以新增一個 `rust-toolchain.toml` 檔案來鎖定 Rust 工具鏈的版本，這可以讓所有人的 Rust 工具鏈版本保持一致，
+避免在 CI 中出現問題。
+
+```toml
+[toolchain]
+channel = "stable"
+components = ["rust-analyzer", "clippy", "rustfmt"]
+```
+
+## CI/CD Pipeline
+
+你可以在 CI/CD Pipeline 中使用下面這些好用的工具：
+
+- `cargo audit` 指令來檢查目前的相依套件有沒有出現已知的漏洞。
+- `cargo-deny` 來強制執行依賴規則，封鎖不需要的 Crate、檢查授權與偵測重複的 Crate。
+- `cargo-tarpaulin` 來產生測試覆蓋率報告，並規定覆蓋率報告低於多少時則 CI 不通過。
+- `cargo-chef` 來快取依賴檔案，加快產生二進制檔案的過程。
+
+```yaml
+# .github/workflows/ci.yaml
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cargo-audit, cargo-deny, cargo-tarpaulin, cargo-chef
+        run: cargo install cargo-audit cargo-deny cargo-tarpaulin cargo-chef
+
+      - name: Security check
+        run: cargo audit
+
+      - name: Dependency policy check
+        run: cargo deny check
+
+      - name: Test coverage gate
+        run: cargo tarpaulin --fail-under 80
+
+      - name: Build using cargo chef
+        run: |
+          cargo chef prepare --recipe-path recipe.json
+          cargo chef cook --recipe-path recipe.json
+          cargo build --release
+```
+
 ## 參考資料
 
 [![21+ Rust Pro Tips (TOP SECRET)](https://img.youtube.com/vi/53XYcpCgQWE/maxresdefault.jpg)](https://www.youtube.com/watch?v=53XYcpCgQWE)
