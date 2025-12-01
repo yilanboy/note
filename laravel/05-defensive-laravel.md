@@ -47,3 +47,52 @@ function divide(int $a, int $b): float {
     return $a / $b;
 }
 ```
+
+## Imutable Dates
+
+在 PHP 中，物件預設是 Call by Reference，因此即使把我們將物件賦予給另外一個變數，我們對這個變數的任何修改都會影響到原始物件。
+
+這個在 Laravel 中會造成一些問題，例如我們在使用 Carbon 的 `addDays` 方法時，會影響到原始的 Carbon 物件。
+
+```php
+use Illuminate\Support\Carbon;
+
+$date = Carbon::now();
+
+dd($date->format('Y-m-d')); // 2025-12-01
+
+$date->addDays(1); // 會影響到 $date
+
+dd($date->format('Y-m-d')); // 2025-12-02
+```
+
+我們可以透過 `toImmutable()` 方法來避免影響到原始物件。
+
+```php
+use Illuminate\Support\Carbon;
+
+$date = Carbon::now()->toImmutable();
+
+dd($date->format('Y-m-d')); // 2025-12-01
+
+$date->addDays(1); // 不會影響到 $date
+
+dd($date->format('Y-m-d')); // 2025-12-01
+```
+
+
+你也可以使用 `copy()` 方法來避免影響到原始物件。
+
+```php
+$date->copy()->addDays(1); // 不會影響到 $date
+```
+
+Laravel 的 Model Casts 也支援 Immutable Date。
+
+```php
+protected function casts(): array {
+    return [
+        'due_date' => 'immutable_datetime',
+    ];
+}
+```
