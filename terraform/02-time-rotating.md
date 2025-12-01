@@ -9,7 +9,7 @@ nav_order: 2
 Terraform 中有提供一個叫做 `time_rotating` 的資源，讓你可以超過一定時間後，重新部署資源。
 
 ```hcl
-resource "time_rotating" "rotate_every_fifteen_seconds" {
+resource "time_rotating" "rotate_every_15_days" {
   rotation_days = 15
 }
 ```
@@ -21,7 +21,7 @@ resource "aws_iam_access_key" "example" {
   user = aws_iam_user.example.name
 
   lifecycle {
-    replace_triggered_by = [time_rotating.rotate_every_fifteen_seconds.rotation_rfc3339]
+    replace_triggered_by = [time_rotating.rotate_every_15_days.rotation_rfc3339]
   }
 }
 ```

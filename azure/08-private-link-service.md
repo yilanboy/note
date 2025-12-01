@@ -34,14 +34,20 @@ Private Link Service 是服務端，負責將服務（如 Load Balancer、VM、P
 
 ## 實作步驟簡述
 
-1. 建立 Load Balancer 與後端 VM。
-2. 建立 Private Link Service，將 Load Balancer 作為目標。
-3. 在其他 VNet 建立 Private Endpoint，連線到 Private Link Service。
+1. 建立 Load Balancer 轉發對象設定為後端 VM 集群。
+2. 幫 Load Balancer 建立 Frontend IP（一個 Private IP，做為訪問 Load Balancer 的入口）。
+3. 幫 Load Balancer 建立 Backend Pool，將後端 VM 加入。
+4. 幫 Load Balancer 建立 Health Probe，用來偵測後端 VM 的健康狀態。
+5. 幫 Load Balancer 建立 Load Balancing Rule，用來定義流量轉發的規則。
+6. 建立 Private Link Service，將 Load Balancer 作為目標。
+7. 在其他 VNet 建立 Private Endpoint，連線到 Private Link Service。
+
+> Azure Load Balancer Health Probe 是一種用來偵測應用程式實例健康狀態的功能。它會向實例發送請求，確認它們是否可用並回應請求。健康探測器可配置為使用不同協定，如 TCP、HTTP 或 HTTPS。這是一項重要功能，因為它幫助你偵測應用程式故障、管理負載並規劃停機時間。
 
 ## 架構圖說明（文字版）
 
 ```text
-不同區域 VM ──> Private Endpoint ──> Private Link Service ──> Load Balancer ──> Metrics VM ──> AMP
+不同區域 VM ──> Private Endpoint ──> Private Link Service ──> Load Balancer ──> Forward Metrics VM ──> AMP
 ```
 
 ## Pricing
