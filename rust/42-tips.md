@@ -445,7 +445,6 @@ fn calculate_result(value: i32) -> i32 {
 clippy fix
 ```
 
-````rust
 ```rust
 fn main() {
     let name = String::from("Alice");
@@ -465,7 +464,7 @@ fn main() {
     println!("Greeting: {}, Parsed number: {}, Sum: {}", greeting, parsed, sum);
     let _ = calculate_result(10); // ✅ 使用回傳值
 }
-````
+```
 
 ## Rust Format
 
