@@ -345,6 +345,7 @@ struct User {
 ```rust
 struct Email(String);
 
+// 判斷 email 是否有效
 impl Email {
     fn parse(s: &str) -> Result<Self, String> {
         if s.contains('@') {
@@ -358,6 +359,14 @@ impl Email {
 struct User {
     email: Email,
     is_verified: bool,
+}
+
+fn main() {
+    let email = Email::parse("user@example.com").unwrap();
+    let user = User {
+        email,
+        is_verified: false,
+    };
 }
 ```
 
@@ -375,7 +384,7 @@ struct UnverifiedUser {
 }
 
 impl UnverifiedUser {
-    // 這裡透過 self，確保只能從未驗證的使用者轉換成已驗證的使用者
+    // 這裡透過 self 而不是 &self，確保只能從未驗證的使用者轉換成已驗證的使用者
     // 因為 self 的所有權會被移動，因此無法再使用未驗證的使用者
     fn verify(self) -> VerifiedUser {
         VerifiedUser {
