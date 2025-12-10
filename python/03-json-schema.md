@@ -21,6 +21,7 @@ pip install jsonschema
 ```python
 from jsonschema import validate, ValidationError
 
+# 定義預期的資料結構
 schema = {
     "type": "object",
     "properties": {
@@ -35,6 +36,8 @@ data = {
 }
 
 try:
+    # 判斷 data 的結構是否與 schema 的相同
+    # 如果與 schema 不同，就會拋出例外
     validate(instance=data, schema=schema)
     print("Validation successful")
 except ValidationError as e:
@@ -43,9 +46,11 @@ except ValidationError as e:
 
 ## 定義 Schema
 
+在結構定義中，我們需要先使用 type 定義我們預期的型別，以簡單的字串、數字、列表與物件為例。
+
 ### 檢查字串與數字 (String and Number)
 
-- `type`: 指定資料型態，如 `"string"`, `"integer"`, `"number"` (包含整數與浮點數)。
+- `type`: 指定資料型態，如 `"string"`, `"number"` (包含整數與浮點數)。
 - 字串可以使用 `minLength`, `maxLength`, `pattern` (Regex) 來限制。
 - 數字可以使用 `minimum`, `maximum`, `exclusiveMinimum`, `exclusiveMaximum` 來限制範圍。
 
@@ -60,18 +65,13 @@ schema = {
         },
         "email": {
             "type": "string",
-            "pattern": "^\\S+@\\S+\\.\\S+$"
+            "pattern": r"^\\S+@\\S+\\.\\S+$"
         },
         "age": {
-            "type": "integer",
+            "type": "number",
             "minimum": 0,
             "maximum": 120
         },
-        "score": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 100.0
-        }
     }
 }
 ```
@@ -94,7 +94,7 @@ schema = {
         "scores": {
             "type": "array",
             "items": {
-                "type": "integer"
+                "type": "number"
             },
             "minItems": 1,
             "maxItems": 10,
@@ -157,7 +157,6 @@ schema = {
     "required": ["id", "user"]
 }
 ```
-
 
 ## 參考資料
 
