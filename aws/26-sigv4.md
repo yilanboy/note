@@ -28,6 +28,31 @@ Signature=fe5f80f77d5fa3beca038a248ff027d0445342fe2855ddc963176630326f1024
 - `SignedHeaders`：以分號分隔的請求標頭清單，用於計算 Signature。
 - `Signature`：256 位元的實際的簽名值，以 64 個小寫十六進位字元表示。
 
+## 簡單的使用範例
+
+使用 Docker 快速的建立一個 AWS SigV4 Proxy 服務器
+
+```bash
+# 拉取 aws-sigv4-proxy 的 image
+docker pull public.ecr.aws/aws-observability/aws-sigv4-proxy:latest
+
+# 建立 aws-sigv4-proxy 的 container
+docker create --name aws-sigv4-proxy -it \
+    --memory=64MB --restart unless-stopped \
+    --env AWS_ACCESS_KEY_ID=${IAM_ACCESS_KEY} \
+    --env AWS_SECRET_ACCESS_KEY=${IAM_SECRET_KEY} \
+    --publish 0.0.0.0:8080:8080 \
+    public.ecr.aws/aws-observability/aws-sigv4-proxy -v
+
+docker start aws-sigv4-proxy
+```
+
+使用 curl 進行測試，使用 aws-sigv4-proxy 進行轉發，清空 AWS IOT 上的特定 Topic。
+
+```bash
+curl -s --noproxy "*" -X POST "http://localhost:8080/topics/${TITLE}?qos=1&retain=true" -H 'host: data-ats.iot.us-west-2.amazonaws.com' -d ''
+```
+
 ## 參考資料
 
 - [AWS Sigv4 in 3 mins](https://towardsaws.com/aws-sigv4-in-3-mins-c324d20f19cf)
