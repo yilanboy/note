@@ -13,7 +13,7 @@ nav_order: 4
 
 ```svelte
 <script>
-let m = { x: 0, y: 0 };
+let m = $state({ x: 0, y: 0 });
 
 function handleMove(event) {
     m.x = event.clientX;
@@ -22,7 +22,7 @@ function handleMove(event) {
 </script>
 
 
-<div on:pointermove={handleMove}>
+<div onpointermove={handleMove}>
     The mouse position is {m.x} x {m.y}
 </div>
 ```
@@ -32,14 +32,16 @@ function handleMove(event) {
 你也可以在元素上使用 inline handlers。
 
 ```svelte
-<div on:pointermove={(event) => {
+<div onpointermove={(event) => {
     m = { x: event.clientX, y: event.clientY };
 }}>
     The mouse position is {m.x} x {m.y}
 </div>
 ```
 
-## Event Modifiers
+## Event Modifiers (已棄用)
+
+> Event Modifiers 在 Svelte 5 中已經被棄用。
 
 DOM 的 event handler 可以使用 event modifiers 來修改行為。
 
@@ -54,9 +56,33 @@ DOM 的 event handler 可以使用 event modifiers 來修改行為。
 
 此外還有 `|preventDefault` 可以阻止預設行為，`|stopPropagation` 可以阻止事件冒泡 ... 等。
 
-> 所謂的事件冒泡 (event bubbling)，是指當一個元素觸發了某個事件，該事件會一層一層往上傳遞到父元素，直到傳遞到 `document` 為止。
-
 event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
+
+## Event Modifiers (推薦)
+
+想要修改 Event 的行為，你需要自己寫函式，並將你事件觸發的 Callback 函式包裝起來。
+
+```svelte
+<script lang="ts">
+    function once(fn: ((event: Event) => unknown) | null) {
+        return function (this: (event: Event) => unknown, event: Event) {
+            if (fn) fn.call(this, event);
+            fn = null;
+        };
+    }
+
+    function preventDefault(fn: (event: Event) => unknown) {
+        return function (this: (event: Event) => void, event: Event) {
+            event.preventDefault();
+            fn.call(this, event);
+        };
+    }
+</script>
+
+<button onclick={once(preventDefault(handler))}>...</button>
+```
+
+> 所謂的事件冒泡 (event bubbling)，是指當一個元素觸發了某個事件，該事件會一層一層往上傳遞到父元素，直到傳遞到 `document` 為止。
 
 ## Component Events
 
@@ -78,7 +104,7 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
     }
 </script>
 
-<button on:click={sayHello}>
+<button onclick={sayHello}>
     Click to say hello
 </button>
 ```
