@@ -6,7 +6,7 @@ nav_order: 37
 
 # 使用 `Box<T>` 指向堆積上的資料
 
-Rust 中有一個智慧指標功能叫做 Box。
+Rust 中有一個智慧指標（Smart Pointer）功能叫做 Box。
 
 **Box 允許你將資料儲存到堆積 (Heap) 上。同時會有一個堆疊 (Stack) 儲存指向堆積資料的指標 (Pointer)**。
 
@@ -50,6 +50,6 @@ use List::{Cons, Nil};
 fn main() {
     // Cons 變體需要的大小為 i32 加上儲存 Box 指標的空間
     // 這樣的寫法就不會造成編譯錯誤，因為 Cons 變體的大小是已知的
-    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil)))));
+    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 }
 ```

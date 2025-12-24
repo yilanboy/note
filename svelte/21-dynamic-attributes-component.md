@@ -26,7 +26,7 @@ nav_order: 21
 </x-button>
 ```
 
-在 Svelte 中也有類似的功能，也就是 `HTMLInputAttributes`。
+在 Svelte 中也可以使用 `HTMLInputAttributes` Type 來接收所有寫在 Component 上的屬性。
 
 ```svelte
 <script lang="ts">
@@ -37,10 +37,13 @@ nav_order: 21
   interface Props extends HTMLInputAttributes {
     label: string;
     id: string;
+    name: string;
+    type?: string;
+    value?: string;
   }
 
-  // 接收所有 props，並解構出 label、id、type 和其他屬性
-  let { label, id, type = "text", ...rest }: Props = $props();
+  // 接收所有 props，並解構出 label、id、type、value 和其他屬性
+  let { label, id, name, type = "text", value = $bindable(""), ...rest }: Props = $props();
 </script>
 
 <div>
@@ -48,10 +51,13 @@ nav_order: 21
     {label}
   </label>
   <div class="mt-2">
-    <!-- 將 id、type 和其他屬性傳遞給 input -->
+    <!-- 將 id、name、type、value 和其他屬性傳遞給 input -->
+    <!-- 其中 value 是 bindable 的 -->
     <input
       {id}
+      {name}
       {type}
+      bind:value
       {...rest}
       class="block w-full rounded-md bg-zinc-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600"
     />

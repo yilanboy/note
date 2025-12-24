@@ -110,6 +110,7 @@ fn process_payment<T: PaymentProcessor>(processor: T, amount: f64) {
 
 ```rust
 // 使用 Trait 物件
+// 這裡的 dyn 表示使用動態分派（Dynamic Dispatch）
 fn process_payment(processor: &dyn PaymentProcessor, amount: f64) {
     processor.pay(amount);
 }

@@ -86,21 +86,17 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 
 ## Component Events
 
-你可以在 component 上觸發事件。
+在 Svelte 5 中，Components 之間的事件傳遞不再使用 `createEventDispatcher`，而是直接透過 Props 傳遞 callback function。
 
 假設我們有一個 `Inner.svelte` component，他的內容如下：
 
 ```svelte
 <!-- Inner.svelte -->
 <script>
-    import { createEventDispatcher } from 'svelte';
-
-    const dispatch = createEventDispatcher();
+    let { onmessage } = $props();
 
     function sayHello() {
-        dispatch('message', {
-            text: 'Hello!'
-        });
+        onmessage('Hello!');
     }
 </script>
 
@@ -109,41 +105,32 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 </button>
 ```
 
-我們可以在 `App.svelte` 中使用 `Inner` component，並在 `Inner` component 觸發 `message` 事件。
+我們可以在 `App.svelte` 中使用 `Inner` component，並傳入一個 function 給 `onmessage` prop。
 
 ```svelte
 <!-- App.svelte -->
 <script>
     import Inner from './Inner.svelte';
 
-    function handleMessage(event) {
-        // event.detail.text is 'Hello!'
-        alert(event.detail.text);
+    function handleMessage(message) {
+        alert(message);
     }
 </script>
 
-<Inner on:message={handleMessage} />
+<Inner onmessage={handleMessage} />
 ```
 
 ## Event Forwarding
 
-與 DOM 事件不同，component 事件不會冒泡。如果監聽的事件，在很深層的 component 中，那你必須將事件一層一層的傳遞到上層 component。
+在 Svelte 5 中，因為事件就是一般的 Props，所以 Event Forwarding 就變成了 Props Drilling。你可以一層一層往下傳，或者使用 Spread Props。
 
 ```svelte
 <!-- 最底層的 Inner.svelte -->
 <script>
-    import { createEventDispatcher } from 'svelte';
-
-    const dispatch = createEventDispatcher();
-
-    function sayHello() {
-        dispatch('message', {
-            text: 'Hello!'
-        });
-    }
+    let { onclick } = $props();
 </script>
 
-<button on:click={sayHello}>
+<button {onclick}>
     Click to say hello
 </button>
 ```
@@ -154,9 +141,22 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 <!-- 中間層的 Outer.svelte -->
 <script>
     import Inner from './Inner.svelte';
+    let { onclick } = $props();
 </script>
 
-<Inner on:message />
+<Inner {onclick} />
+```
+
+或者使用 Spread syntax 傳遞所有其餘的 props：
+
+```svelte
+<!-- 中間層的 Outer.svelte -->
+<script>
+    import Inner from './Inner.svelte';
+    let { ...rest } = $props();
+</script>
+
+<Inner {...rest} />
 ```
 
 最後是最上層要接收事件的 `App.svelte`。
@@ -166,33 +166,10 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 <script>
     import Outer from './Outer.svelte';
 
-    function handleMessage(event) {
-        // event.detail.text is 'Hello!'
-        alert(event.detail.text);
+    function handleMessage() {
+        alert('Hello!');
     }
 </script>
 
-<Outer on:message={handleMessage} />
-```
-
-Event forwarding 對於 DOM 事件也同樣可以用。
-
-```svelte
-<!-- PushButton.svelte -->
-<button on:click>
-    Push
-</button>
-```
-
-```svelte
-<!-- App.svelte -->
-<script>
-    import PushButton from './PushButton.svelte';
-
-    function handlePush() {
-        alert('button was pushed');
-    }
-</script>
-
-<PushButton on:click={handlePush} />
+<Outer onclick={handleMessage} />
 ```
