@@ -4,7 +4,7 @@ parent: Svelte
 nav_order: 21
 ---
 
-# Dynamic Attributes in Components
+# Forwarding Attributes
 
 在 Laravel 中，我們可以使用 `$attributes` 來接收任何寫在 Component 上的屬性。
 
