@@ -63,7 +63,7 @@ class GeneratePasskeyAuthenticationOptionsController extends Controller
             $serializer = Serializer::make();
             // 將憑證請求選項的物件轉換為 JSON 字串
             $optionsJson = $serializer->toJson($options);
-        } catch (SerializerException $e) {
+        } catch (SerializerExceptions $e) {
             Log::error('Webauthn 認證選項序列化失敗', [
                 'exception' => $e->getMessage(),
             ]);
@@ -82,26 +82,24 @@ class GeneratePasskeyAuthenticationOptionsController extends Controller
 
 這邊有一點需要注意，`toJson()` 方法是有可能會拋出例外的，所以如果你想要測試 `toJson()` 拋出例外的情況。上面程式碼的寫法就會讓你很難去測試。
 
-因為我們沒有辦法使用 Mock 去替換掉 `Serializer::make()` 產生的實體。
+為什麼呢？因為我們很難使用 Mock 去替換掉 `Serializer::make()` 產生的實體。
 
-雖然 Mockery 有一招可以讓你去 mock 靜態方法，
+雖然 Mockery 有一招可以讓你去 Mock 靜態方法，我們可以透過這個方式讓 `Serializer::make()` 直接拋出錯誤。
 
 ```php
+$serializerException = new class extends Exception implements SerializerExceptionInterface {};
+
 // 使用 alias 來 mock 靜態方法
-$serializerClassMock = Mockery::mock('alias:App\Services\Serializer');
+$serializerMock = Mockery::mock('alias:App\Services\Serializer');
 
-// 模擬 make() 回傳一個 Mock 物件，並在呼叫 toJson() 時拋出例外
-$serializerInstanceMock = Mockery::mock();
-$serializerInstanceMock->shouldReceive('toJson')
-    ->andThrow(new SerializerException('Serialization failed'));
-
-$serializerClassMock->shouldReceive('make')
-    ->andReturn($serializerInstanceMock);
+// 讓 make() 靜態方法拋出例外
+$serializerMock->shouldReceive('make')
+    ->andThrow(new $serializerException('Serialization failed'));
 ```
 
-但這麼做有一個問題，那就是會影響到其他測試。一旦使用 `alias`，後續的測試中如果也有使用到 `Serializer::make()`，那麼就會直接拋出例外。
+但這麼做有一個問題，那就是會影響到其他測試。一旦使用 `alias`，如果在後續的測試也有使用到 `Serializer::make()`，那麼都會直接拋出例外。
 
-所以在執行測試時，注意加上 `#[RunInSeparateProcess]` 的註解，讓這個測試在一個獨立的進程中執行。
+所以在執行測試時，我們需要加上 `#[RunInSeparateProcess]` 的註解，讓這個測試在一個獨立的程序中執行。
 
 ```php
 #[Test]
@@ -110,13 +108,11 @@ public function returns400AndLogsErrorWhenSerializationFailsInAuthentication()
 {
     // ...
 
-    $serializerInstanceMock = Mockery::mock();
-    $serializerInstanceMock->shouldReceive('toJson')
-        ->andThrow(new SerializerException('Serialization failed'));
+    $serializerException = new class extends Exception implements SerializerExceptionInterface {};
 
-    $serializerClassMock = Mockery::mock('alias:App\Services\Serializer');
-    $serializerClassMock->shouldReceive('make')
-        ->andReturn($serializerInstanceMock);
+    $serializerMock = Mockery::mock('alias:App\Services\Serializer');
+    $serializerMock->shouldReceive('make')
+        ->andThrow(new $serializerException('Serialization failed'));
 
     // ...
 }
@@ -124,7 +120,7 @@ public function returns400AndLogsErrorWhenSerializationFailsInAuthentication()
 
 ## 透過 Laravel 的 Service Container 使用依賴注入
 
-相較於直接在程式碼中使用靜態方法建立實體，我們可以在 Laravel 的 Service Container 中設定如何建立 Serializer。
+如果你是使用 Laravel 框架開發，相較於直接在程式碼中使用靜態方法建立實體，我們可以在 Laravel 的 Service Container 中設定如何建立 Serializer 的實體。
 
 ```php
 // app/Providers/AppServiceProvider.php
@@ -142,7 +138,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-之後我們就可以透過依賴注入的方式，將 Serializer 的實體傳入到 Controller 中。
+之後我們就可以透過依賴注入的方式，將 `Serializer` 的實體傳入到 Controller 中。
 
 ```php
 use App\Services\Serializer;
@@ -158,7 +154,7 @@ class GeneratePasskeyAuthenticationOptionsController extends Controller
         try {
             // 將憑證請求選項的物件轉換為 JSON 字串
             $optionsJson = $serializer->toJson($options);
-        } catch (SerializerException $e) {
+        } catch (SerializerExceptions $e) {
             Log::error('Webauthn 認證選項序列化失敗', [
                 'exception' => $e->getMessage(),
             ]);
@@ -175,7 +171,7 @@ class GeneratePasskeyAuthenticationOptionsController extends Controller
 }
 ```
 
-在測試中，我們也不需要使用 `alias`，只需要將 Service Container 中的 Serializer 實體替換成 Mock 實體即可。
+在測試中，我們不再需要 Mock 靜態方法，只需要將 Service Container 中的 `Serializer` 實體替換成 Mock 實體即可。
 
 ```php
 #[Test]
@@ -183,11 +179,13 @@ public function returns400AndLogsErrorWhenSerializationFailsInAuthentication()
 {
     // ...
 
+    $serializerException = new class extends Exception implements SerializerExceptionInterface {};
+
     // 建立一個 Serializer 的 Mock 物件
     $serializerMock = Mockery::mock(Serializer::class);
     // 預期 toJson 方法會被呼叫，並拋出例外
     $serializerMock->shouldReceive('toJson')
-        ->andThrow(new SerializerException('Serialization failed'));
+        ->andThrow(new $serializerException('Serialization failed'));
 
     // 將 Mock 的 serializer 實體替換掉 Service Container 中的 serializer 實體
     $this->app->instance(Serializer::class, $serializerMock);
