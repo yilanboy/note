@@ -81,7 +81,9 @@ async fn page_title(url: &str) -> Option<String> {
 
 ### 👩‍💻 執行非同步函式
 
-宣告好非同步函式後該如何去執行它？
+宣告好非同步函式後該如何去執行它？因為 Rust 本身不提供執行非同步程式的 Runtime，所以我們必須要使用 `trpl::block_on()`。
+
+`trpl::block_on()` 可以接收一個 `async` 函式或區塊，並**阻塞主程序等待這個函式完成**。
 
 ```rust
 // ⚠️ main 函式作為程式的進入點，不可以加上 async 關鍵字
