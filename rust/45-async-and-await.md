@@ -1,3 +1,9 @@
+---
+layout: default
+parent: Rust
+nav_order: 45
+---
+
 # Rust 的非同步程式設計
 
 在 Rust 中，非同步程式設計是通過 Future 資料型別與 `async` 與 `await` 關鍵字來實現的。
