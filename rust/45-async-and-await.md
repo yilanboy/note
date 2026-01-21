@@ -563,7 +563,9 @@ match page_title(url).poll() {
 - 呼叫 `poll()` 有可能回傳 `Pending`，此時我們可以再次呼叫 `poll()`，直到回傳 `Ready`。
 - 當你呼叫 `poll()` 並取得 `Ready` 後，再次呼叫 `poll()` 就會 Panic！
 
-### 如何呼叫 `poll()` 直到返回 Ready？那當然是用迴圈了。
+### 如何呼叫 `poll()` 直到返回 Ready？
+
+那當然是用迴圈了，但是需要注意的是 `await` 的實作並不是用這種做法。因為這種做法代表在回傳 Ready 前，程序會被整個阻塞住。
 
 ```rust
 let mut page_title_fut = page_title(url);
@@ -598,11 +600,19 @@ loop {
 
 ### 一個無法編譯的例子
 
+我們都知道 Rust 的 Vector 只能放同型別的資料，如果想在 Vector 中放不同型別的資料，我們可以將他包在 `Box` 智慧指針中。
+
+那我們可以利用 Box，將不同的 Future 放入同一個 Vector 中嗎？答案是...
+
+**不行**，因為 Future 是擁有**自我引用**的資料類型，看看下面的錯誤例子：
+
 ```rust
         let tx_fut = async move {
             // --snip--
         };
 
+        // 你不能利用 Box 將不同的 Future 放入同一個 Vector 中
+        // 因為 Future 是擁有自我引用的資料類型
         let futures: Vec<Box<dyn Future<Output = ()>>> =
             vec![Box::new(tx1_fut), Box::new(rx_fut), Box::new(tx_fut)];
 
