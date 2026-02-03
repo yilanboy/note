@@ -51,6 +51,31 @@ For iOS development, run:
 
 建立好之後，根據你的需求，你可以建立桌面或是移動應用程式。
 
+## 更新依賴套件
+
+你可以在專案底下使用下面的指令更新前端的依賴套件：
+
+```bash
+pnpm update @tauri-apps/cli @tauri-apps/api --latest
+```
+
+如果要更新後端依賴套件，我們可以更新 `src-tauri` 底下的 `Cargo.toml`。只要將 `%version%` 替換成最新的版本即可：
+
+```toml
+[build-dependencies]
+tauri-build = "%version%"
+
+[dependencies]
+tauri = { version = "%version%" }
+```
+
+更新好之後可以使用下面的指令更新後端依賴套件：
+
+```bash
+cd src-tauri
+cargo update
+```
+
 ## 開發 Android 平台
 
 Tauri 可以開發 Android 平台的應用程式，但是需要先在環境中設定 Android 的開發套件。

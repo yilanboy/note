@@ -352,8 +352,8 @@ fn main() {
     trpl::block_on(async {
         let (tx, mut rx) = trpl::channel();
 
-        // 這裡加上 move，將 tx 的所有權移入這個非同步區塊
-        // 當這個區塊執行結束，tx 將會被丟棄，後續的 trpl::join() 就可以完成執行並回傳 Future
+        // 這裡加上 move，將 tx 的所有權移入這個非同步區塊。
+        // 當這個區塊執行結束，tx 會被丟棄，進而關閉 channel。如此一來，接收端的 rx.recv().await 就會回傳 None，讓迴圈可以正常結束。
         let tx_fut = async move {
             let vals = vec![
                 String::from("hi"),
