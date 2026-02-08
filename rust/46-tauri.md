@@ -85,6 +85,8 @@ cd src-tauri
 cargo update
 ```
 
+> 我在更新套件後，在 Android 平台有遇到 Gradle 版本不相容的問題，導致無法編譯；在 iOS 平台則是遇到 App 開啟後立刻閃退的問題。最後只能降低版本。感覺版本可能不能隨意更新 😂。
+
 ## 開發 Android 平台
 
 Tauri 支援 Android 應用程式開發，但需先配置 Android 開發環境。
@@ -120,7 +122,7 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 
 除了 Android，Tauri 亦支援 iOS 平台開發，但需先配置 iOS 開發環境。
 
-首先，請從 App Store 下載並安裝 **Xcode**。
+首先，請從 App Store 下載並安裝 **Xcode**，安裝完 Xcode 之後還需要安裝 Components 有 MacOS、iOS 與 WatchOS 等，但我們需要安裝 iOS 的 Components 即可。
 
 接著，使用 `rustup target` 新增 iOS 目標平台：
 
@@ -128,7 +130,7 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
 ```
 
-使用 Homebrew 安裝 CocoaPods：
+使用 Homebrew 安裝 CocoaPods，這是一個管理 iOS 專案的套件管理工具：
 
 ```bash
 brew install cocoapods
@@ -169,3 +171,15 @@ xcrun: error: unable to find utility "devicectl", not a developer tool or in PAT
 sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 xcrun -f devicectl
 ```
+
+執行完上述指令後，再次執行檢查指令：
+
+```bash
+xcrun -f devicectl
+# 結果應該是：/Applications/Xcode.app/Contents/Developer/usr/bin/devicectl
+
+xcode-select -p
+# 結果應該是：/Applications/Xcode.app/Contents/Developer
+```
+
+最後，再次執行 `pnpm tauri info`，應該就能正確偵測到 Xcode 了。
