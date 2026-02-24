@@ -6,24 +6,33 @@ nav_order: 46
 
 # Tauri
 
-[Tauri](https://v2.tauri.app/) 是一個用於開發桌面與行動應用程式的框架。類似於 Electron，它允許開發者使用 Web 技術建構前端，並以 Rust 開發後端。相比之下，Tauri 構建的應用程式通常體積更小、效能更佳。
+[Tauri](https://v2.tauri.app/) 是一個用於開發桌面與行動應用程式的跨平台框架。其架構與 Electron 類似，允許開發者使用 Web 技術建構前端，並利用 Rust 處理後端邏輯。相比 Electron，Tauri 構建的應用程式體積更輕巧、效能更出色，且具備更高的安全性。
 
-## 安裝 Tauri
+本文記錄了使用 Tauri 開發簡單 App 的實踐經驗，採用的技術架構如下：
 
-首先，使用 Cargo 安裝 Tauri CLI：
+- **套件管理工具**：pnpm
+- **前端框架**：SvelteKit + TypeScript + Tailwind CSS
+- **後端語言**：Tauri + Rust
+- **資料庫**：SQLite
+
+---
+
+## 安裝與初始化
+
+首先，透過 Cargo 安裝 Tauri CLI：
 
 ```bash
 # 安裝 Tauri CLI
 cargo install create-tauri-app --locked
 ```
 
-安裝完成後，使用 `cargo create-tauri-app` 指令來建立 Tauri 專案：
+接著，執行 `cargo create-tauri-app` 指令建立新專案：
 
 ```bash
 cargo create-tauri-app
 ```
 
-建立專案時，您可以選擇熟悉的前端技術（如 React、Vue 或 Svelte）或 Rust 前端函式庫來建構使用者介面。同時，Tauri 也支援多種套件管理工具，包括 npm、pnpm 與 deno 等。
+在建立過程中，您可以選擇偏好的前端框架（如 React、Vue 或 Svelte）及套件管理工具。以下是本範例的選擇流程：
 
 ```text
 ✔ Project name · demo
@@ -49,26 +58,32 @@ For iOS development, run:
   pnpm tauri ios dev
 ```
 
-專案建立後，根據需求，您可以開發桌面或行動應用程式，並透過模擬器進行測試。
+專案建立後，您可以開發桌面版或行動版應用程式，並透過以下指令啟動開發模式：
 
 ```bash
-# 執行桌面應用程式
+# 啟動桌面版開發模式
 pnpm tauri dev
-# 模擬在 Android 上執行行動應用程式
+# 在 Android 模擬器中執行
 pnpm tauri android dev
-# 模擬在 iOS 上執行行動應用程式
+# 在 iOS 模擬器中執行
 pnpm tauri ios dev
 ```
 
-## 更新依賴套件
+---
 
-若要更新前端依賴套件，請在專案根目錄執行以下指令：
+## 更新依賴項
+
+### 前端依賴
+
+若要更新前端的 Tauri 相關套件，請在專案根目錄執行：
 
 ```bash
 pnpm update @tauri-apps/cli @tauri-apps/api --latest
 ```
 
-若要更新後端（Rust）依賴套件，請修改 `src-tauri` 目錄下的 `Cargo.toml` 檔案，將 `%version%` 替換為最新版本號：
+### 後端依賴 (Rust)
+
+修改 `src-tauri` 目錄下的 `Cargo.toml` 檔案，將 `%version%` 替換為最新的版本號：
 
 ```toml
 [build-dependencies]
@@ -78,108 +93,198 @@ tauri-build = "%version%"
 tauri = { version = "%version%" }
 ```
 
-修改完成後，執行以下指令更新：
+修改後，進入 `src-tauri` 目錄執行更新：
 
 ```bash
 cd src-tauri
 cargo update
 ```
 
-> 我在更新套件後，在 Android 平台有遇到 Gradle 版本不相容的問題，導致無法編譯；在 iOS 平台則是遇到 App 開啟後立刻閃退的問題。最後只能降低版本。感覺版本可能不能隨意更新 😂。
+> **提示**：更新套件後，建議刪除 `src-tauri/gen/[android|apple]` 目錄，並重新執行 `pnpm tauri [android|ios] init` 以確保環境配置正確。在 Android 平台上，建議先解除安裝舊版 App 再重新構建。
 
-## 開發 Android 平台
+---
 
-Tauri 支援 Android 應用程式開發，但需先配置 Android 開發環境。
+## Android 開發環境配置
 
-首先，請安裝 Android Studio，並透過 SDK Manager 下載以下元件：
+Tauri 支援 Android 平台，但需要預先配置 Android SDK 環境。
 
-- Android SDK Platform
-- Android SDK Platform-Tools
-- NDK (Side by side)
-- Android SDK Build-Tools
-- Android SDK Command-line Tools
+1. **安裝 Android Studio**：透過 SDK Manager 下載以下元件：
+   - Android SDK Platform
+   - Android SDK Platform-Tools
+   - NDK (Side by side)
+   - Android SDK Build-Tools
+   - Android SDK Command-line Tools
 
-接著，設定 `JAVA_HOME` 環境變數：
+2. **設定環境變數**：在 Shell 設定檔（如 `.zshrc` 或 `.bashrc`）中加入：
 
 ```bash
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
-```
-
-設定 `ANDROID_HOME` 與 `NDK_HOME` 環境變數：
-
-```bash
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 ```
 
-最後，使用 `rustup target` 新增 Android 目標平台：
+3. **新增 Rust 目標平台**：
 
 ```bash
 rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 ```
 
-## 開發 iOS 平台
+---
 
-除了 Android，Tauri 亦支援 iOS 平台開發，但需先配置 iOS 開發環境。
+## iOS 開發環境配置
 
-首先，請從 App Store 下載並安裝 **Xcode**，安裝完 Xcode 之後還需要安裝 Components 有 MacOS、iOS 與 WatchOS 等，但我們需要安裝 iOS 的 Components 即可。
-
-接著，使用 `rustup target` 新增 iOS 目標平台：
+1. **安裝 Xcode**：從 App Store 安裝後，確保已下載 iOS 相關組件（Components）。
+2. **新增 Rust 目標平台**：
 
 ```bash
 rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
 ```
 
-使用 Homebrew 安裝 CocoaPods，這是一個管理 iOS 專案的套件管理工具：
+3. **安裝 CocoaPods**：
 
 ```bash
 brew install cocoapods
 ```
 
-初始化 iOS 開發環境：
+4. **初始化 iOS 專案**：
 
 ```bash
 pnpm tauri ios init
 ```
 
-### 疑難排解
+### 疑難排解：Xcode 偵測失敗
 
-若在執行 `pnpm tauri info` 時，發現無法正確偵測到 Xcode（或顯示未安裝）。
+若執行 `pnpm tauri info` 無法正確識別 Xcode，通常是 `xcode-select` 路徑指向了錯誤的 Command Line Tools 路徑。
 
-此問題可能源於 [Github Issue #8565](https://github.com/tauri-apps/tauri/issues/8565) 中提到的 `xcode-select` 路徑設定問題。您可以執行以下指令進行檢查：
+**檢查方式**：
 
 ```bash
-xcrun -f devicectl # 檢查 devicectl 是否隨 Xcode command line tool 安裝
-xcode-select -p # 檢查 Xcode command line tool 是否指向 Xcode IDE。有時它可能指向舊版本或 Beta 版。
+xcrun -f devicectl # 若顯示 error: unable to find utility "devicectl"，則路徑有誤
+xcode-select -p # 若顯示 /Library/Developer/CommandLineTools，通常需要修正
 ```
 
-如果 `xcrun -f devicectl` 顯示錯誤如下：
-
-```text
-xcrun: error: unable to find utility "devicectl", not a developer tool or in PATH
-```
-
-且 `xcode-select -p` 顯示路徑為：
-
-```text
-/Library/Developer/CommandLineTools
-```
-
-您可以執行以下指令將路徑修正為 Xcode 應用程式路徑，以解決此問題：
+**解決方案**：
+將路徑指向實際的 Xcode 應用程式路徑：
 
 ```bash
 sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-xcrun -f devicectl
 ```
 
-執行完上述指令後，再次執行檢查指令：
+修復後再次驗證，`xcrun -f devicectl` 應能正確輸出路徑，且 `pnpm tauri info` 應可正常偵測。
+
+---
+
+## 使用 SQLite 作為本地資料庫
+
+### 1. 安裝套件與插件
+
+首先，安裝前端 SQL 介面套件：
 
 ```bash
-xcrun -f devicectl
-# 結果應該是：/Applications/Xcode.app/Contents/Developer/usr/bin/devicectl
-
-xcode-select -p
-# 結果應該是：/Applications/Xcode.app/Contents/Developer
+pnpm tauri add sql
 ```
 
-最後，再次執行 `pnpm tauri info`，應該就能正確偵測到 Xcode 了。
+接著，在 Rust 後端啟用 SQLite 特性：
+
+```bash
+cd src-tauri
+cargo add tauri-plugin-sql --features sqlite
+```
+
+### 2. 資料庫遷移 (Migrations)
+
+建立 `migrations` 資料夾，並存放對應的 SQL 檔案：
+
+```text
+migrations/
+├── 0001_create_users_table.sql
+└── 0002_create_groups_table.sql
+```
+
+在 `src-tauri/src/lib.rs` 中設定 Migration：
+
+```rust
+use tauri_plugin_sql::{Migration, MigrationKind};
+
+pub fn run() {
+    let migrations = vec![
+        Migration {
+            version: 1,
+            description: "create_users_table",
+            sql: include_str!("../migrations/0001_create_users_table.sql"),
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 2,
+            description: "create_groups_table",
+            sql: include_str!("../migrations/0002_create_groups_table.sql"),
+            kind: MigrationKind::Up,
+        },
+    ];
+
+    tauri::Builder::default()
+        .plugin(
+            tauri_plugin_sql::Builder::default()
+                .add_migrations("sqlite:mydatabase.db", migrations)
+                .build(),
+        )
+        // ... 其他 plugin 初始化
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+```
+
+> **注意**：目前 Tauri 的 Migration 功能尚不完整，雖然定義了 `MigrationKind::Down`，但實務上還無法像 Laravel 般輕鬆進行 Rollback。
+
+### 3. 資料庫儲存路徑
+
+SQLite 檔案的實際儲存位置依作業系統而定。例如在 macOS 上，通常位於：
+`/Users/<用戶名稱>/Library/Application Support/com.<開發者名稱>.<App名稱>/mydatabase.db`
+
+---
+
+## 前端讀取資料庫 (SvelteKit 範例)
+
+在 SvelteKit 的 `src/routes/+layout.ts` 中載入資料庫並執行查詢：
+
+```typescript
+import Database from "@tauri-apps/plugin-sql";
+import type { LayoutLoad } from "./$types";
+
+export const load: LayoutLoad = async () => {
+  const db = await Database.load("sqlite:mydatabase.db");
+  const tables = (await db.select(
+    "SELECT * FROM sqlite_master WHERE type='table'",
+  )) as any[];
+
+  return {
+    tables: tables,
+  };
+};
+```
+
+> **重要提示**：Tauri 應用程式不包含 Node.js 執行環境，因此不支援 SSR（伺服器端渲染）。在 SvelteKit 中，請避免使用 `+layout.server.ts` 或 `+page.server.ts`。
+
+隨後即可在子頁面 `+page.svelte` 中讀取資料：
+
+```svelte
+<script lang="ts">
+  let { data } = $props();
+</script>
+
+<main class="container mx-auto p-4">
+  <h1 class="text-lg font-bold">所有資料表</h1>
+  {#each data.tables as table}
+    <p class="mt-2 p-2 bg-white rounded shadow-sm">{table.name}</p>
+  {/each}
+</main>
+```
+
+---
+
+## 參考資料
+
+- [Tauri 官方文件 - 配置行動目標](https://v2.tauri.app/start/prerequisites/#configure-for-mobile-targets)
+- [Tauri Plugin - SQL](https://v2.tauri.app/plugin/sql/)
+- [Github Issue: Unable to find Sqlite db path](https://github.com/tauri-apps/plugins-workspace/issues/198)
+- [Github Issue: How to use "Down" migrations?](https://github.com/tauri-apps/plugins-workspace/issues/1346)
