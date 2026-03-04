@@ -66,12 +66,11 @@ CloudWatch Events (排程) ──→ Artisan Lambda (指令排程)
 
 AWS Lambda 原生支援的 Runtime 包括 Node.js、Python、Java、Go、.NET 等，但 **不包含 PHP**。[Bref](https://bref.sh/) 是一個開源專案，它透過 Lambda Layer 的機制提供 PHP Runtime，讓 PHP 應用程式能在 Lambda 上執行。
 
-Bref 提供了多種 Layer：
+Bref 提供了 x86_64 和 ARM64 架構的 Layer，本專案使用 ARM64 架構：
 
 - **PHP Layer**（`arm-php-85`）：提供 PHP Runtime，用於 Web 和 Queue Worker。
-- **Console Layer**（`console`）：提供 CLI 環境，用於執行 Artisan 指令。
 
-Layer ARN 可在 [Bref Runtimes 頁面](https://runtimes.bref.sh/) 查詢，需注意選擇正確的 AWS Region 和 CPU 架構（本專案使用 ARM64）。
+Layer ARN 可在 [Bref Runtimes 頁面](https://runtimes.bref.sh/) 查詢，需注意選擇正確的 AWS Region 和 CPU 架構。
 
 ## Terraform 檔案結構
 
@@ -97,7 +96,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.0.0"
+      version = "~> 6.0"
     }
   }
 
