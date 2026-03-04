@@ -10,7 +10,6 @@ Laravel Pennant 是一個用來管理功能旗標 (Feature Flag) 的輕量套件
 
 你可以用來管理新功能是否開放給使用者使用，當新功能尚未準備好時，可以先將功能關閉，或是只開放給部分使用者使用。
 
-
 ## 如何使用
 
 假設你有一個新的頁面只想開放給管理員使用，你可以在 `AppServiceProvider.php` 的 `boot` 方法中加入以下的程式碼：
@@ -54,7 +53,6 @@ public function boot(): void
     });
 }
 ```
-
 
 之後就可以在你的控制器中使用 `Feature::value('new-button-color')` 來取得功能旗標的值。
 
