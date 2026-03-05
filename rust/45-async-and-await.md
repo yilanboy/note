@@ -89,14 +89,14 @@ async fn page_title(url: &str) -> Option<String> {
 
 宣告好非同步函式後該如何去執行它？因為 Rust 本身不提供執行非同步程式的 Runtime，所以我們必須要使用 `trpl::block_on()`。
 
-`trpl::block_on()` 可以接收一個 `async` 函式或區塊，它會**阻塞主程序並等待這個 `async` 完成**。
+`trpl::block_on()` 可以接收一個 `async` 函式或區塊，它會**阻塞主程式並等待這個 `async` 完成**。
 
 ```rust
 // ⚠️ main 函式作為程式的進入點，不可以加上 async 關鍵字
 fn main() {
     let url = String::from("https://www.rust-lang.org");
 
-    // 透過 block_on 阻塞主程序並等待傳入的 async 區塊完成
+    // 透過 block_on 阻塞主程式並等待傳入的 async 區塊完成
     trpl::block_on(async {
         // ⚠️ 因為 async 區塊會回傳 Future，所以這裡需要使用 .await 來取得結果
         match page_title(&url).await {
@@ -157,7 +157,7 @@ fn main() {
 
 > 為什麼 `main()` 不能加上 `async` 關鍵字？
 >
-> 仔細想想，狀態機需要一個 Runtime 去管理，但如果執行 Runtime 的入口點 `main()` 變成一個狀態機，那麼誰可以管理這個狀態機呢？Runtime 根本還執行啊！
+> 仔細想想，狀態機需要一個 Runtime 去管理，但如果執行 Runtime 的入口點 `main()` 變成一個狀態機，那麼誰可以管理這個狀態機呢？Runtime 根本還沒執行啊！
 
 ## 非同步在哪裡？
 
@@ -220,15 +220,15 @@ async fn page_title(url: &str) -> (&str, Option<String>) {
 
 我們也可以使用執行緒來同時執行多個任務，那麼這個做法與非同步有什麼不同？
 
-### 使用執行緒執行多個任務
+### 使用 spawn_task 執行多個任務
 
 ```rust
 use std::time::Duration;
 
 fn main() {
     trpl::block_on(async {
-        // 這個 spawn_task 額外建立一個執行緒來執行任務
-        // ⚠️ 但是這個任務並不會完整執行，因為執行到一半，主程序就會結束了
+        // spawn_task 會在 Runtime 上產生一個新的非同步任務（async task）
+        // ⚠️ 但是這個任務並不會完整執行，因為執行到一半，主程式就會結束了
         trpl::spawn_task(async {
             for i in 1..10 {
                 println!("hi number {i} from the first task!");
@@ -236,7 +236,7 @@ fn main() {
             }
         });
 
-        // ⚠️ 主程序在這個迴圈執行完畢後立刻結束
+        // ⚠️ 主程式在這個迴圈執行完畢後立刻結束
         for i in 1..5 {
             println!("hi number {i} from the second task!");
             trpl::sleep(Duration::from_millis(500)).await;
@@ -245,7 +245,7 @@ fn main() {
 }
 ```
 
-執行結果如下，可以看到第一個任務並沒有完整執行，因為主程序在這個迴圈執行完畢後立刻結束。需要注意的是，每次執行時，打印順序都會不太一樣：
+執行結果如下，可以看到第一個任務並沒有完整執行，因為主程式在這個迴圈執行完畢後立刻結束。需要注意的是，每次執行時，打印順序都會不太一樣：
 
 ```text
 hi number 1 from the first task!
@@ -278,7 +278,7 @@ fn main() {
             trpl::sleep(Duration::from_millis(500)).await;
         }
 
-        // 確保第一個任務結束後才結束主程序
+        // 確保第一個任務結束後才結束主程式
         handle.await.unwrap();
     });
 }
@@ -387,7 +387,7 @@ fn main() {
 
 如果一個 Future 遲遲無法完成，那麼它會霸佔 Runtime 導致執行時間過長，餓死（Starving）其他任務。如何避免這種情況？
 
-以下面的程式碼為例，在耗時的任務間依序使用 `.await`，可以將控制權交還給 Runtime，這樣 Runtime 就可以去檢查其他任務是否已經準備好，並執行它們，藉此加快程序的執行速度。
+以下面的程式碼為例，在耗時的任務間依序使用 `.await`，可以將控制權交還給 Runtime，這樣 Runtime 就可以去檢查其他任務是否已經準備好，並執行它們，藉此加快程式的執行速度。
 
 ```rust
 use std::{thread, time::Duration};
@@ -403,7 +403,7 @@ fn main() {
         let one_ms = Duration::from_millis(1);
 
         // 在耗時的任務間依序使用 await，可以將控制權交還給 Runtime
-        // 這樣 Runtime 就可以去檢查其他任務是否已經準備好，並執行它們，藉此加快程序的執行速度
+        // 這樣 Runtime 就可以去檢查其他任務是否已經準備好，並執行它們，藉此加快程式的執行速度
         let a = async {
             println!("'a' started.");
             slow("a", 300);
@@ -498,7 +498,7 @@ fn main() {
 }
 
 async fn timeout<F: Future>(future_to_try: F, max_time: Duration) -> Result<F::Output, Duration> {
-    // trpl::select 會優先執行第一個參數的 Future，所以我們將要執行的非同步函式放在第一個參數
+    // trpl::select 會優先輪詢（poll）第一個參數的 Future，所以我們將要執行的非同步函式放在第一個參數
     match trpl::select(future_to_try, trpl::sleep(max_time)).await {
         Either::Left(output) => Ok(output),
         Either::Right(_) => Err(max_time),
@@ -589,16 +589,16 @@ match page_title(url).poll() {
 
 ### 如何呼叫 `poll()` 直到返回 Ready？
 
-那當然是用迴圈了，但是需要注意的是 `await` 的實作並不是用這種做法。因為這種做法代表在回傳 Ready 前，程序會被整個阻塞住。
+那當然是用迴圈了，但是需要注意的是 `await` 的實作並不是用這種做法。因為這種做法代表在回傳 Ready 前，程式會被整個阻塞住。
 
 ```rust
 let mut page_title_fut = page_title(url);
 
 // 注意 await 的實作並不是用這種做法
-// 因為這種做法代表在回傳 Ready 前，程序會被整個阻塞住
+// 因為這種做法代表在回傳 Ready 前，程式會被整個阻塞住
 loop {
     match page_title_fut.poll() {
-        Ready(value) => match page_title {
+        Ready(value) => match value {
             Some(title) => println!("The title for {url} was {title}"),
             None => println!("{url} had no title"),
         }
