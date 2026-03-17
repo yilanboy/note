@@ -18,9 +18,6 @@ nav_order: 1
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "features": {
-    "edit_prediction_provider": "copilot"
-  },
   "base_keymap": "JetBrains",
   "theme": {
     "mode": "system",
@@ -53,11 +50,11 @@ nav_order: 1
     }
   },
   "vim_mode": true,
-  "relative_line_numbers": true
+  "relative_line_numbers": "enabled"
 }
 ```
 
-Keymap 設定
+Keymap 設定（包含 Vim 模式）：
 
 ```json
 // Zed keymap
