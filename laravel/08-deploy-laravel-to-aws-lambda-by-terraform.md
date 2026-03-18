@@ -261,11 +261,13 @@ IAM Policy 授予的權限包括：
 
 ### Lambda — 三個 Function 的定義
 
-以 Web Lambda 為例：
+與 v2 相同，Laravel 的 Function 可以分為 Web、Artisan、Jobs Worker 三個 Function。
+
+Web Lambda 的範例如下：
 
 ```hcl
-resource "aws_lambda_function" "web_lambda_function" {
-  filename         = var.filename                    # Laravel 應用程式壓縮檔
+resource "aws_lambda_function" "web" {
+  filename         = var.filename                     # Laravel 應用程式壓縮檔
   source_code_hash = filesha256(var.filename)         # 偵測程式碼變更
   handler          = "Bref\\LaravelBridge\\Http\\OctaneHandler"
   runtime          = var.lambda_runtime               # provided.al2023
@@ -274,18 +276,21 @@ resource "aws_lambda_function" "web_lambda_function" {
   timeout          = 28                               # API Gateway 逾時為 30 秒
   architectures    = ["arm64"]                        # ARM 架構較便宜
   role             = aws_iam_role.lambda_execution.arn
-  layers           = [var.php_lambda_layer_arn]        # Bref PHP Layer
+  layers           = [var.php_lambda_layer_arn]       # Bref PHP Layer
 
   environment {
-    variables = merge({
-      BREF_LOOP_MAX                    = "250"
-      OCTANE_PERSIST_DATABASE_SESSIONS = "1"
-      DYNAMODB_CACHE_TABLE             = aws_dynamodb_table.cache_table.name
-      SQS_QUEUE                        = aws_sqs_queue.jobs_queue.url
-      BREF_RUNTIME                     = "Bref\\FunctionRuntime\\Main"
-      LOG_CHANNEL                      = "stderr"
-      LOG_STDERR_FORMATTER             = "Bref\\Monolog\\CloudWatchFormatter"
-    }, jsondecode(file(var.environment_variables_json_file)))
+    variables = merge(
+      jsondecode(file(var.environment_variables_json_file)),
+      {
+        BREF_RUNTIME                     = "Bref\\FunctionRuntime\\Main"
+        BREF_LOOP_MAX                    = "250"
+        OCTANE_PERSIST_DATABASE_SESSIONS = "1"
+        LOG_CHANNEL                      = "stderr"
+        LOG_STDERR_FORMATTER             = "Bref\\Monolog\\CloudWatchFormatter"
+        DYNAMODB_CACHE_TABLE             = aws_dynamodb_table.cache.name
+        SQS_QUEUE                        = aws_sqs_queue.jobs.url
+      }
+    )
   }
 
   # VPC 設定（選用）
@@ -301,6 +306,104 @@ resource "aws_lambda_function" "web_lambda_function" {
   # EFS 檔案系統（選用）
   dynamic "file_system_config" {
     for_each = var.enable_filesystem ? ["apply"] : []
+    content {
+      arn              = var.access_point_arn
+      local_mount_path = "/mnt/efs"
+    }
+  }
+}
+```
+
+Artisan Lambda 的範例如下：
+
+```hcl
+resource "aws_lambda_function" "artisan" {
+  filename         = var.filename
+  source_code_hash = filesha256(var.filename)
+  handler          = "artisan"
+  runtime          = var.lambda_runtime
+  function_name    = "${local.app_name}-artisan"
+  memory_size      = var.lambda_memory_size
+  timeout          = 720
+  architectures    = ["arm64"]
+  role             = aws_iam_role.lambda_execution.arn
+  layers           = [var.php_lambda_layer_arn]
+
+  environment {
+    variables = merge(
+      jsondecode(file(var.environment_variables_json_file)),
+      {
+        BREF_RUNTIME         = "Bref\\ConsoleRuntime\\Main"
+        LOG_CHANNEL          = "stderr"
+        LOG_STDERR_FORMATTER = "Bref\\Monolog\\CloudWatchFormatter"
+        DYNAMODB_CACHE_TABLE = aws_dynamodb_table.cache.name
+        SQS_QUEUE            = aws_sqs_queue.jobs.url
+      }
+    )
+  }
+
+  dynamic "vpc_config" {
+    for_each = var.enable_vpc ? ["apply"] : []
+
+    content {
+      subnet_ids                  = var.subnet_ids
+      security_group_ids          = var.security_group_ids
+      ipv6_allowed_for_dual_stack = true
+    }
+  }
+
+  dynamic "file_system_config" {
+    for_each = var.enable_filesystem ? ["apply"] : []
+
+    content {
+      arn              = var.access_point_arn
+      local_mount_path = "/mnt/efs"
+    }
+  }
+}
+```
+
+Jobs Worker Lambda 的範例如下：
+
+```hcl
+resource "aws_lambda_function" "jobs_worker" {
+  filename         = var.filename
+  source_code_hash = filesha256(var.filename)
+  handler          = "Bref\\LaravelBridge\\Queue\\QueueHandler"
+  runtime          = var.lambda_runtime
+  function_name    = "${local.app_name}-jobs-worker"
+  memory_size      = var.lambda_memory_size
+  timeout          = 60
+  architectures    = ["arm64"]
+  role             = aws_iam_role.lambda_execution.arn
+  layers           = [var.php_lambda_layer_arn]
+
+  environment {
+    variables = merge(
+      jsondecode(file(var.environment_variables_json_file)),
+      {
+        BREF_RUNTIME         = "Bref\\FunctionRuntime\\Main" # Jobs Worker 與 Web 相同，都是使用 FunctionRuntime
+        LOG_CHANNEL          = "stderr"
+        LOG_STDERR_FORMATTER = "Bref\\Monolog\\CloudWatchFormatter"
+        DYNAMODB_CACHE_TABLE = aws_dynamodb_table.cache.name
+        SQS_QUEUE            = aws_sqs_queue.jobs.url
+      }
+    )
+  }
+
+  dynamic "vpc_config" {
+    for_each = var.enable_vpc ? ["apply"] : []
+
+    content {
+      subnet_ids                  = var.subnet_ids
+      security_group_ids          = var.security_group_ids
+      ipv6_allowed_for_dual_stack = true
+    }
+  }
+
+  dynamic "file_system_config" {
+    for_each = var.enable_filesystem ? ["apply"] : []
+
     content {
       arn              = var.access_point_arn
       local_mount_path = "/mnt/efs"
