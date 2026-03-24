@@ -53,6 +53,39 @@ docker start aws-sigv4-proxy
 curl -s --noproxy "*" -X POST "http://localhost:8080/topics/${TITLE}?qos=1&retain=true" -H 'host: data-ats.iot.us-west-2.amazonaws.com' -d ''
 ```
 
+或是從 STS（Security Token Service）取得暫時性的 Token。
+
+```bash
+SIGV4_PROXY_ENDPOINT_IP="127.0.0.1"
+SIGV4_PROXY_PORT=3128
+
+# perform iam-assume role
+ASSUME_ROLE_ARN=arn:aws:iam::100999444666:role/prometheus-reader
+# create a temp file
+ASSUME_ROLE_RESPONES_FILENAME=$(mktemp)
+
+curl --noproxy "*" -s -X POST \
+  -H "Host: sts.amazonaws.com" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "Action=AssumeRole" \
+  -d "Version=2011-06-15" \
+  -d "RoleArn=${ASSUME_ROLE_ARN}" \
+  -d "RoleSessionName=$(hostname)" \
+  -o ${ASSUME_ROLE_RESPONES_FILENAME} \
+  http://${PROMETHEUS_HUB_ENDPOINT_IP}:${SIGV4_PROXY_PORT}/
+
+# get the session token related variables
+ASSUME_ROLE_RESPONSE_ARN=$(xq -x /AssumeRoleResponse/AssumeRoleResult/AssumedRoleUser/Arn ${ASSUME_ROLE_RESPONES_FILENAME} | tail -1)
+
+ASSUME_ROLE_RESPONSE_ACCESS_KEY_ID=$(xq -x /AssumeRoleResponse/AssumeRoleResult/Credentials/AccessKeyId ${ASSUME_ROLE_RESPONES_FILENAME} | tail -1)
+
+ASSUME_ROLE_RESPONSE_SECRET_ACCESS_KEY=$(xq -x /AssumeRoleResponse/AssumeRoleResult/Credentials/SecretAccessKey ${ASSUME_ROLE_RESPONES_FILENAME} | tail -1)
+
+ASSUME_ROLE_RESPONSE_SESSION_TOKEN=$(xq -x /AssumeRoleResponse/AssumeRoleResult/Credentials/SessionToken ${ASSUME_ROLE_RESPONES_FILENAME} | tail -1)
+
+rm -f ${ASSUME_ROLE_RESPONES_FILENAME}
+```
+
 ## 參考資料
 
 - [AWS Sigv4 in 3 mins](https://towardsaws.com/aws-sigv4-in-3-mins-c324d20f19cf)
