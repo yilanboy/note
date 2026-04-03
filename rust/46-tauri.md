@@ -108,14 +108,14 @@ cargo update
 
 Tauri 支援 Android 平台，但需要預先配置 Android SDK 環境。
 
-1. **安裝 Android Studio**：透過 SDK Manager 下載以下元件：
-   - Android SDK Platform
-   - Android SDK Platform-Tools
-   - NDK (Side by side)
-   - Android SDK Build-Tools
-   - Android SDK Command-line Tools
+- **安裝 Android Studio**：透過 SDK Manager 下載以下元件：
+  - Android SDK Platform
+  - Android SDK Platform-Tools
+  - NDK (Side by side)
+  - Android SDK Build-Tools
+  - Android SDK Command-line Tools
 
-2. **設定環境變數**：在 Shell 設定檔（如 `.zshrc` 或 `.bashrc`）中加入：
+- **設定環境變數**：在 Shell 設定檔（如 `.zshrc` 或 `.bashrc`）中加入：
 
 ```bash
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
@@ -123,7 +123,7 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
 ```
 
-3. **新增 Rust 目標平台**：
+- **新增 Rust 目標平台**：
 
 ```bash
 rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
@@ -133,20 +133,21 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 
 ## iOS 開發環境配置
 
-1. **安裝 Xcode**：從 App Store 安裝後，確保已下載 iOS 相關組件（Components）。
-2. **新增 Rust 目標平台**：
+- **安裝 Xcode**：從 App Store 安裝後，確保已下載 iOS 相關組件（Components）。
+
+- **新增 Rust 目標平台**：
 
 ```bash
 rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
 ```
 
-3. **安裝 CocoaPods**：
+- **安裝 CocoaPods**：
 
 ```bash
 brew install cocoapods
 ```
 
-4. **初始化 iOS 專案**：
+- **初始化 iOS 專案**：
 
 ```bash
 pnpm tauri ios init
@@ -236,10 +237,25 @@ pub fn run() {
 
 > **注意**：目前 Tauri 的 Migration 功能尚不完整，雖然定義了 `MigrationKind::Down`，但實務上還無法像 Laravel 般輕鬆進行 Rollback。
 
+#### 疑難排解：Migration 錯誤 (已套用但被修改)
+
+在開發過程中，如果修改了已經執行過的 Migration SQL 檔案（例如：修改了某個資料表的欄位定義），在執行應用程式時，可能會遇到 `migration x was previously applied but has been modified` 的錯誤。
+
+因此建議對任何資料表的修改，**都透過新的 Migration 檔案來修改**。
+
+**解決方案**：
+
+- **重置資料庫（開發環境下最直接有效）**：在不保留既有資料的前提下，最簡單且直接的解法是 **直接刪除本地的 SQLite 資料庫檔案**（例如 `mydatabase.db`），然後重新啟動程式讓所有 Migration 重新跑一次。有時也可搭配 `cargo clean` 清除編譯快取來確保環境乾淨。
+
+> 詳見 SQLx 討論區：[Sometimes getting "migration x was previously applied but has been modified" error even after resetting database](https://github.com/launchbadge/sqlx/discussions/1292)
+
 ### 3. 資料庫儲存路徑
 
 SQLite 檔案的實際儲存位置依作業系統而定。例如在 macOS 上，通常位於：
-`/Users/<用戶名稱>/Library/Application Support/com.<開發者名稱>.<App名稱>/mydatabase.db`
+
+```text
+'/Users/<用戶名稱>/Library/Application Support/com.<開發者名稱>.<App名稱>/mydatabase.db'
+```
 
 ---
 
