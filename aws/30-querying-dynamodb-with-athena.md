@@ -152,34 +152,12 @@ resource "aws_athena_data_catalog" "dynamodb" {
 }
 ```
 
-這是整個架構的核心：建立一個 `FEDERATED` 類型的 Athena Data Catalog。
+這是整個架構的核心：建立一個 `LAMBDA` 類型的 Athena Data Catalog。
 
-- `type = "FEDERATED"` 告訴 Athena 這個 Catalog 要透過 Lambda Connector 存取外部資料來源
+- `type = "LAMBDA"` 告訴 Athena 這個 Catalog 要透過 Lambda Connector 存取外部資料來源
 - `name` 必須與 CloudFormation Stack 中的 `AthenaCatalogName` 相同
 - `depends_on` 確保 Lambda Connector 先部署完成才建立 Catalog
 - Data Catalog 名稱不可使用保留字：`awsdatacatalog`、`hive`、`jmx`、`system`
-
-### 5. Glue Catalog Database
-
-```hcl
-resource "aws_glue_catalog_database" "dynamodb" {
-  name         = "dynamodb_database"
-  description  = "Glue catalog database for querying DynamoDB tables via Athena"
-  location_uri = "dynamo-db-flag"
-}
-```
-
-在 Glue Data Catalog 建立一個 database，用來組織 DynamoDB 表格的 schema metadata。`location_uri = "dynamo-db-flag"` 是 AthenaDynamoDBConnector 辨識這個 database 對應到 DynamoDB 的特殊旗標值，缺少這個值 Connector 將無法正確識別資料來源。
-
-如果在 Glue 中手動建立 Table 來描述 DynamoDB 的 schema，可以設定以下 Table Properties：
-
-| 屬性                                            | 說明                                                     |
-| ----------------------------------------------- | -------------------------------------------------------- |
-| `classification = "dynamodb"`                   | 必填，告知 Connector 這張表對應 DynamoDB                 |
-| `sourceTable = <table_name>`                    | 選填，當 Glue Table 名稱與 DynamoDB Table 名稱不同時使用 |
-| `columnMapping = col1=Col1,col2=Col2`           | 選填，欄位名稱大小寫對應映射                             |
-| `defaultTimeZone = <timezone>`                  | 選填，時區設定                                           |
-| `datetimeFormatMapping = col=yyyyMMdd'T'HHmmss` | 選填，自訂日期時間格式                                   |
 
 ### 6. Query Results Bucket 與 Workgroup
 
@@ -231,49 +209,9 @@ terraform apply
 
 ```sql
 SELECT *
-FROM "dynamodb-connector-catalog"."dynamodb_database"."my_table"
+FROM "dynamodb-connector-catalog"."default"."my_table"
 LIMIT 100;
 ```
-
-### 過濾條件
-
-Connector 支援 Predicate Pushdown，以下運算子會被下推到 DynamoDB 層執行，減少資料傳輸量：
-
-| 類型 | 支援的運算子                               |
-| ---- | ------------------------------------------ |
-| 邏輯 | `AND`                                      |
-| 比較 | `=`、`!=`、`<`、`<=`、`>`、`>=`、`IS NULL` |
-
-```sql
-SELECT user_id, name, created_at
-FROM "dynamodb-connector-catalog"."dynamodb_database"."users"
-WHERE status = 'active'
-  AND created_at > '2025-01-01';
-```
-
-### 聚合查詢
-
-```sql
-SELECT status, COUNT(*) as count
-FROM "dynamodb-connector-catalog"."dynamodb_database"."orders"
-GROUP BY status
-ORDER BY count DESC;
-```
-
-### Passthrough Query（PartiQL 直接下推）
-
-若需要使用 DynamoDB 原生的 PartiQL 語法（例如存取巢狀屬性或陣列），可以使用 Passthrough Query：
-
-```sql
-SELECT * FROM TABLE(
-    system.query(
-        query => 'SELECT Devices FROM WatchList
-                  WHERE Devices.FireStick.DateWatched[0] > ''2024-01-01'''
-    )
-)
-```
-
-Passthrough Query 會把 PartiQL 直接送到 DynamoDB 執行，繞過 Athena 的 SQL 解析層，適合處理複雜的巢狀結構資料。
 
 ## 功能限制
 
