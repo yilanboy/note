@@ -237,6 +237,8 @@ pub fn run() {
 
 > **注意**：目前 Tauri 的 Migration 功能尚不完整，雖然定義了 `MigrationKind::Down`，但實務上還無法像 Laravel 般輕鬆進行 Rollback。
 
+Tauri 會檢查 SQL 檔案中的 SQL 語法是否已被執行過，**若已執行過，則不會再次執行**。
+
 #### 疑難排解：Migration 錯誤 (已套用但被修改)
 
 在開發過程中，如果修改了已經執行過的 Migration SQL 檔案（例如：修改了某個資料表的欄位定義），在執行應用程式時，可能會遇到 `migration x was previously applied but has been modified` 的錯誤。
