@@ -136,7 +136,7 @@ AWS 在 Serverless Application Repository（SAR）上提供了官方的 `AthenaD
 4. 填入 `AthenaCatalogName` 和 `SpillBucket` 等參數
 5. 勾選 IAM 確認並點擊 **Deploy**
 
-### 4. Athena Data Catalog（Federated）
+### 4. Athena Data Catalog（Lambda）
 
 ```hcl
 resource "aws_athena_data_catalog" "dynamodb" {
@@ -144,12 +144,10 @@ resource "aws_athena_data_catalog" "dynamodb" {
 
   name        = "dynamodb-connector-catalog"
   description = "Athena data source for querying DynamoDB via federated query"
-  type        = "FEDERATED"
+  type        = "LAMBDA"
 
-  parameters = {}
-
-  tags = {
-    federated_athena_datacatalog = true
+  parameters = {
+    function = "arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:dynamodb-connector-catalog"
   }
 }
 ```
@@ -160,16 +158,6 @@ resource "aws_athena_data_catalog" "dynamodb" {
 - `name` 必須與 CloudFormation Stack 中的 `AthenaCatalogName` 相同
 - `depends_on` 確保 Lambda Connector 先部署完成才建立 Catalog
 - Data Catalog 名稱不可使用保留字：`awsdatacatalog`、`hive`、`jmx`、`system`
-
-> **注意：`parameters` 為空也能正常運作**
->
-> `aws_athena_data_catalog` 這個 Terraform resource 本身並不完整代表 DynamoDB Connector 的設定。Connector 的核心設定（Lambda Function、IAM Role、Spill Bucket 等）實際上是由上一步的 SAR CloudFormation Stack 負責建立與維護的。Athena Data Catalog 只是一個「指向」該 Connector 的入口，因此 `parameters = {}` 即使是空的，整個查詢機制也能正常運作。
->
-> 若是先在 AWS Console 手動建立 Data Catalog，**Data Source 選擇 Custom Lambda**，之後再用 `terraform import` 納入管理，同樣可以正常使用，import 指令如下：
->
-> ```bash
-> terraform import aws_athena_data_catalog.dynamodb dynamodb-connector-catalog
-> ```
 
 ### 5. Glue Catalog Database
 
