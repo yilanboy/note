@@ -48,18 +48,73 @@ aws ecs run-task \
 
 > Amazon ECR 儲存庫必須先存在，才能推送 Image。
 
-首先在 Docker 中建立 Amazon ECR 的登錄檔，這樣才有權限推送 Image 到 ECR。
+### 所需 IAM 權限
+
+從 EC2 上使用 Docker 推送 Image 到 ECR，EC2 的 Instance Profile (或執行指令的 IAM User) 需要以下權限：
+
+| 權限                              | 用途                                            |
+| --------------------------------- | ----------------------------------------------- |
+| `ecr:GetAuthorizationToken`       | 透過 `aws ecr get-login-password` 取得登入憑證  |
+| `ecr:BatchCheckLayerAvailability` | 檢查 Image Layer 是否已存在於 ECR，避免重複上傳 |
+| `ecr:InitiateLayerUpload`         | 開始上傳 Image Layer                            |
+| `ecr:UploadLayerPart`             | 分段上傳 Image Layer                            |
+| `ecr:CompleteLayerUpload`         | 完成 Image Layer 上傳                           |
+| `ecr:PutImage`                    | 上傳 Image manifest，正式註冊 Image             |
+
+若只是要從 ECR **拉取 Image** (例如 EC2 啟動時 `docker pull`)，則只需要：
+
+| 權限                              | 用途                        |
+| --------------------------------- | --------------------------- |
+| `ecr:GetAuthorizationToken`       | 取得登入憑證                |
+| `ecr:BatchCheckLayerAvailability` | 檢查 Layer 是否存在         |
+| `ecr:GetDownloadUrlForLayer`      | 取得 Image Layer 的下載 URL |
+| `ecr:BatchGetImage`               | 取得 Image manifest         |
+
+> AWS 有提供 Managed Policy：`AmazonEC2ContainerRegistryPowerUser` (推送+拉取)、`AmazonEC2ContainerRegistryReadOnly` (僅拉取)，可以直接掛在 IAM Role 上使用。
+
+### 登入 ECR
+
+在 Docker 中建立 Amazon ECR 的登入憑證，這樣才有權限推送 Image 到 ECR。
 
 ```bash
 aws ecr get-login-password --region REGION | docker login --username AWS --password-stdin AWS_ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com
 ```
 
-建立你的 Image 並推送到 ECR.
+其中 `REGION` 與 `AWS_ACCOUNT_ID` 可以這樣取得：
+
+```bash
+# 取得目前 AWS CLI 設定的 Region
+REGION=$(aws configure get region)
+
+# 或從 EC2 Instance Metadata 取得 (IMDSv2)
+TOKEN=$(curl -sX PUT "http://169.254.169.254/latest/api/token" \
+    -H "X-aws-ec2-metadata-token-ttl-seconds: 60")
+REGION=$(curl -sH "X-aws-ec2-metadata-token: $TOKEN" \
+    http://169.254.169.254/latest/meta-data/placement/region)
+
+# 取得目前身份的 AWS Account ID
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+```
+
+組合起來會像這樣：
+
+```bash
+REGION=$(aws configure get region)
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+aws ecr get-login-password --region "$REGION" \
+    | docker login --username AWS \
+        --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com"
+```
+
+### 建立 Image 並推送
+
+建立你的 Image 並推送到 ECR。
 
 ```bash
 docker buildx build \
     --platform linux/arm64 \
-    --push -t AWS_ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/IMAGE_NAME:latest .
+    --push -t "$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/IMAGE_NAME:latest" .
 ```
 
 ## SAA 題庫筆記
