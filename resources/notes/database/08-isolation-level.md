@@ -1,51 +1,79 @@
-# Isolation Level
+# 資料庫隔離級別 (Transaction Isolation Level)
 
-## 什麼是隔離級別 (Isolation Level)？
+## 什麼是交易 (Transaction)？
 
-Isolation Level 是資料庫管理系統 (Database Management System, DBMS) 提供的一種功能，用來控制多個交易 (Transaction) 之間的互動。當多個交易同時存取資料庫時，可能會發生一些問題，例如：
+在資料庫中，交易是指一組作為單一邏輯工作單元的資料庫操作。這些操作要麼全部成功，要麼全部失敗，以確保資料的完整性和一致性 (Atomicity)。
 
-- Dirty Read (髒讀) 是指在一個交易 (Transaction) 中，能夠讀取到另一個尚未提交 (uncommitted) 事務所修改的資料。
-  - 如果那個尚未提交的事務後來進行回滾 (Rollback)，那麼已經讀到該筆舊資料或中途狀態資料的交易，就讀到了一個「髒」的數據 -- 意即沒有真正被最終確定下來的數據。
-  - Dirty Read 通常發生在最低的隔離級別，也就是 Read Uncommitted，但這個隔離級別並不常使用，目前主流資料庫預設的級別都是 Read Committed。
-- Non-Repeatable Read：一個交易讀取到另一個交易已提交的資料，但在同一個交易中，再次讀取時，資料已經被修改。
-- Phantom Read：一個交易讀取到另一個交易已提交的資料，但在同一個交易中，再次讀取時，資料筆數已經增加或減少。
+當多個交易同時對資料庫進行讀寫時，如果沒有適當的隔離機制，就可能引發資料不一致的問題。
 
-這些問題都是因為多個交易同時存取資料庫時，資料庫管理系統沒有提供足夠的隔離性，導致資料不一致。
+## 三種常見的資料讀取問題
 
-## 隔離級別 (Isolation Level)
+在高併發情境下，若不對交易進行隔離，可能出現以下三種常見的讀取問題：
 
-為了解決這些問題，資料庫管理系統提供了不同的隔離級別 (Isolation Level)。不同的隔離級別提供不同的隔離性，也就是不同的交易之間的互動程度。
+1.  **Dirty Read (髒讀)**
+    - **情境**：交易 A 修改了一筆資料，但尚未提交 (commit)，此時交易 B 讀取了這筆被修改過但未提交的資料。如果交易 A 最終因為某些原因而回滾 (rollback)，那麼交易 B 讀到的就是一筆從未真正存在過的「髒」資料。
+    - **比喻**：老闆跟你說下個月要加薪，你很高興地告訴了家人。結果隔天老闆說公司財務有困難，加薪取消了。你家人得到的就是一個「髒」資訊。
 
-常見的隔離級別有四個：
+2.  **Non-Repeatable Read (不可重複讀)**
+    - **情境**：在同一個交易內，兩次讀取同一筆資料，但返回的結果卻不同。這是因為在兩次讀取之間，有另一個交易修改了這筆資料並已提交。
+    - **精準的說法**：「在同一個交易內，多次讀取同一筆資料卻返回不同的值」。
+    - **比喻**：你第一次查機票價格是 5000 元，還在考慮時，航空公司調整了票價，你第二次查詢時，價格變成了 5500 元。
 
-1. Read Uncommitted
-2. Read Committed
-3. Repeatable Read
-4. Serializable
+3.  **Phantom Read (幻讀)**
+    - **情境**：在同一個交易內，兩次執行相同的範圍查詢 (range query)，但第二次查詢返回的結果集包含了第一次查詢時不存在的「幻影」資料列。這是因為在兩次查詢之間，有另一個交易新增或刪除了符合查詢條件的資料。
+    - **與 Non-Repeatable Read 的區別**：不可重複讀是針對「單一資料列」的修改，而幻讀是針對「多筆資料列」的新增或刪除。
+    - **比喻**：你第一次統計你們部門有 10 個人，在你統計的過程中，人資部門新招了一位員工並加到你們部門，你再次統計時，發現變成了 11 個人。
 
-### Read Uncommitted
+## 四種隔離級別 (Isolation Levels)
 
-Read Uncommitted 是最低的隔離級別，它允許交易讀取到其他交易尚未提交的資料。這個隔離級別的問題最多，因為它允許 Dirty Read、Non-Repeatable Read 和 Phantom Read。
+為了解決上述問題，SQL 標準定義了四種隔離級別，隔離強度由低到高排列： 
 
-### Read Committed
+| 隔離級別 | Dirty Read | Non-Repeatable Read | Phantom Read |
+| :--- | :---: | :---: | :---: |
+| **Read Uncommitted** | 可能發生 | 可能發生 | 可能發生 |
+| **Read Committed** | 不會發生 | 可能發生 | 可能發生 |
+| **Repeatable Read** | 不會發生 | 不會發生 | 可能發生 |
+| **Serializable** | 不會發生 | 不會發生 | 不會發生 |
 
-Read Committed 是一個比較常見的隔離級別，它保證一個交易只能讀取到其他交易已經提交的資料。這樣可以避免 Dirty Read，但仍然可能發生 Non-Repeatable Read 和 Phantom Read。
+### 1. Read Uncommitted (讀取未提交)
 
-### Repeatable Read
+- **特性**：最低的隔離級別，允許交易讀取其他交易尚未提交的變更。效能最好，但資料一致性最差。
+- **解決問題**：無。
+- **使用情境**：極少使用。適用於對資料一致性要求極低，可以接受讀到「髒」資料的場景，例如監控系統的非精確數據統計。
 
-Repeatable Read 是一個比較嚴格的隔離級別，它保證一個交易在同一個交易中多次讀取同一筆資料時，資料不會被修改。這樣可以避免 Non-Repeatable Read，但仍然可能發生 Phantom Read。
+### 2. Read Committed (讀取已提交)
 
-### Serializable
+- **特性**：保證一個交易只能讀取到其他交易已經提交的資料，解決了髒讀問題。這是大多數資料庫（如 PostgreSQL, SQL Server, Oracle）預設的隔離級別。
+- **解決問題**：Dirty Read。
+- **使用情境**：適用於大多數的一般應用。在這種級別下，可以避免讀到無效資料，但對於需要多次讀取同一資料並保證結果一致的報表或複雜查詢，可能就不夠用。
 
-Serializable 是最嚴格的隔離級別，它保證一個交易在同一個交易中多次讀取同一筆資料時，資料不會被修改，並且保證一個交易在同一個交易中多次讀取同一筆資料時，資料的筆數不會被修改。這樣可以避免 Non-Repeatable Read 和 Phantom Read。
+### 3. Repeatable Read (可重複讀)
 
-## 隔離級別的選擇
+- **特性**：保證在同一個交易中，多次讀取同一筆資料的結果都是一樣的，解決了不可重複讀的問題。MySQL (InnoDB) 的預設隔離級別。
+- **解決問題**：Dirty Read, Non-Repeatable Read。
+- **使用情境**：當應用需要確保在一一個交易過程中，所依賴的資料不會被其他交易修改時。例如，一個需要先讀取帳戶餘額，然後根據餘額進行一系列計算和更新的金融交易。如果餘額在計算過程中被改變，可能導致錯誤的結果。
 
-不同的隔離級別提供不同的隔離性，也就是不同的交易之間的互動程度。一般來說，隔離級別越高，資料庫管理系統的效能就越差，因為需要更多的鎖來保證隔離性。
+### 4. Serializable (可序列化)
 
-在選擇隔離級別時，需要根據應用的需求來決定。如果應用需要高度的隔離性，可以選擇 Serializable；如果應用對隔離性要求不高，可以選擇 Read Committed。
+- **特性**：最高的隔離級別，透過鎖定機制，強制交易順序執行，完全避免了上述所有讀取問題，如同所有交易都是一個接一個地執行。效能最差，但資料一致性最好。
+- **解決問題**：Dirty Read, Non-Repeatable Read, Phantom Read。
+- **使用情境**：對資料一致性要求極高的場景。例如，在需要確保資料絕對準確無誤的金融系統或庫存管理系統中。如果一個操作需要讀取庫存，計算後更新，那麼在整個過程中，絕對不能有其他交易來修改庫存數量，否則會導致超賣或庫存數據混亂。
+
+## 如何選擇隔離級別？
+
+選擇隔離級別需要在「資料一致性」和「系統效能」之間做出權衡：
+
+- **隔離級別越高**：資料越一致、越安全，但需要更多的鎖定機制，導致資料庫併發效能越低。
+- **隔離級別越低**：資料庫併發效能越高，但資料一致性的風險也越大。
+
+**總結建議**：
+
+- **從 `Read Committed` 開始**：這是大部分資料庫的預設值，能滿足多數應用場景的需求。
+- **當心 `Repeatable Read`**：如果你的應用在一個交易中需要多次讀取同一筆資料，且結果必須一致，可以考慮使用 `Repeatable Read`，但要注意 MySQL 因為 gap lock 機制，可能會增加死鎖 (deadlock) 的風險。
+- **謹慎使用 `Serializable`**：除非你的業務對資料一致性有極端嚴格的要求，且可以接受效能上的犧牲，否則應避免使用 `Serializable`。
 
 ## 參考資料
 
-- [事務隔離](https://zh.wikipedia.org/zh-tw/%E4%BA%8B%E5%8B%99%E9%9A%94%E9%9B%A2)
-- [Transaction Isolation Levels](https://www.postgresql.org/docs/17/transaction-iso.html)
+- [維基百科：事務隔離](https://zh.wikipedia.org/zh-tw/%E4%BA%8B%E5%8B%99%E9%9A%94%E9%9B%A2)
+- [PostgreSQL Docs: Transaction Isolation](https://www.postgresql.org/docs/current/transaction-iso.html)
+- [MySQL Docs: Transaction Isolation Levels](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
