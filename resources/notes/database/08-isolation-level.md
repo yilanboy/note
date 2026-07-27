@@ -26,7 +26,7 @@
 
 ## 四種隔離級別 (Isolation Levels)
 
-為了解決上述問題，SQL 標準定義了四種隔離級別，隔離強度由低到高排列： 
+為了解決上述問題，SQL 標準定義了四種隔離級別，隔離強度由低到高排列：
 
 | 隔離級別 | Dirty Read | Non-Repeatable Read | Phantom Read |
 | :--- | :---: | :---: | :---: |
@@ -71,6 +71,79 @@
 - **從 `Read Committed` 開始**：這是大部分資料庫的預設值，能滿足多數應用場景的需求。
 - **當心 `Repeatable Read`**：如果你的應用在一個交易中需要多次讀取同一筆資料，且結果必須一致，可以考慮使用 `Repeatable Read`，但要注意 MySQL 因為 gap lock 機制，可能會增加死鎖 (deadlock) 的風險。
 - **謹慎使用 `Serializable`**：除非你的業務對資料一致性有極端嚴格的要求，且可以接受效能上的犧牲，否則應避免使用 `Serializable`。
+
+## PostgreSQL 實戰範例
+
+在 PostgreSQL 中，隔離級別是一個**交易 (Transaction) 層級**的設定，而不是針對單一資料表。你可以為整個資料庫設定預設的隔離級別，也可以在需要時為單一的交易或會話 (Session) 臨時指定不同的級別。
+
+### 如何取得目前的隔離級別？
+
+你可以使用 `SHOW` 指令來查看當前會話預設的隔離級別。
+
+```sql
+SHOW transaction_isolation;
+```
+
+執行後，你會得到類似下面的結果，這代表 PostgreSQL 的預設隔離級別是 `Read committed`。
+
+```
+ transaction_isolation
+-----------------------
+ read committed
+(1 row)
+```
+
+### 如何更新隔離級別？
+
+更新隔離級別有三種不同的範圍 (Scope)：
+
+1.  **針對目前交易 (Current Transaction)**
+    如果你只需要在一個特定的交易中提高隔離級別（例如，在一個複雜的轉帳交易中），你可以這樣做：
+
+    ```sql
+    BEGIN;
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+    -- 在這裡執行你的 SQL 查詢...
+    -- 這些查詢將會運作在 REPEATABLE READ 級別下
+    COMMIT;
+    -- 交易結束後，隔離級別會自動恢復成會話的預設值 (read committed)
+    ```
+    **注意**：`SET TRANSACTION` 指令必須在交易的最開始、任何 `SELECT`, `INSERT`, `UPDATE`, `DELETE` 之前執行。
+
+2.  **針對目前會話 (Current Session)**
+    如果你希望目前連線中的所有後續交易都使用新的隔離級別，你可以設定會話的預設值：
+
+    ```sql
+    SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+    ```
+    設定之後，這個連線中所有新的交易都會預設使用 `REPEATABLE READ`，直到你再次更改它或斷開連線。
+
+3.  **針對整個資料庫 (Database-wide)**
+    如果你想更改整個資料庫的預設隔離級別，讓所有新的連線都使用新的級別，你可以使用 `ALTER DATABASE`。你必須擁有資料庫的超級使用者權限才能執行此操作。
+
+    ```sql
+    ALTER DATABASE your_database_name SET default_transaction_isolation = 'repeatable read';
+    ```
+    這個設定不會影響到目前已經建立的連線，只會對**之後新建立的連線**生效。
+
+### 在活躍狀態下更改隔離級別會有影響嗎？
+
+總結來說，**更改隔離級別是安全的，但需要了解其影響**。
+
+-   **不會中斷現有服務**：當你使用 `ALTER DATABASE` 更改整個資料庫的預設隔離級別時，它**不會**影響任何正在執行中的交易或已經建立的連線。它只會改變新連線的預設行為。因此，在生產環境的活躍資料庫上執行這個指令，並不會造成服務中斷。
+
+-   **主要的副作用是效能**：
+    -   **提高隔離級別** (例如從 `Read Committed` 改為 `Repeatable Read` 或 `Serializable`) 會增加資料庫的負擔。PostgreSQL 需要做更多的工作來追蹤資料版本和管理鎖定，這會導致：
+        -   **查詢延遲增加**：部分查詢可能會變慢。
+        -   **併發能力下降**：因為鎖定的範圍和時間可能變長，在高併發時更容易發生交易等待或衝突。
+        -   **更高的錯誤率**：在 `Serializable` 級別下，如果偵測到可能破壞序列性的操作，交易會被強制中斷並回滾，回傳「serialization failure」錯誤。你的應用程式必須準備好捕捉這類錯誤並進行重試。
+    -   **降低隔離級別**則會帶來相反的效果：效能提升，但資料一致性的風險增加。
+
+**總結建議**：
+
+-   除非有非常明確的需求，否則**保持預設的 `Read Committed`** 通常是最佳選擇。
+-   如果只有特定的業務邏輯需要更高的隔離性（例如產生重要報表、處理金融交易），請**優先考慮在單一交易或會話中臨時提升隔離級別**，而不是更改全域設定。
+-   如果要更改全域預設值，務必在測試環境中充分評估其對應用程式效能和穩定性的影響。
 
 ## 參考資料
 
