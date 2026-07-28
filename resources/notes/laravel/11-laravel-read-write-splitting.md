@@ -32,8 +32,6 @@ flowchart TD
     UseReplica --> FinalReplica[Use Replica DB Connection];
 ```
 
----
-
 ## 2. 深入剖析三種情境
 
 ### 情境 A：`DB::transaction()` 的運作機制
@@ -44,8 +42,6 @@ flowchart TD
 * Transaction 期間的所有查詢保證走 Primary 主庫。
 * **交易結束後（`COMMIT` / `ROLLBACK`）**，`$transactions` 歸零。若沒有開啟 `sticky => true`，下一個 Transaction 外的 `SELECT` **會立刻切換回 Replica 從庫**！
 
-
-
 ### 情境 B：開啟 `sticky => true` 的運作機制
 
 * **行為**：為單一 HTTP Request（生命週期）提供「Read-Your-Own-Writes」的一致性。
@@ -54,12 +50,9 @@ flowchart TD
 2. 當執行任何寫入語法（`INSERT`/`UPDATE`/`DELETE`）時，Laravel 將連線狀態的 `$modified` 設為 `true`。
 3. 此 Request 剩下的時間內，所有 `SELECT` 的 `getReadPdo()` 都會直接改回傳 Primary PDO。
 
-
 * **重點**：
 * `sticky` **不會**自動開啟，必須在 `config/database.php` 顯式聲明 `'sticky' => true`。
 * `sticky` 狀態**不會跨 Request 共享**，也**不會**改變資料庫自身的 Isolation Level。
-
-
 
 ### 情境 C：Transaction + Sticky 組合拳
 
@@ -67,10 +60,6 @@ flowchart TD
 1. Transaction 期間：因為 `$transactions > 0`，走 Primary。
 2. Transaction 寫入時：標記 `$modified = true`。
 3. Transaction Commit 結束後：因為 `$modified` 已被標記為 `true`，**後續 Transaction 外的普通 SELECT 依然會繼續走 Primary**。
-
-
-
----
 
 ## 3. 常見迷思與誤區（Debunking Mistakes）
 
@@ -86,13 +75,9 @@ flowchart TD
 * **跨 Request**：使用者在 A 頁面 Submit（Request 1 寫入主庫），跳轉到 B 頁面（Request 2 讀取從庫）。對 Request 2 來說 `$modified` 為 `false`，若從庫尚未同步完成，依然會讀到舊資料。
 * **非同步 Queue Job**：主程式發送寫入並丟出 Job，Job 跑在獨立進程，讀取 Replica 時依然可能遇到 Replication Lag。
 
-
-
 ### ❌ 迷思 3：「Sticky 會覆蓋 DB 的 Isolation Level」
 
 * **事實**：`sticky` 只是 Laravel 框架層級的 **SQL 路由開關**。當 SQL 被送到 Primary 主庫後，依然受限於 MySQL / PostgreSQL 設定的隔離層級（如 `Repeatable Read` 的快照讀機制）。
-
----
 
 ## 4. 最佳實踐建議 (Best Practices)
 
