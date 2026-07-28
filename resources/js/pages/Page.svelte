@@ -4,6 +4,7 @@
 
 <script lang="ts">
   import { highlightCodeBlocks } from "@/shared/highlight";
+  import { renderMermaidDiagrams } from "@/shared/mermaid";
 
   interface Props {
     title: string;
@@ -12,10 +13,11 @@
 
   let { title, html }: Props = $props();
 
-  // Highlights code blocks after mount and re-runs when the note changes,
-  // because the attachment reads `html`. Client-side only.
-  function highlight(article: HTMLElement) {
+  // Highlights code blocks and renders Mermaid diagrams after mount.
+  // This runs when the note changes because the attachment reads `html`.
+  function processContent(article: HTMLElement) {
     highlightCodeBlocks(article);
+    renderMermaidDiagrams(article);
   }
 </script>
 
@@ -25,7 +27,7 @@
 
 <main class="mx-auto w-full max-w-3xl px-4 py-8 lg:px-8">
   <article
-    {@attach highlight}
+    {@attach processContent}
     class="prose max-w-none leading-8 prose-zinc dark:prose-invert prose-p:wrap-break-word
            prose-a:text-emerald-600 prose-a:no-underline prose-a:underline-offset-2 visited:prose-a:text-emerald-700 prose-a:hover:text-emerald-700 prose-a:hover:underline focus:prose-a:ring-2 focus:prose-a:ring-emerald-300/60 focus:prose-a:outline-none dark:prose-a:text-lividus-400 dark:visited:prose-a:text-lividus-300 dark:prose-a:hover:text-lividus-300 dark:focus:prose-a:ring-lividus-800/60
            prose-blockquote:rounded-[0.3rem] prose-blockquote:border-emerald-300 prose-blockquote:bg-emerald-50 prose-blockquote:px-4 prose-blockquote:py-3 prose-blockquote:font-semibold prose-blockquote:text-emerald-900 prose-blockquote:not-italic dark:prose-blockquote:border-lividus-700 dark:prose-blockquote:bg-lividus-950/30 dark:prose-blockquote:text-lividus-200"
