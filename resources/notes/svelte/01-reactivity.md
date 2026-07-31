@@ -4,7 +4,7 @@ Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大
 
 ## 使用 `$state` 的基本即時反應
 
-要創建一個反應性變數，你可以使用 `$state` 來初始化它。對此變數的任何更改都將自動觸發 DOM 的更新。
+要創建一個反應性變數，你可以使用 `$state` 來初始化它。**對此變數的任何更改都將自動觸發 DOM 的更新。**
 
 ```svelte
 <script>
@@ -21,7 +21,64 @@ Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大
 </button>
 ```
 
-在 Svelte 5 中，即時反應不再是**基於賦值 (assignment)**。相反地，`$state` 創建了一個 Svelte 會追蹤的訊號 (signal)。當訊號的值發生變化時，Svelte 就會知道要更新什麼。
+在 Svelte 5 中，即時反應不再是**基於賦值 (assignment)**。相反地，`$state` 創建了一個 Svelte 會追蹤的訊號 (Signal)。當訊號的值發生變化時，Svelte 就會知道要更新什麼。
+
+如果不使用 `$state` 的話，我們對 `count` 的任何更改都不會自動觸發 DOM 的更新。
+
+```svelte
+<script>
+// 如果不使用 `$state`，則 `count` 不是反應性的
+let count = 0;
+
+// ...
+</script>
+
+<!-- 點擊按鈕將不再更新 DOM，因為 `count` 不是 `$state` 創建的訊號 -->
+<button onclick={increment}>
+    Clicked {count}
+    <!-- ... -->
+</button>
+```
+
+### 常見錯誤：只引用 `$state` 的初始值
+
+如果把 `$state` 的值直接指定給另一個變數，另一個變數只會取得當下的初始值。之後即使 `$state` 更新了，這個變數也不會跟著更新，因此 Svelte 會顯示以下錯誤：
+
+Svelte: This reference only captures the initial value of `userName`. Did you mean to reference it inside a derived instead?
+
+例如，下面的 `greeting` 只會是 `訪客`，不會隨著 `userName` 的變化而更新：
+
+```svelte
+<script>
+    let userName = $state("訪客");
+    let greeting = userName;
+
+    function updateUserName() {
+        userName = "小明";
+    }
+</script>
+
+<button onclick={updateUserName}>更新使用者名稱</button>
+<p>{greeting}</p>
+```
+
+如果希望 `greeting` 始終反映 `userName` 的最新值，請使用 `$derived`：
+
+```svelte
+<script>
+    let userName = $state("訪客");
+    let greeting = $derived(userName);
+
+    function updateUserName() {
+        userName = "小明";
+    }
+</script>
+
+<button onclick={updateUserName}>更新使用者名稱</button>
+<p>{greeting}</p>
+```
+
+詳細說明請參考：[state_referenced_locally](https://svelte.dev/e/state_referenced_locally)。
 
 ## 使用 `$derived` 的衍生狀態
 
