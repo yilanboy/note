@@ -100,6 +100,13 @@ Host foo
   IdentityFile ~/.ssh/id_rsa
 ```
 
+> 需要注意的是，如果你在 SSH Config 中設定了 `UserKnownHostsFile /dev/null`，
+> 注意也要加上 `StrictHostKeyChecking no`，避免 SSH 連線時出現 `Host key verification failed` 的錯誤。
+>
+> 因為如果 `~/.ssh/known_hosts` 檔案中如果沒有目標主機的資訊，
+> 初次登入時就會出現需要互動的提問 `Are you sure you want to continue connecting (yes/no)?`。
+> 因為 Ansible 沒有控制台介面（no TTY），所以這個互動的提問會導致連線失敗。
+
 你只需要在 inventory 中設定：
 
 ```ini
