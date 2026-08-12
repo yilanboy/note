@@ -2,19 +2,127 @@
 
 PHPStorm 為 Jetbrains 推出的 PHP IDE，是寫 PHP 的好幫手，這裡記錄一些我習慣在 PHPStorm 中調整的設定。
 
-## 程式碼樣式
+## 初始設置
 
-### 使用 Laravel Pint 的程式碼風格
+### 程式碼樣式
+
+#### 使用 Laravel Pint 的程式碼風格
 
 在 Settings -> Editor -> Code Style -> PHP 中。
 
 點選右上角的 Set from... 然後選擇 **Laravel**。
 
-### 對齊陣列的值
+#### 對齊陣列的值
 
 在 Settings -> Editor -> Code Style -> PHP -> Wrappings and Braces 底下。
 
 勾選 Array Initializer 底下的 **Align key-value pairs**。
+
+### 將 `.idea` 加入版本控制
+
+PhpStorm 預設會產生 `.idea` 資料夾，底下會放置這個 IDE 的設定檔案。
+
+官方建議將這些設定檔案加入版本控制，方便後續開發者協作。不過我覺得這個資料夾很礙眼，最後還是沒有加入版本控制。
+
+詳細說明請參考 [官方文件](https://intellij-support.jetbrains.com/hc/en-us/articles/206544839)。
+
+### 切換至其他 App 時自動儲存檔案
+
+Settings → Appearance & Behavior → System Settings
+
+在 Autosave 底下勾選：
+
+✅ Save files when switching to a different application or a built-in terminal
+
+### 儲存時清除不必要的行末空白
+
+Settings → Editor → General
+
+在 On Save 底下設定：
+
+✅ Remove trailing spaces on All lines
+
+❌ Keep trailing spaces on caret line
+
+### 儲存時保留檔案尾部一個換行
+
+Settings → Editor → General
+
+在 On Save 底下勾選：
+
+✅ Remove trailing blank lines at the end of saved files
+
+✅ Ensure every saved file ends with a line break
+
+### 儲存時自動排版
+
+> 此功能在私人專案使用還不錯，公司專案則不建議使用；需要時可以使用 `Shift` + `Ctrl` + `Cmd` + `Space`。
+
+Settings → Tools → Actions on Save
+
+✅ Reformat code
+
+### 註解在程式碼前保留一個空白
+
+Settings → Editor → Code Style → PHP
+
+在 Code Generation 底下的 Comment Code 設定：
+
+❌ Line comment at first column
+
+✅ Add a space at comment start
+
+### 左側檔案列表自動選取目前開啟的檔案
+
+點選檔案列表上方的三個點，並選取 **Always Select Opened File**。
+
+### 為特定檔案開啟 Word Wrap
+
+使用 Tailwind CSS 時可以考慮開啟這項功能。
+
+Settings → Editor → General → Soft Wraps
+
+可以在 Soft-wrap these file 中設定想要啟用 Word Wrap 的檔案。
+
+另外可以取消勾選下方的選項，讓 Word Wrap 的符號出現在行首與行尾：
+
+❌ Only show soft-wrap indicators for the current line
+
+### 使用 Prettier 排版
+
+須先安裝 Prettier：
+
+```bash
+npm install --save-dev --save-exact prettier
+```
+
+在 PhpStorm 安裝 Prettier 套件，可以參考[官方指南](https://www.jetbrains.com/help/phpstorm/prettier.html)。
+
+接著在 Settings → Tools → Actions on Save 中勾選：
+
+✅ Run Prettier
+
+### 載入 PSR-12 Code Style
+
+PhpStorm 預設使用自己的排版風格，可以到：
+
+Editor → Code Style → PHP
+
+在上方的 **Set from ...** 中選擇 **PSR-12**。不過套用後的風格仍有些微差異，例如 Arrow function：PhpStorm 預設不會在 Arrow function 的括號後方加上空格。
+
+```php
+fn() => 0
+```
+
+可以再到 Spaces → Before parentheses 中勾選：
+
+✅ Arrow function parentheses
+
+如此即可排版為：
+
+```php
+fn () => 0
+```
 
 ## 快捷鍵（Shortcuts）
 
