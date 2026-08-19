@@ -27,6 +27,7 @@ const LANGS = [
     "nginx",
     "blade",
     "jinja",
+    "dotenv",
 ];
 
 let highlighter: Highlighter | null = null;
@@ -58,23 +59,30 @@ export async function highlightCodeBlocks(container: HTMLElement): Promise<void>
     }
 
     await Promise.all(
-        Array.from(blocks).map(async (code) => {
-            const language = /language-([\w-]+)/.exec(code.className)?.[1] ?? "text";
+        Array.from(blocks).map(async (code: HTMLElement) => {
+            let language = /language-([\w-]+)/.exec(code.className)?.[1] ?? "text";
+
+            // If the language is mermaid, skip highlighting, let mermaid.ts handle it
+            if (language === "mermaid") {
+                return;
+            }
+
+            // if language is not in LANGS, set it to "text"
+            if (!LANGS.includes(language)) {
+                language = "text";
+            }
+
             const pre = code.parentElement;
 
             if (!(pre instanceof HTMLPreElement)) {
                 return;
             }
 
-            try {
-                pre.outerHTML = highlighter.codeToHtml(code.textContent ?? "", {
-                    lang: language,
-                    themes: THEMES,
-                    defaultColor: "light",
-                });
-            } catch {
-                // Unknown language: leave the block unhighlighted.
-            }
+            pre.outerHTML = highlighter.codeToHtml(code.textContent ?? "", {
+                lang: language,
+                themes: THEMES,
+                defaultColor: "light",
+            });
         }),
     );
 }

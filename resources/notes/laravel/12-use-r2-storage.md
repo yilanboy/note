@@ -34,7 +34,7 @@ R2 沒有傳統意義上的 `region`，但 S3 驅動程式需要一個非空值�
 
 將相關設定放入 `.env` 檔案：
 
-```env
+```dotenv
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
 R2_ENDPOINT=
