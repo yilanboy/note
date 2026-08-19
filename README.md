@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <img src="public/favicon.svg" alt="note.docfunc icon" width="96" height="96">
 </p>
@@ -131,7 +133,7 @@ The notes directory is located in `resources/notes/`.
 ### Folder and File Naming Rules
 
 1. **Categories**: Create a subdirectory inside `resources/notes/` (e.g. `resources/notes/kubernetes`).
-2. **Category Names**: By default, category folder names are capitalized and formatted into headlines using `Str::headline()`. To override the title representation (e.g. for acronyms like AWS, K8s, API), configure them in [config/notes.php](file:///Users/allenjiang/code/php/note.docfunc/config/notes.php):
+2. **Category Names**: By default, category folder names are capitalized and formatted into headlines using `Str::headline()`. To override the title representation (e.g. for acronyms like AWS, K8s, API), configure them in [config/notes.php](config/notes.php):
     ```php
     'display_names' => [
         'k8s' => 'K8s',
