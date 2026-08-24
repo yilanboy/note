@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/opt/homebrew/Cellar/php/8.5.9/bin/php",
+            "args": [
+                "/Users/allenjiang/code/php/vomorize/artisan",
+                "boost:mcp"
+            ]
+        },
+        "svelte": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@sveltejs/mcp"
+            ]
+        }
+    }
+}

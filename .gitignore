@@ -33,13 +33,3 @@ Thumbs.db
 **/caddy
 frankenphp
 frankenphp-worker.php
-
-# AI
-/.ai
-/.junie
-/.claude
-/.agents
-AGENTS.md
-CLAUDE.md
-boost.json
-.mcp.json
