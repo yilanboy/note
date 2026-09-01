@@ -33,3 +33,14 @@ Thumbs.db
 **/caddy
 frankenphp
 frankenphp-worker.php
+
+# Laravel Boost
+/.ai
+/.agents
+/.claude
+/.junie
+.mcp.json
+AGENTS.md
+CLAUDE.md
+boost.json
+opencode.json
