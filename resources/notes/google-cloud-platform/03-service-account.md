@@ -7,7 +7,7 @@ Service Account 有點類似 Azure 的 Managed Identity。
 例如，我有一個 BigQuery 的資料集 (Dataset)，我可以建立一個 Service Account，
 並賦予他擁有這個資料集的 DataEditor 權限，讓 Fluent Bit 可以透過這個 Service Account，將資料寫入 BigQuery。
 
-> 根據情況，官方會更建議使用 Workload identity federation 來取得短期的權限。
+> 根據情況，官方會更建議使用 [Workload Identity Federation](./04-workload-identity-federation.md) 來取得短期的權限（Keyless）。
 
 ## 使用 Terraform 建立一個 Service Account
 
