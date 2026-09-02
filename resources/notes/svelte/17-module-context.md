@@ -61,7 +61,7 @@
 ```svelte
 <!-- App.svelte -->
 <script>
-    import Player, { stopAll } from "./Player.svelte";
+    import Player, { stopAll } from './Player.svelte';
 
     // ...
 </script>

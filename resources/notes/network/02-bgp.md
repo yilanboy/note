@@ -186,12 +186,12 @@ Origin 有三種值，分別為 IGP、EGP 和 Incomplete。
 - `bgp as-path access-list ...`
 - `route-map ...`
 - BFD
-  - Profile
-  - Peer
+    - Profile
+    - Peer
 - router bgp
-  - global settings
-  - peer-group
-  - neighbor
+    - global settings
+    - peer-group
+    - neighbor
 
 **第一個部分**為 IP Prefix List。參數說明可以參考 [FRRouting 的文件](https://docs.frrouting.org/en/latest/filter.html#ip-prefix-list)
 

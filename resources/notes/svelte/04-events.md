@@ -44,7 +44,7 @@ DOM 的 event handler 可以使用 event modifiers 來修改行為。
 
 ```svelte
 <!-- 只有第一次點擊會有效果 -->
-<button on:click|once={() => alert("clicked")}> Click me </button>
+<button on:click|once={() => alert('clicked')}> Click me </button>
 ```
 
 此外還有 `|preventDefault` 可以阻止預設行為，`|stopPropagation` 可以阻止事件冒泡 ... 等。
@@ -89,7 +89,7 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
     let { onmessage } = $props();
 
     function sayHello() {
-        onmessage("Hello!");
+        onmessage('Hello!');
     }
 </script>
 
@@ -101,7 +101,7 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 ```svelte
 <!-- App.svelte -->
 <script>
-    import Inner from "./Inner.svelte";
+    import Inner from './Inner.svelte';
 
     function handleMessage(message) {
         alert(message);
@@ -129,7 +129,7 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 ```svelte
 <!-- 中間層的 Outer.svelte -->
 <script>
-    import Inner from "./Inner.svelte";
+    import Inner from './Inner.svelte';
     let { onclick } = $props();
 </script>
 
@@ -141,7 +141,7 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 ```svelte
 <!-- 中間層的 Outer.svelte -->
 <script>
-    import Inner from "./Inner.svelte";
+    import Inner from './Inner.svelte';
     let { ...rest } = $props();
 </script>
 
@@ -153,10 +153,10 @@ event modifier 可以組合使用，例如 `on:click|once|preventDefault`。
 ```svelte
 <!-- 最上層的 App.svelte -->
 <script>
-    import Outer from "./Outer.svelte";
+    import Outer from './Outer.svelte';
 
     function handleMessage() {
-        alert("Hello!");
+        alert('Hello!');
     }
 </script>
 

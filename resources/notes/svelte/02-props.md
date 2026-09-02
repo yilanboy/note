@@ -14,7 +14,7 @@
 
 ```svelte
 <script>
-    import Nested from "./Nested.svelte";
+    import Nested from './Nested.svelte';
 </script>
 
 <Nested name="world" />
@@ -26,7 +26,7 @@
 
 ```svelte
 <script>
-    let { name = "world" } = $props;
+    let { name = 'world' } = $props;
 </script>
 ```
 
@@ -51,13 +51,13 @@
 
 ```svelte
 <script>
-    import PackageInfo from "./PackageInfo.svelte";
+    import PackageInfo from './PackageInfo.svelte';
 
     const pkg = {
-        name: "svelte",
-        speed: "blazing",
+        name: 'svelte',
+        speed: 'blazing',
         version: 4,
-        website: "https://svelte.dev",
+        website: 'https://svelte.dev',
     };
 </script>
 

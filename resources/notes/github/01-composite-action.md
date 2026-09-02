@@ -11,47 +11,47 @@ name: Build images
 # ...
 
 jobs:
-  build-hello-1-image:
-    # 登入 Docker Hub 並打包映像檔
-    name: Start to build images and publish to docker hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    build-hello-1-image:
+        # 登入 Docker Hub 並打包映像檔
+        name: Start to build images and publish to docker hub
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+            - name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and push image to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          file: dockerfiles/hello-1.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            allen/hello-1:latest
-            allen/hello-1:1.0.0
-          cache-from: type=registry,ref=allen/hello-1:buildcache
-          cache-to: type=registry,ref=allen/hello-1:buildcache,mode=max
+            - name: Build and push image to Docker Hub
+              uses: docker/build-push-action@v5
+              with:
+                  file: dockerfiles/hello-1.Dockerfile
+                  platforms: linux/amd64,linux/arm64
+                  push: true
+                  tags: |
+                      allen/hello-1:latest
+                      allen/hello-1:1.0.0
+                  cache-from: type=registry,ref=allen/hello-1:buildcache
+                  cache-to: type=registry,ref=allen/hello-1:buildcache,mode=max
 
-  # 上面的流程改一下 image 名稱後，重複三次... 😰
-  build-hello-2-image:
-    # ...
+    # 上面的流程改一下 image 名稱後，重複三次... 😰
+    build-hello-2-image:
+        # ...
 
-  build-hello-3-image:
-    # ...
+    build-hello-3-image:
+        # ...
 
-  build-hello-4-image:
-    # ...
+    build-hello-4-image:
+        # ...
 ```
 
 為了避免反覆書寫相同的流程定義，GitHub Action 提供了一種叫做 Composite Action 的功能。你可以將重複的定義抽出來，形成一個獨立的 action。透過重複使用這個 action，你能夠更有效的組織你的流程定義，使檔案的內容更加精簡。
@@ -79,50 +79,50 @@ description: A GitHub Action to login to Docker Hub, then build images and publi
 
 # Composite Action 的輸入參數，可以用來設定 Docker Hub 的帳號密碼以及映像檔的名稱
 inputs:
-  registry_username:
-    description: “Username for image registry”
-    required: true
-  registry_password:
-    description: “Password for image registry”
-    required: true
-  file:
-    description: “Path to the Dockerfile to build”
-    required: true
-  image_name:
-    description: “Name of the image to push”
-    required: true
-  image_tag:
-    description: “Tag of the image to push”
-    required: true
+    registry_username:
+        description: “Username for image registry”
+        required: true
+    registry_password:
+        description: “Password for image registry”
+        required: true
+    file:
+        description: “Path to the Dockerfile to build”
+        required: true
+    image_name:
+        description: “Name of the image to push”
+        required: true
+    image_tag:
+        description: “Tag of the image to push”
+        required: true
 
 # Composite Action 的執行步驟
 runs:
-  using: "composite"
-  steps:
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+    using: 'composite'
+    steps:
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        # 使用剛剛的輸入參數
-        username: ${{ inputs.registry_username }}
-        password: ${{ inputs.registry_password }}
+        - name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+              # 使用剛剛的輸入參數
+              username: ${{ inputs.registry_username }}
+              password: ${{ inputs.registry_password }}
 
-    - name: Build and push image to Docker Hub
-      uses: docker/build-push-action@v5
-      with:
-        file: ${{ inputs.file }}
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: |
-          ${{ inputs.image_name }}:latest
-          ${{ inputs.image_name }}:${{ inputs.image_tag }}
-        cache-from: type=registry,ref=${{ inputs.image_name }}:buildcache
-        cache-to: type=registry,ref=${{ inputs.image_name }}:buildcache,mode=max
+        - name: Build and push image to Docker Hub
+          uses: docker/build-push-action@v5
+          with:
+              file: ${{ inputs.file }}
+              platforms: linux/amd64,linux/arm64
+              push: true
+              tags: |
+                  ${{ inputs.image_name }}:latest
+                  ${{ inputs.image_name }}:${{ inputs.image_tag }}
+              cache-from: type=registry,ref=${{ inputs.image_name }}:buildcache
+              cache-to: type=registry,ref=${{ inputs.image_name }}:buildcache,mode=max
 ```
 
 可以看到 Composite Action 就好像 Terraform 的模組，你可以設定需要提供哪些參數，並在內部使用外部傳入的參數。
@@ -136,33 +136,33 @@ name: Build images
 # ...
 
 jobs:
-  build-hello-1-image:
-    name: Start to build images and publish to docker hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    build-hello-1-image:
+        name: Start to build images and publish to docker hub
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      # 使用 Composite Action 並傳入參數
-      # 流程不變，但可以少打很多行字 👍
-      - name: Build and push image to Docker Hub
-        uses: ./.github/actions/build-image
-        with:
-          registry_username: ${{ secrets.REGISTRY_USERNAME }}
-          registry_password: ${{ secrets.REGISTRY_PASSWORD }}
-          file: dockerfiles/hello-1.Dockerfile
-          image_name: allen/hello
-          image_tag: 1.0.0
+            # 使用 Composite Action 並傳入參數
+            # 流程不變，但可以少打很多行字 👍
+            - name: Build and push image to Docker Hub
+              uses: ./.github/actions/build-image
+              with:
+                  registry_username: ${{ secrets.REGISTRY_USERNAME }}
+                  registry_password: ${{ secrets.REGISTRY_PASSWORD }}
+                  file: dockerfiles/hello-1.Dockerfile
+                  image_name: allen/hello
+                  image_tag: 1.0.0
 
-  # 下面的流程也同樣使用 Composite Action，並傳入不同的輸入參數
-  build-hello-2-image:
-    # ...
+    # 下面的流程也同樣使用 Composite Action，並傳入不同的輸入參數
+    build-hello-2-image:
+        # ...
 
-  build-hello-3-image:
-    # ...
+    build-hello-3-image:
+        # ...
 
-  build-hello-4-image:
-    # ...
+    build-hello-4-image:
+        # ...
 ```
 
 上述的做法是將 action 與 workflow 放在同一個專案底下，如果想讓不同專案共用相同的 action，你可以單獨建立一個 GitHub 專案來放常常使用到的 action。
@@ -173,14 +173,14 @@ jobs:
 # ...
 
 jobs:
-  hello_world_job:
-    runs-on: ubuntu-latest
-    name: A job to say hello
-    steps:
-      - uses: actions/checkout@v4
+    hello_world_job:
+        runs-on: ubuntu-latest
+        name: A job to say hello
+        steps:
+            - uses: actions/checkout@v4
 
-      # 使用 GitHub 上的 action
-      - uses: my-github-account/reusable-actions/hello-world-composite-action@v1
+            # 使用 GitHub 上的 action
+            - uses: my-github-account/reusable-actions/hello-world-composite-action@v1
 ```
 
 有了 Action Composition，我們就可以將流程模組化，除了可以少寫很多行字，流程上的管理也會更輕鬆，當有流程的內容需要修改時，我們只需要修改 action 的內容即可，而不用修改每一個專案中 workflow。

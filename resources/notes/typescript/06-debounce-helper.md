@@ -6,30 +6,30 @@
 
 ```typescript
 export default function debounce<T extends (...args: unknown[]) => void>(
-  callback: T,
-  delay: number
+    callback: T,
+    delay: number,
 ): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout>;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
-  return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
 
-    timeoutId = setTimeout(() => {
-      callback.apply(this, args);
-    }, delay);
-  };
+        timeoutId = setTimeout(() => {
+            callback.apply(this, args);
+        }, delay);
+    };
 }
 ```
 
 使用方式：
 
 ```typescript
-import debounce from "./debounce";
+import debounce from './debounce';
 
 const handleResize = debounce(() => {
-  console.log("Window resized");
+    console.log('Window resized');
 }, 300);
 
 handleResize();
@@ -52,15 +52,15 @@ handleResize(); // 只有最後一次調用會成功印出 "Window resized"
 let timeoutId: ReturnType<typeof setTimeout>;
 
 return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
-  // 如果計時器已經存在，且還沒有被執行，則清除它
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-  }
+    // 如果計時器已經存在，且還沒有被執行，則清除它
+    if (timeoutId) {
+        clearTimeout(timeoutId);
+    }
 
-  // 設置一個新的計時器
-  timeoutId = setTimeout(() => {
-    callback.apply(this, args);
-  }, delay);
+    // 設置一個新的計時器
+    timeoutId = setTimeout(() => {
+        callback.apply(this, args);
+    }, delay);
 };
 ```
 
@@ -75,7 +75,7 @@ let value: unknown;
 
 value = 10; // 數字型別，OK
 value = true; // 布林型別，OK
-value = "Hello World!"; // 字串型別，OK
+value = 'Hello World!'; // 字串型別，OK
 value = []; // 陣列型別，OK
 value = {}; // 基礎物件型別，OK
 ```
@@ -83,10 +83,10 @@ value = {}; // 基礎物件型別，OK
 但要注意，當我們想要對 `unknown` 類型的值進行操作時，必須先進行類型檢查或類型斷言：
 
 ```typescript
-let value: unknown = "Hello World";
+let value: unknown = 'Hello World';
 
-if (typeof value === "string") {
-  console.log(value.toUpperCase()); // OK，因為我們已經檢查過 value 是字串
+if (typeof value === 'string') {
+    console.log(value.toUpperCase()); // OK，因為我們已經檢查過 value 是字串
 }
 ```
 

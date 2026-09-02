@@ -75,7 +75,7 @@ Slot 可以設定屬性：
 
 <!-- App.svelte -->
 <Card let:item={isRed}>
-    <h2 style:color={isRed ? "red" : ""}>Hello!</h2>
+    <h2 style:color={isRed ? 'red' : ''}>Hello!</h2>
 </Card>
 ```
 

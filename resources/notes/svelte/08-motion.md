@@ -8,7 +8,7 @@ Svelte 提供了 `tweened` 這個函式，可以簡單的建立一個由 A 轉�
 
 ```svelte
 <script>
-    import { tweened } from "svelte/motion";
+    import { tweened } from 'svelte/motion';
 
     const progress = tweened(0);
 </script>
@@ -24,8 +24,8 @@ Svelte 提供了 `tweened` 這個函式，可以簡單的建立一個由 A 轉�
 
 ```svelte
 <script>
-    import { tweened } from "svelte/motion";
-    import { cubicOut } from "svelte/easing";
+    import { tweened } from 'svelte/motion';
+    import { cubicOut } from 'svelte/easing';
 
     const progress = tweened(0, {
         duration: 400,
@@ -40,7 +40,7 @@ Svelte 提供了 `tweened` 這個函式，可以簡單的建立一個由 A 轉�
 
 ```svelte
 <script>
-    import { spring } from "svelte/motion";
+    import { spring } from 'svelte/motion';
 
     let coords = spring(
         { x: 50, y: 50 },

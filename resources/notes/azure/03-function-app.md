@@ -12,16 +12,16 @@ Azure function 主要有兩個部分，第一個部分是要執行的程式碼�
 
 ```json
 {
-  "scriptFile": "__init__.py",
-  "bindings": [
-    {
-      "name": "myblob",
-      "type": "blobTrigger", // 綁定的種類
-      "direction": "in", // in or out, 代表該綁定是會接收資料進函式，還是從函式送出資料
-      "path": "samples-workitems/{name}",
-      "connection": "AzureWebJobsStorage"
-    }
-  ]
+    "scriptFile": "__init__.py",
+    "bindings": [
+        {
+            "name": "myblob",
+            "type": "blobTrigger", // 綁定的種類
+            "direction": "in", // in or out, 代表該綁定是會接收資料進函式，還是從函式送出資料
+            "path": "samples-workitems/{name}",
+            "connection": "AzureWebJobsStorage"
+        }
+    ]
 }
 ```
 
@@ -35,22 +35,22 @@ Azure function 主要有兩個部分，第一個部分是要執行的程式碼�
 ```json
 // function.json
 {
-  "scriptFile": "__init__.py", // 進入點檔案
-  "entrypoint": "main", // 進入點函式
-  "bindings": [
-    {
-      "authLevel": "function",
-      "type": "httpTrigger",
-      "direction": "in",
-      "name": "req",
-      "methods": ["get", "post"]
-    },
-    {
-      "type": "http",
-      "direction": "out",
-      "name": "$return"
-    }
-  ]
+    "scriptFile": "__init__.py", // 進入點檔案
+    "entrypoint": "main", // 進入點函式
+    "bindings": [
+        {
+            "authLevel": "function",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": ["get", "post"]
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "$return"
+        }
+    ]
 }
 ```
 
@@ -96,10 +96,10 @@ def main(req):
 - `Dockerfile`：（可選）在發佈您的專案到自訂容器時使用
 - `tests/`：（可選）包含您的函式應用程式的測試案例。
 - `.funcignore`：（可選）聲明不應發佈到 azure 的檔案。通常，這個檔案包含以下檔案
-  - `.vscode/` 以忽略編輯器設定
-  - `.venv/` 以忽略本地 python 虛擬環境
-  - `tests/` 以忽略測試案例
-  - `local.settings.json` 以防止本地應用程式設定被發佈。
+    - `.vscode/` 以忽略編輯器設定
+    - `.venv/` 以忽略本地 python 虛擬環境
+    - `tests/` 以忽略測試案例
+    - `local.settings.json` 以防止本地應用程式設定被發佈。
 
 ## Use Local Tool to Deploy Your Function
 

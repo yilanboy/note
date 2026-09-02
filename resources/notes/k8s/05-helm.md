@@ -54,9 +54,9 @@ helm show values bitnami/wordpress
 ```yaml
 # values.yaml
 mariadb:
-  auth:
-    database: user0db
-    username: user0
+    auth:
+        database: user0db
+        username: user0
 ```
 
 使用 `helm install` 的 `-f` 參數載入檔案，覆蓋 Chart 的預設設定。
@@ -209,30 +209,30 @@ mychart-repo
 name: Release Charts
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  release:
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    release:
+        permissions:
+            contents: write
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+            - name: Configure Git
+              run: |
+                  git config user.name "$GITHUB_ACTOR"
+                  git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+            - name: Run chart-releaser
+              uses: helm/chart-releaser-action@v1.6.0
+              env:
+                  CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 ```
 
 接著，你需要在 GitHub 上建立一個分支 `gh-pages`。

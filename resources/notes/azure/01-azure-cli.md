@@ -21,34 +21,34 @@ az login --user <myAlias@myCompany.com> -password <myPassword>
 
 ```json
 [
-  {
-    "cloudName": "AzureCloud",
-    "homeTenantId": "unique-tenant-id",
-    "id": "unique-subscription-id-01",
-    "isDefault": true,
-    "managedByTenants": [],
-    "name": "test_azure_account_01",
-    "state": "Enabled",
-    "tenantId": "unique-tenant-id",
-    "user": {
-      "name": "foo@example.com",
-      "type": "user"
+    {
+        "cloudName": "AzureCloud",
+        "homeTenantId": "unique-tenant-id",
+        "id": "unique-subscription-id-01",
+        "isDefault": true,
+        "managedByTenants": [],
+        "name": "test_azure_account_01",
+        "state": "Enabled",
+        "tenantId": "unique-tenant-id",
+        "user": {
+            "name": "foo@example.com",
+            "type": "user"
+        }
+    },
+    {
+        "cloudName": "AzureCloud",
+        "homeTenantId": "unique-tenant-id",
+        "id": "unique-subscription-id-02",
+        "isDefault": false,
+        "managedByTenants": [],
+        "name": "IT Team Dev/Test",
+        "state": "Enabled",
+        "tenantId": "unique-tenant-id",
+        "user": {
+            "name": "foo@example.comm",
+            "type": "user"
+        }
     }
-  },
-  {
-    "cloudName": "AzureCloud",
-    "homeTenantId": "unique-tenant-id",
-    "id": "unique-subscription-id-02",
-    "isDefault": false,
-    "managedByTenants": [],
-    "name": "IT Team Dev/Test",
-    "state": "Enabled",
-    "tenantId": "unique-tenant-id",
-    "user": {
-      "name": "foo@example.comm",
-      "type": "user"
-    }
-  }
 ]
 ```
 

@@ -103,11 +103,11 @@ cargo update
 Tauri 支援 Android 平台，但需要預先配置 Android SDK 環境。
 
 - **安裝 Android Studio**：透過 SDK Manager 下載以下元件：
-  - Android SDK Platform
-  - Android SDK Platform-Tools
-  - NDK (Side by side)
-  - Android SDK Build-Tools
-  - Android SDK Command-line Tools
+    - Android SDK Platform
+    - Android SDK Platform-Tools
+    - NDK (Side by side)
+    - Android SDK Build-Tools
+    - Android SDK Command-line Tools
 
 - **設定環境變數**：在 Shell 設定檔（如 `.zshrc` 或 `.bashrc`）中加入：
 
@@ -260,18 +260,18 @@ SQLite 檔案的實際儲存位置依作業系統而定。例如在 macOS 上，
 在 SvelteKit 的 `src/routes/+layout.ts` 中載入資料庫並執行查詢：
 
 ```typescript
-import Database from "@tauri-apps/plugin-sql";
-import type { LayoutLoad } from "./$types";
+import Database from '@tauri-apps/plugin-sql';
+import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async () => {
-  const db = await Database.load("sqlite:mydatabase.db");
-  const tables = (await db.select(
-    "SELECT * FROM sqlite_master WHERE type='table'",
-  )) as any[];
+    const db = await Database.load('sqlite:mydatabase.db');
+    const tables = (await db.select(
+        "SELECT * FROM sqlite_master WHERE type='table'",
+    )) as any[];
 
-  return {
-    tables: tables,
-  };
+    return {
+        tables: tables,
+    };
 };
 ```
 
@@ -281,14 +281,14 @@ export const load: LayoutLoad = async () => {
 
 ```svelte
 <script lang="ts">
-  let { data } = $props();
+    let { data } = $props();
 </script>
 
 <main class="container mx-auto p-4">
-  <h1 class="text-lg font-bold">所有資料表</h1>
-  {#each data.tables as table}
-    <p class="mt-2 p-2 bg-white rounded shadow-sm">{table.name}</p>
-  {/each}
+    <h1 class="text-lg font-bold">所有資料表</h1>
+    {#each data.tables as table}
+        <p class="mt-2 p-2 bg-white rounded shadow-sm">{table.name}</p>
+    {/each}
 </main>
 ```
 

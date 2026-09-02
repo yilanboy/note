@@ -20,10 +20,10 @@ Sealed secrets 的概念是會在 k8s 叢集上面啟動一個 sealed secrets co
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mysecret
-  namespace: mynamespace
+    name: mysecret
+    namespace: mynamespace
 data:
-  foo: YmFy # <- base64 encoded "bar"
+    foo: YmFy # <- base64 encoded "bar"
 ```
 
 我們可以使用 sealed secret 將其變成加密後的 `SealedSecret` 設定檔案：
@@ -32,11 +32,11 @@ data:
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  name: mysecret
-  namespace: mynamespace
+    name: mysecret
+    namespace: mynamespace
 spec:
-  encryptedData:
-    foo: AgBy3i4OJSWK+PiTySYZZA9rO43cGDEq.....
+    encryptedData:
+        foo: AgBy3i4OJSWK+PiTySYZZA9rO43cGDEq.....
 ```
 
 當你將 `SealedSecret` 部署到叢集時，**sealed secrets controller 會自動將你的 `SealedSecret` 解密，並建立對應的 `Secret`**。
@@ -78,12 +78,12 @@ kubeseal -f mysecret.yaml -w mysealedsecret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  namespace: mysql
-  name: mysql-secret
+    namespace: mysql
+    name: mysql-secret
 type: Opaque
 stringData:
-  root-password: "oPKcjfYqRUuzi7Mi"
-  password: "oPAspyYdAEHRqhU5"
+    root-password: 'oPKcjfYqRUuzi7Mi'
+    password: 'oPAspyYdAEHRqhU5'
 ```
 
 使用 `kubeseal` 將其轉換成 `SealedSecret`。
@@ -98,19 +98,19 @@ kubeseal -f mysql-secret.yaml -w mysql-sealed-secret.yaml
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
-  creationTimestamp: null
-  name: mysql-secret
-  namespace: mysql
+    creationTimestamp: null
+    name: mysql-secret
+    namespace: mysql
 spec:
-  encryptedData:
-    password: AgAYrXLOxXW+TyTw9CpNBJGclc+6f2ZMxCNwi4DqQgDTuCZ5kCtyvXSGlI8bN4o1stzHHAD+Abl9mPSbT6rv9e/m7ivgZim+OV7hR2Ofy+5pFuxo4wvo5WmEHAawFHLwKEvOljOHPJYbsAjd5xCeVah247+QknytvDMOss18N2z3quCge1jc1eMsi2s3joFKWP8frLbuvDOuo2HlH8je7RBPvnoMieGbFM+XMOBCVAj+ECIKigNQK6i2hNW11zzox3UMTuiZ1aoqhcP1XlppVOeVuTRVNTjr1ufM8s96ep9XxABSHyLXHOB1K1TJ/AUvju6DilhKBiiXEHapCj+Ep/n2HUsiKk2v52mdYIk7rAgm5Y/y2ga0iIl5KX35qKFgi4CH36/K9XEG/Fb/a91PCeIvYRsTpadYV15GQecMURgc/xs6DnCxEKWoUSBpEsAE4mcjPOFQ8nxtoaeJkqaFyPLGrxK6RSTPO80u9K6LAr3P3DUIxf7WYfddyD4A5dxS0uU455mgKZ4qTQgPS+ui9s8yjQAjXLMrzQbs7ryqlOP0xlzAepLuIGEqf5qNdjxk2JbogpChqpLwk73Zb8kYn+rQ7VTqEhQTUxZDunRfQdkp2YzzP6SYwhDVLEC4xEazYHpc5YMT1pNvHCqkorD+IU2FVXKf61hgp3Vd3w+9nxTtg30P07d+xS3uJ3mhYlfmaxkPMlM2r81EszcpOxxcY24C
-    root-password: AgDOYVakO0Zekv16s+NGCoeDPVLHUL+96j9zgiUPL1OS0V8hP8ibeRcDD6cTNIKEBLS+/rKwpc5YbdGGCmUC0o+uHs5Noxr0ZTCeLEgNcDP3G4ZHX8TXXYkeSeklV4+bCBM+BNrfEiOx4DpOle+p7MeVMdtHnSSBjYo+aclgwtrIGfiCoKKuz+qTuGcm97vTaIy+vNwZNn1yreDcsaix10xitypI+z+Yq5/r0bTSP/r7IHtV7hAoMtXMkkPjCP7UHnsu6m7m9zAhxSVwyKfIvjAbbD6ymguq/o06GSwS6JuZPz9YbPXnlc/a2Ku/m+OzzVHECNUTQ7x50X0E33bAJlOlM9nMk1k2nOaut0qNOnZ3+RVsact0JLSXLMP4Vm8thXl/1ZBfN814cH0tooiaEsv82dwHjJdJFju5KfN+1jLhkflNmlgKGU/BIyaXOPJeCT7eXpD9Ks0uZhFuJYaLxcMzJEpZvvJst9NQBqOoHB9BMm63GDVHyv8ojHXzEfzLbbgsCt0cqsFFrFkJeWLBcnz42FY0SIE7HM9FcRICcGARjSD2PcFEEOpLLLWTVPZQGRZgojVDw4dD36qpHrytfSmyWFQbo5X+ouyWKzx+thO0f/BW4Sv3D1Z3OYO/FfzR/apHAjhgNkf5/54u5Fel/fBS4nhq/xbfceD+3acvAWdgY910vsztiwdJQkKbw2oQm8WS2q2f3xZ33CUxHNHMTyza
-  template:
-    metadata:
-      creationTimestamp: null
-      name: mysql-secret
-      namespace: mysql
-    type: Opaque
+    encryptedData:
+        password: AgAYrXLOxXW+TyTw9CpNBJGclc+6f2ZMxCNwi4DqQgDTuCZ5kCtyvXSGlI8bN4o1stzHHAD+Abl9mPSbT6rv9e/m7ivgZim+OV7hR2Ofy+5pFuxo4wvo5WmEHAawFHLwKEvOljOHPJYbsAjd5xCeVah247+QknytvDMOss18N2z3quCge1jc1eMsi2s3joFKWP8frLbuvDOuo2HlH8je7RBPvnoMieGbFM+XMOBCVAj+ECIKigNQK6i2hNW11zzox3UMTuiZ1aoqhcP1XlppVOeVuTRVNTjr1ufM8s96ep9XxABSHyLXHOB1K1TJ/AUvju6DilhKBiiXEHapCj+Ep/n2HUsiKk2v52mdYIk7rAgm5Y/y2ga0iIl5KX35qKFgi4CH36/K9XEG/Fb/a91PCeIvYRsTpadYV15GQecMURgc/xs6DnCxEKWoUSBpEsAE4mcjPOFQ8nxtoaeJkqaFyPLGrxK6RSTPO80u9K6LAr3P3DUIxf7WYfddyD4A5dxS0uU455mgKZ4qTQgPS+ui9s8yjQAjXLMrzQbs7ryqlOP0xlzAepLuIGEqf5qNdjxk2JbogpChqpLwk73Zb8kYn+rQ7VTqEhQTUxZDunRfQdkp2YzzP6SYwhDVLEC4xEazYHpc5YMT1pNvHCqkorD+IU2FVXKf61hgp3Vd3w+9nxTtg30P07d+xS3uJ3mhYlfmaxkPMlM2r81EszcpOxxcY24C
+        root-password: AgDOYVakO0Zekv16s+NGCoeDPVLHUL+96j9zgiUPL1OS0V8hP8ibeRcDD6cTNIKEBLS+/rKwpc5YbdGGCmUC0o+uHs5Noxr0ZTCeLEgNcDP3G4ZHX8TXXYkeSeklV4+bCBM+BNrfEiOx4DpOle+p7MeVMdtHnSSBjYo+aclgwtrIGfiCoKKuz+qTuGcm97vTaIy+vNwZNn1yreDcsaix10xitypI+z+Yq5/r0bTSP/r7IHtV7hAoMtXMkkPjCP7UHnsu6m7m9zAhxSVwyKfIvjAbbD6ymguq/o06GSwS6JuZPz9YbPXnlc/a2Ku/m+OzzVHECNUTQ7x50X0E33bAJlOlM9nMk1k2nOaut0qNOnZ3+RVsact0JLSXLMP4Vm8thXl/1ZBfN814cH0tooiaEsv82dwHjJdJFju5KfN+1jLhkflNmlgKGU/BIyaXOPJeCT7eXpD9Ks0uZhFuJYaLxcMzJEpZvvJst9NQBqOoHB9BMm63GDVHyv8ojHXzEfzLbbgsCt0cqsFFrFkJeWLBcnz42FY0SIE7HM9FcRICcGARjSD2PcFEEOpLLLWTVPZQGRZgojVDw4dD36qpHrytfSmyWFQbo5X+ouyWKzx+thO0f/BW4Sv3D1Z3OYO/FfzR/apHAjhgNkf5/54u5Fel/fBS4nhq/xbfceD+3acvAWdgY910vsztiwdJQkKbw2oQm8WS2q2f3xZ33CUxHNHMTyza
+    template:
+        metadata:
+            creationTimestamp: null
+            name: mysql-secret
+            namespace: mysql
+        type: Opaque
 ```
 
 我們先建立 `mysql-sealed-secret.yaml` 對應的 namespace `mysql`。

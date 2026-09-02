@@ -43,25 +43,25 @@ type: (commonjs) module
 
 ```json
 {
-  "name": "example-package",
-  "version": "0.0.1",
-  "description": "An example npm package",
-  "keywords": ["example"],
-  "homepage": "https://github.com/yilanboy/example-package#readme",
-  "bugs": {
-    "url": "https://github.com/yilanboy/example-package/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yilanboy/example-package.git"
-  },
-  "license": "MIT",
-  "author": "yilanboy",
-  "type": "module",
-  "main": "dist/index.js",
-  "scripts": {
-    "test": "vitest"
-  }
+    "name": "example-package",
+    "version": "0.0.1",
+    "description": "An example npm package",
+    "keywords": ["example"],
+    "homepage": "https://github.com/yilanboy/example-package#readme",
+    "bugs": {
+        "url": "https://github.com/yilanboy/example-package/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yilanboy/example-package.git"
+    },
+    "license": "MIT",
+    "author": "yilanboy",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "vitest"
+    }
 }
 ```
 
@@ -83,30 +83,30 @@ node_modules/.bin/tsc --init
 
 ```json
 {
-  "compilerOptions": {
-    /* Base Options: */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    /* If transpiling with TypeScript: */
-    "module": "NodeNext",
-    "outDir": "dist",
-    "sourceMap": true,
-    /* if you're building for a library: */
-    "declaration": true,
-    /* If your code run in the DOM: */
-    "lib": ["es2022", "dom", "dom.iterable"]
-  },
-  "include": ["src/**/*"]
+    "compilerOptions": {
+        /* Base Options: */
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        /* Strictness */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        /* If transpiling with TypeScript: */
+        "module": "NodeNext",
+        "outDir": "dist",
+        "sourceMap": true,
+        /* if you're building for a library: */
+        "declaration": true,
+        /* If your code run in the DOM: */
+        "lib": ["es2022", "dom", "dom.iterable"]
+    },
+    "include": ["src/**/*"]
 }
 ```
 
@@ -116,7 +116,7 @@ node_modules/.bin/tsc --init
 
 ```typescript
 export function sayHiTo(name: string): string {
-  return `Hello, ${name}!`;
+    return `Hello, ${name}!`;
 }
 ```
 
@@ -143,10 +143,10 @@ dist/
 
 ```json
 {
-  /* ... */
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts"
-  /* ... */
+    /* ... */
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts"
+    /* ... */
 }
 ```
 
@@ -154,13 +154,13 @@ dist/
 
 ```json
 {
-  /* ... */
-  "scripts": {
-    "test": "vitest",
-    "build": "tsc",
-    "dev": "tsc --watch"
-  }
-  /* ... */
+    /* ... */
+    "scripts": {
+        "test": "vitest",
+        "build": "tsc",
+        "dev": "tsc --watch"
+    }
+    /* ... */
 }
 ```
 
@@ -179,11 +179,11 @@ npm install --save-dev vitest
 新增一個資料夾 `tests/`，並在底下新增一個檔案 `example.test.ts`。
 
 ```typescript
-import { expect, test } from "vitest";
-import { sayHiTo } from "../src/index";
+import { expect, test } from 'vitest';
+import { sayHiTo } from '../src/index';
 
-test("say hi to someone", () => {
-  expect(sayHiTo("Allen")).toBe("Hello, Allen!");
+test('say hi to someone', () => {
+    expect(sayHiTo('Allen')).toBe('Hello, Allen!');
 });
 ```
 
@@ -227,19 +227,19 @@ npm view --json
 
 ```json
 {
-  /* ... */
-  "time": {
-    "created": "2025-01-15T08:20:13.194Z",
-    "modified": "2025-01-21T03:49:51.769Z",
-    "1.0.0": "2025-01-07T10:37:07.072Z",
-    "1.0.1": "2025-01-07T10:45:59.308Z",
-    "1.0.2": "2025-01-07T13:46:38.976Z",
-    "1.0.3": "2025-01-07T14:04:26.164Z",
-    "0.0.1": "2025-01-15T08:20:13.369Z",
-    "0.0.2": "2025-01-17T04:58:30.219Z",
-    "0.0.3": "2025-01-17T05:03:49.809Z"
-  }
-  /* ... */
+    /* ... */
+    "time": {
+        "created": "2025-01-15T08:20:13.194Z",
+        "modified": "2025-01-21T03:49:51.769Z",
+        "1.0.0": "2025-01-07T10:37:07.072Z",
+        "1.0.1": "2025-01-07T10:45:59.308Z",
+        "1.0.2": "2025-01-07T13:46:38.976Z",
+        "1.0.3": "2025-01-07T14:04:26.164Z",
+        "0.0.1": "2025-01-15T08:20:13.369Z",
+        "0.0.2": "2025-01-17T04:58:30.219Z",
+        "0.0.3": "2025-01-17T05:03:49.809Z"
+    }
+    /* ... */
 }
 ```
 

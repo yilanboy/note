@@ -6,7 +6,7 @@
 
 ```svelte
 <script>
-    let name = "world";
+    let name = 'world';
 </script>
 
 <input bind:value={name} placeholder="Enter your name" />
@@ -64,13 +64,16 @@ Svelte 中也提供 `bind` 來綁定 checkbox 的 checked 屬性。
     let selected;
 
     let items = [
-        { id: 1, name: "one" },
-        { id: 2, name: "two" },
-        { id: 3, name: "three" },
+        { id: 1, name: 'one' },
+        { id: 2, name: 'two' },
+        { id: 3, name: 'three' },
     ];
 </script>
 
-<select bind:value={selected} on:change={() => console.log(`selected: ${selected.name}`)}>
+<select
+    bind:value={selected}
+    on:change={() => console.log(`selected: ${selected.name}`)}
+>
     {#each items as item}
         <!-- note the <option> values are objects, rather than strings. Svelte doesn't mind -->
         <option value={item}>{item.name}</option>
@@ -92,7 +95,7 @@ Svelte 中也提供 `bind` 來綁定 checkbox 的 checked 屬性。
         <input type="radio" name="scoops" value={number} bind:group={scoops} />
 
         {number}
-        {number === 1 ? "scoop" : "scoops"}
+        {number === 1 ? 'scoop' : 'scoops'}
     </label>
 {/each}
 ```
@@ -108,7 +111,7 @@ Svelte 中也提供 `bind` 來綁定 checkbox 的 checked 屬性。
 </script>
 
 <select multiple bind:value={flavours}>
-    {#each ["cookies and cream", "mint choc chip", "raspberry ripple"] as flavour}
+    {#each ['cookies and cream', 'mint choc chip', 'raspberry ripple'] as flavour}
         <option>{flavour}</option>
     {/each}
 </select>
@@ -120,7 +123,7 @@ Svelte 中也提供 `bind` 來綁定 checkbox 的 checked 屬性。
 
 ```svelte
 <script>
-    let message = "";
+    let message = '';
 </script>
 
 <textarea bind:value={message} placeholder="Enter a message"></textarea>

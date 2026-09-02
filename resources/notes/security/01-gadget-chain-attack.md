@@ -177,5 +177,5 @@ unserialize($payload);
 
 ## 參考資料
 
-- [Deserialization: What the Heck *Actually* Is a Gadget Chain?](https://medium.com/@dub-flow/deserialization-what-the-heck-actually-is-a-gadget-chain-1ea35e32df69)
+- [Deserialization: What the Heck _Actually_ Is a Gadget Chain?](https://medium.com/@dub-flow/deserialization-what-the-heck-actually-is-a-gadget-chain-1ea35e32df69)
 - [PHP deserialization attacks and a new gadget chain in Laravel](https://blog.quarkslab.com/php-deserialization-attacks-and-a-new-gadget-chain-in-laravel.html)

@@ -24,10 +24,10 @@ docker info --format '{{.LoggingDriver}}'
 
 ```json
 {
-  "log-driver": "local",
-  "log-opts": {
-    "max-size": "10m"
-  }
+    "log-driver": "local",
+    "log-opts": {
+        "max-size": "10m"
+    }
 }
 ```
 

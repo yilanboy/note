@@ -588,88 +588,88 @@ output "jobs_dlq_url" {
 
 1. **準備 Laravel 應用程式**
 
-   ```bash
-   cd laravel-app
+    ```bash
+    cd laravel-app
 
-   # 安裝生產環境依賴
-   composer install --prefer-dist --optimize-autoloader --no-dev
+    # 安裝生產環境依賴
+    composer install --prefer-dist --optimize-autoloader --no-dev
 
-   # 清除快取設定（Lambda 透過環境變數設定）
-   php artisan config:clear
+    # 清除快取設定（Lambda 透過環境變數設定）
+    php artisan config:clear
 
-   # 建置前端資源
-   npm ci && npm run build
+    # 建置前端資源
+    npm ci && npm run build
 
-   # 移除不必要的檔案
-   rm -rf node_modules tests storage .git .github
+    # 移除不必要的檔案
+    rm -rf node_modules tests storage .git .github
 
-   # 打包成 zip
-   zip --quiet --recurse-paths --symlinks "../laravel-app.zip" .
-   ```
+    # 打包成 zip
+    zip --quiet --recurse-paths --symlinks "../laravel-app.zip" .
+    ```
 
-   > **重要**：不要在 zip 中包含 `config:cache` 的產出。Lambda 環境變數會在執行時透過 `$_ENV` 注入，如果設定被快取，環境變數會被忽略。
+    > **重要**：不要在 zip 中包含 `config:cache` 的產出。Lambda 環境變數會在執行時透過 `$_ENV` 注入，如果設定被快取，環境變數會被忽略。
 
 2. **準備環境變數 JSON 檔案**
 
-   建立 `environment-variables.json`，包含 Laravel 所需的環境變數：
+    建立 `environment-variables.json`，包含 Laravel 所需的環境變數：
 
-   ```json
-   {
-     "APP_NAME": "My App",
-     "APP_KEY": "base64:...",
-     "APP_ENV": "production",
-     "DB_CONNECTION": "pgsql",
-     "DB_HOST": "your-rds-endpoint",
-     "DB_DATABASE": "your_database",
-     "DB_USERNAME": "your_username",
-     "DB_PASSWORD": "your_password",
-     "ASSET_URL": "https://your-s3-bucket.s3.amazonaws.com"
-   }
-   ```
+    ```json
+    {
+        "APP_NAME": "My App",
+        "APP_KEY": "base64:...",
+        "APP_ENV": "production",
+        "DB_CONNECTION": "pgsql",
+        "DB_HOST": "your-rds-endpoint",
+        "DB_DATABASE": "your_database",
+        "DB_USERNAME": "your_username",
+        "DB_PASSWORD": "your_password",
+        "ASSET_URL": "https://your-s3-bucket.s3.amazonaws.com"
+    }
+    ```
 
-   > **注意**：`ASSET_URL` 必須指向存放靜態資源的 S3 Bucket URL，因為 Lambda 無法直接提供靜態檔案（CSS/JS/圖片）。
+    > **注意**：`ASSET_URL` 必須指向存放靜態資源的 S3 Bucket URL，因為 Lambda 無法直接提供靜態檔案（CSS/JS/圖片）。
 
 3. **準備 Terraform 設定檔案**
 
-   建立 `terraform.config`（Backend 設定）：
+    建立 `terraform.config`（Backend 設定）：
 
-   ```conf
-   bucket="your-terraform-state-bucket"
-   key="your-app.tfstate"
-   region="us-west-2"
-   dynamodb_table="your-terraform-lock-table"
-   ```
+    ```conf
+    bucket="your-terraform-state-bucket"
+    key="your-app.tfstate"
+    region="us-west-2"
+    dynamodb_table="your-terraform-lock-table"
+    ```
 
-   建立 `terraform.tfvars`（變數值）：
+    建立 `terraform.tfvars`（變數值）：
 
-   ```hcl
-   app_name = "my-laravel-app"
+    ```hcl
+    app_name = "my-laravel-app"
 
-   # VPC 設定（如需存取 RDS 資料庫）
-   enable_vpc         = true
-   subnet_ids         = ["subnet-xxx", "subnet-yyy"]
-   security_group_ids = ["sg-xxx"]
+    # VPC 設定（如需存取 RDS 資料庫）
+    enable_vpc         = true
+    subnet_ids         = ["subnet-xxx", "subnet-yyy"]
+    security_group_ids = ["sg-xxx"]
 
-   # EFS 設定（如需持久化檔案系統）
-   enable_filesystem = true
-   access_point_arn  = "arn:aws:elasticfilesystem:us-west-2:123456789:access-point/fsap-xxx"
+    # EFS 設定（如需持久化檔案系統）
+    enable_filesystem = true
+    access_point_arn  = "arn:aws:elasticfilesystem:us-west-2:123456789:access-point/fsap-xxx"
 
-   # API Gateway（ACM 憑證）
-   certificate_arn    = "arn:aws:acm:us-west-2:123456789:certificate/xxx-xxx"
-   custom_domain_name = "app.example.com"
+    # API Gateway（ACM 憑證）
+    certificate_arn    = "arn:aws:acm:us-west-2:123456789:certificate/xxx-xxx"
+    custom_domain_name = "app.example.com"
 
-   # 標籤
-   tag_service     = "my-app"
-   tag_environment = "production"
-   tag_owner       = "team-name"
+    # 標籤
+    tag_service     = "my-app"
+    tag_environment = "production"
+    tag_owner       = "team-name"
 
-   # S3
-   aws_bucket = "my-app-storage"
+    # S3
+    aws_bucket = "my-app-storage"
 
-   # Lambda
-   environment_variables_json_file = "./environment-variables.json"
-   filename                        = "./laravel-app.zip"
-   ```
+    # Lambda
+    environment_variables_json_file = "./environment-variables.json"
+    filename                        = "./laravel-app.zip"
+    ```
 
 ### 執行部署
 
@@ -703,25 +703,25 @@ aws apigatewayv2 get-domain-name --domain-name app.example.com
 
 ```yaml
 steps:
-  # 1. 設定 AWS 認證（使用 OIDC，無需存放 Access Key）
-  - uses: aws-actions/configure-aws-credentials@v4
-    with:
-      role-to-assume: arn:aws:iam::123456789:role/github_action
-      aws-region: us-west-2
+    # 1. 設定 AWS 認證（使用 OIDC，無需存放 Access Key）
+    - uses: aws-actions/configure-aws-credentials@v4
+      with:
+          role-to-assume: arn:aws:iam::123456789:role/github_action
+          aws-region: us-west-2
 
-  # 2. 設定 PHP 和 Node.js 環境
-  - uses: shivammathur/setup-php@v2
-    with:
-      php-version: "8.4"
+    # 2. 設定 PHP 和 Node.js 環境
+    - uses: shivammathur/setup-php@v2
+      with:
+          php-version: '8.4'
 
-  - uses: actions/setup-node@v4
-    with:
-      node-version: "24.8.0"
+    - uses: actions/setup-node@v4
+      with:
+          node-version: '24.8.0'
 
-  # 3. 設定 Terraform
-  - uses: hashicorp/setup-terraform@v3
+    # 3. 設定 Terraform
+    - uses: hashicorp/setup-terraform@v3
 
-  # 4. 部署（clone、打包、terraform apply、同步靜態資源）
+    # 4. 部署（clone、打包、terraform apply、同步靜態資源）
 ```
 
 Workflow 使用 `workflow_dispatch` 觸發，代表需要手動在 GitHub Actions 頁面點擊 "Run workflow" 來啟動部署。

@@ -197,8 +197,8 @@ spec:
           image: nginx:1.17.10
           resources:
               limits:
-                  cpu: "1"
-                  memory: "250Mi"
+                  cpu: '1'
+                  memory: '250Mi'
           ports:
               - containerPort: 80
 ```

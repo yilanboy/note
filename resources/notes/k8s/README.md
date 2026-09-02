@@ -24,13 +24,13 @@
 - 因為 k3s 叢集放在 private subnet，所以外部無法直接訪問，如果想訪問叢集上的服務，會透過 proxy 做請求上的轉發。
 - 想在本地端使用 `kubectl` 操作 k3s 叢集時，也會透過 proxy 做請求上的轉發。
 
-  ```nginx
-  stream {
-      server {
-          listen 6443;
-          proxy_pass 10.0.1.10:6443;
-      }
-  }
-  ```
+    ```nginx
+    stream {
+        server {
+            listen 6443;
+            proxy_pass 10.0.1.10:6443;
+        }
+    }
+    ```
 
-  > Kubectl 本身就是使用 TLS 加密，因此不需要在 nginx 上額外設定憑證，只需要單純轉發請求就好。
+    > Kubectl 本身就是使用 TLS 加密，因此不需要在 nginx 上額外設定憑證，只需要單純轉發請求就好。

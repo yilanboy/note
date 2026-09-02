@@ -28,7 +28,11 @@ Tailwind CSS 預設提供了豐富的色盤，每一種顏色都有 `50`、`100`
 
 ```css
 @theme {
-    --color-zinc-850: color-mix(in oklch, var(--color-zinc-800), var(--color-zinc-900));
+    --color-zinc-850: color-mix(
+        in oklch,
+        var(--color-zinc-800),
+        var(--color-zinc-900)
+    );
 }
 ```
 

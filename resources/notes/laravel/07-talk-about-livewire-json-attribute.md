@@ -91,17 +91,17 @@ new class extends Component
 
 ```javascript
 $wire
-  .save()
-  .then((data) => {
-    // 處理成功回應
-    console.log(data);
-  })
-  .catch((e) => {
-    if (e.status === 422) {
-      // 處理 validation 失敗
-      console.log(e.errors);
-    }
-  });
+    .save()
+    .then((data) => {
+        // 處理成功回應
+        console.log(data);
+    })
+    .catch((e) => {
+        if (e.status === 422) {
+            // 處理 validation 失敗
+            console.log(e.errors);
+        }
+    });
 ```
 
 你可能會想，這不就是前端與後端最常見的交互方式嗎？透過 JSON 格式的資料。
@@ -142,17 +142,17 @@ Livewire 的核心開發者 Ryan Chandler，也在去年的 Wire Live 議程中�
 
 ```json
 {
-  "components": [
-    {
-      "snapshot": "...",
-      "effects": {
-        "returns": [null],
-        // [!code highlight:1]
-        "html": "一大片的 HTML ()..."
-      }
-    }
-  ],
-  "assets": []
+    "components": [
+        {
+            "snapshot": "...",
+            "effects": {
+                "returns": [null],
+                // [!code highlight:1]
+                "html": "一大片的 HTML ()..."
+            }
+        }
+    ],
+    "assets": []
 }
 ```
 

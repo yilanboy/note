@@ -1,5 +1,3 @@
-
-
 <p align="center">
   <img src="public/favicon.svg" alt="note.docfunc icon" width="96" height="96">
 </p>

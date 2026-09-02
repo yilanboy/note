@@ -23,11 +23,11 @@ kubectl apply -f https://raw.githubusercontent.com/stakater/Reloader/master/depl
 ```yaml
 kind: Deployment
 metadata:
-  annotations:
-    reloader.stakater.com/auto: "true"
+    annotations:
+        reloader.stakater.com/auto: 'true'
 spec:
-  template:
-    metadata:
+    template:
+        metadata:
 ```
 
 ## 參考資料

@@ -45,17 +45,17 @@ compsoer require web-auth/webauthn-lib
 
 ```typescript
 import {
-  browserSupportsWebAuthn,
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
+    browserSupportsWebAuthn,
+    startAuthentication,
+    startRegistration,
+} from '@simplewebauthn/browser';
 
 declare global {
-  interface Window {
-    browserSupportsWebAuthn: Function;
-    startAuthentication: Function;
-    startRegistration: Function;
-  }
+    interface Window {
+        browserSupportsWebAuthn: Function;
+        startAuthentication: Function;
+        startRegistration: Function;
+    }
 }
 
 window.browserSupportsWebAuthn = browserSupportsWebAuthn;
@@ -67,17 +67,17 @@ window.startRegistration = startRegistration;
 
 ```javascript
 export default defineConfig({
-  plugins: [
-    laravel({
-      input: [
-        // ...
-        // 加上剛剛新增的 TypeScript 檔案
-        "resources/ts/webauthn.ts",
-      ],
-      refresh: true,
-    }),
-    tailwindcss(),
-  ],
+    plugins: [
+        laravel({
+            input: [
+                // ...
+                // 加上剛剛新增的 TypeScript 檔案
+                'resources/ts/webauthn.ts',
+            ],
+            refresh: true,
+        }),
+        tailwindcss(),
+    ],
 });
 ```
 
@@ -405,27 +405,27 @@ Route::get('/passkeys/register-options', GeneratePasskeyRegisterOptionsControlle
 
 ```javascript
 async function registerPasskey() {
-  // 檢查瀏覽器是否支援 WebAuthn
-  if (!browserSupportsWebAuthn()) {
-    throw new Error("你的瀏覽器不支援 WebAuthn");
-  }
+    // 檢查瀏覽器是否支援 WebAuthn
+    if (!browserSupportsWebAuthn()) {
+        throw new Error('你的瀏覽器不支援 WebAuthn');
+    }
 
-  // 向 API 取得憑證建立選項
-  const response = await fetch("api/passkeys/register-options");
-  const optionsJSON = await response.json();
+    // 向 API 取得憑證建立選項
+    const response = await fetch('api/passkeys/register-options');
+    const optionsJSON = await response.json();
 
-  try {
-    // 開始註冊安全金鑰，前端會跳出建立密碼金鑰的 UI
-    // 用戶可以在 UI 上選擇要使用的驗證裝置來產生憑證
-    const passkey = await startRegistration({
-      optionsJSON,
-    });
-  } catch (e) {
-    throw new Error("密碼金鑰註冊失敗");
-  }
+    try {
+        // 開始註冊安全金鑰，前端會跳出建立密碼金鑰的 UI
+        // 用戶可以在 UI 上選擇要使用的驗證裝置來產生憑證
+        const passkey = await startRegistration({
+            optionsJSON,
+        });
+    } catch (e) {
+        throw new Error('密碼金鑰註冊失敗');
+    }
 
-  // 將憑證的資料轉換為 JSON 字串，然後傳送到後端
-  return JSON.stringify(passkey);
+    // 將憑證的資料轉換為 JSON 字串，然後傳送到後端
+    return JSON.stringify(passkey);
 }
 ```
 
@@ -595,25 +595,25 @@ Route::get('/passkeys/authentication-options', GeneratePasskeyAuthenticationOpti
 
 ```javascript
 async function loginWithPasskey() {
-  if (!browserSupportsWebAuthn()) {
-    throw new Error("你的瀏覽器不支援 WebAuthn");
-  }
+    if (!browserSupportsWebAuthn()) {
+        throw new Error('你的瀏覽器不支援 WebAuthn');
+    }
 
-  const response = await fetch("api/passkeys/authentication-options");
-  const optionsJSON = await response.json();
+    const response = await fetch('api/passkeys/authentication-options');
+    const optionsJSON = await response.json();
 
-  try {
-    // 開始身分驗證，前端會跳出 UI
-    // 用戶可以在 UI 上選擇要使用的驗證裝置開始身分驗證
-    const answer = await startAuthentication({
-      optionsJSON,
-    });
-  } catch (error) {
-    throw new Error("密碼金鑰無效");
-  }
+    try {
+        // 開始身分驗證，前端會跳出 UI
+        // 用戶可以在 UI 上選擇要使用的驗證裝置開始身分驗證
+        const answer = await startAuthentication({
+            optionsJSON,
+        });
+    } catch (error) {
+        throw new Error('密碼金鑰無效');
+    }
 
-  // 將憑證的資料轉換為 JSON 字串，然後傳送到後端
-  return JSON.stringify(answer);
+    // 將憑證的資料轉換為 JSON 字串，然後傳送到後端
+    return JSON.stringify(answer);
 }
 ```
 

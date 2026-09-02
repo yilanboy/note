@@ -12,30 +12,30 @@ Ansible playbooks 提供了一個更進階的方式來管理主機上的設定�
   hosts: web_servers
   become: true
   tasks:
-    - name: Update all packages to their latest version
-      ansible.builtin.apt:
-        name: "*"
-        state: latest
+      - name: Update all packages to their latest version
+        ansible.builtin.apt:
+            name: '*'
+            state: latest
 
 - name: Install nginx and start it
   hosts: web_servers
   become: true
   tasks:
-    - name: Install nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: present
+      - name: Install nginx
+        ansible.builtin.apt:
+            name: nginx
+            state: present
 
-    - name: Copy local nginx config to remote
-      ansible.builtin.copy:
-        src: nginx.conf
-        dest: /etc/nginx/nginx.conf
-        mode: "0644"
+      - name: Copy local nginx config to remote
+        ansible.builtin.copy:
+            src: nginx.conf
+            dest: /etc/nginx/nginx.conf
+            mode: '0644'
 
-    - name: Start nginx
-      ansible.builtin.service:
-        name: nginx
-        state: started
+      - name: Start nginx
+        ansible.builtin.service:
+            name: nginx
+            state: started
 ```
 
 `hosts` 為定義在 inventory 檔案中的 host 或是 group。如果是 group 的話，Ansible 會依序對 group 中的每一個 host 執行任務。

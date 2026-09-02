@@ -15,29 +15,29 @@ cd $HOME && mkdir -p .warp/themes
 將剛剛下載的`palenight.yaml` 檔案放在 `.warp/themes/palenight` 底下。
 
 ```yaml
-accent: "#82aaff"
-background: "#292d3e"
+accent: '#82aaff'
+background: '#292d3e'
 details: darker
-foreground: "#d0d0d0"
+foreground: '#d0d0d0'
 terminal_colors:
     bright:
-        black: "#434758"
-        blue: "#9cc4ff"
-        cyan: "#a3f7ff"
-        green: "#ddffa7"
-        magenta: "#e1acff"
-        red: "#ff8b92"
-        white: "#ffffff"
-        yellow: "#ffe585"
+        black: '#434758'
+        blue: '#9cc4ff'
+        cyan: '#a3f7ff'
+        green: '#ddffa7'
+        magenta: '#e1acff'
+        red: '#ff8b92'
+        white: '#ffffff'
+        yellow: '#ffe585'
     normal:
-        black: "#292d3e"
-        blue: "#82aaff"
-        cyan: "#89ddff"
-        green: "#c3e88d"
-        magenta: "#c792ea"
-        red: "#f07178"
-        white: "#d0d0d0"
-        yellow: "#ffcb6b"
+        black: '#292d3e'
+        blue: '#82aaff'
+        cyan: '#89ddff'
+        green: '#c3e88d'
+        magenta: '#c792ea'
+        red: '#f07178'
+        white: '#d0d0d0'
+        yellow: '#ffcb6b'
 ```
 
 **重新啟動 warp**，並使用快捷鍵 `Cmd` + `P` 搜尋 Open Theme Picker。
@@ -53,10 +53,10 @@ terminal_colors:
 之後只需要在 `palenight.yaml` 中設定即可。
 
 ```yaml
-accent: "#82aaff"
-background: "#292d3e"
+accent: '#82aaff'
+background: '#292d3e'
 details: darker
-foreground: "#d0d0d0"
+foreground: '#d0d0d0'
 ############################################################### SEE BELOW
 background_image:
     # the path is relative to ~/.warp/themes/

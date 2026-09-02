@@ -10,7 +10,7 @@
 
 ```js
 // stores.js
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const count = writable(0);
 ```
@@ -20,7 +20,7 @@ export const count = writable(0);
 ```svelte
 <!-- Increment.svelte -->
 <script>
-    import { count } from "./stores.js";
+    import { count } from './stores.js';
 
     function increment() {
         count.update((n) => n + 1);
@@ -35,7 +35,7 @@ export const count = writable(0);
 ```svelte
 <!-- Decrement.svelte -->
 <script>
-    import { count } from "./stores.js";
+    import { count } from './stores.js';
 
     function decrement() {
         count.update((n) => n - 1);
@@ -49,9 +49,9 @@ export const count = writable(0);
 
 ```svelte
 <script>
-    import { count } from "./stores.js";
-    import Increment from "./Increment.svelte";
-    import Decrement from "./Decrement.svelte";
+    import { count } from './stores.js';
+    import Increment from './Increment.svelte';
+    import Decrement from './Decrement.svelte';
 
     let count_value;
 
@@ -74,8 +74,8 @@ export const count = writable(0);
 
 ```svelte
 <script>
-    import { onDestroy } from "svelte";
-    import { count } from "./stores.js";
+    import { onDestroy } from 'svelte';
+    import { count } from './stores.js';
 
     // ...
 
@@ -95,7 +95,7 @@ export const count = writable(0);
 
 ```svelte
 <script>
-    import { count } from "./stores.js";
+    import { count } from './stores.js';
 
     // ...
 </script>
@@ -116,7 +116,7 @@ export const count = writable(0);
 ```js
 // stores.js
 
-import { readable } from "svelte/store";
+import { readable } from 'svelte/store';
 
 // new Date() is the initial value, you can set it null or undefined
 // the start function is called when the store get its first subscriber
@@ -134,7 +134,7 @@ export const time = readable(new Date(), function start(set) {
 
 ```svelte
 <script>
-    import { time } from "./stores.js";
+    import { time } from './stores.js';
 </script>
 
 <h1>The time is {$time.toLocaleTimeString()}</h1>
@@ -147,7 +147,7 @@ export const time = readable(new Date(), function start(set) {
 ```js
 // stores.js
 
-import { readable, derived } from "svelte/store";
+import { readable, derived } from 'svelte/store';
 
 export const time = readable(new Date(), function start(set) {
     const interval = setInterval(() => {
@@ -162,7 +162,9 @@ export const time = readable(new Date(), function start(set) {
 const start = new Date();
 
 // create a new store that is derived from the time store
-export const elapsed = derived(time, ($time) => Math.round(($time - start) / 1000));
+export const elapsed = derived(time, ($time) =>
+    Math.round(($time - start) / 1000),
+);
 ```
 
 ## Custom Stores
@@ -191,7 +193,7 @@ export const count = createCount();
 
 ```svelte
 <script>
-    import { count } from "./stores.js";
+    import { count } from './stores.js';
 </script>
 
 <h1>The count is {$count}</h1>
@@ -207,12 +209,12 @@ export const count = createCount();
 
 ```svelte
 <script>
-    import { name } from "./stores.js";
+    import { name } from './stores.js';
 </script>
 
 <h1>Hello {$name}!</h1>
 
 <input bind:value={$name} />
 
-<button on:click={() => ($name += "!")}> Add exclamation mark! </button>
+<button on:click={() => ($name += '!')}> Add exclamation mark! </button>
 ```

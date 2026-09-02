@@ -65,5 +65,7 @@ CSS 本身提供了一個語法，可以判斷用戶是使用滑鼠游標還是�
 
 ```html
 <!-- 使用 [@media(pointer:fine)]:hidden，當用戶使用滑鼠游標時，隱藏 span -->
-<span class="absolute top-1/2 left-1/2 size-12 -translate-1/2 [@media(pointer:fine)]:hidden"></span>
+<span
+    class="absolute top-1/2 left-1/2 size-12 -translate-1/2 [@media(pointer:fine)]:hidden"
+></span>
 ```

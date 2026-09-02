@@ -27,15 +27,15 @@ server {
 ```yaml
 - name: Deploy website nginx config
   ansible.builtin.template:
-    src: ./templates/nginx.conf.j2
-    dest: /etc/nginx/sites-available/{{ server_name }}
-    owner: root
-    group: root
-    mode: "u=rw,g=r,o=r"
+      src: ./templates/nginx.conf.j2
+      dest: /etc/nginx/sites-available/{{ server_name }}
+      owner: root
+      group: root
+      mode: 'u=rw,g=r,o=r'
   vars:
-    nginx_port: 8080
-    server_name: example.com
-    web_root: /var/www/html
+      nginx_port: 8080
+      server_name: example.com
+      web_root: /var/www/html
   notify: restart nginx
 ```
 

@@ -6,7 +6,7 @@
 
 ```svelte
 <script>
-    let foo = "bar";
+    let foo = 'bar';
 </script>
 
 <!-- 暫停渲染並印出 foo 的值 -->

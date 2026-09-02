@@ -28,12 +28,12 @@ Terraform 以「位址」（例如 `aws_subnet.public`）作為 state 中識別�
 
 1. 在任一 `.tf` 檔案中（建議單獨開一個 `moved.tf`，方便事後清理）加入 `moved` block：
 
-   ```hcl
-   moved {
-     from = <舊位址>
-     to   = <新位址>
-   }
-   ```
+    ```hcl
+    moved {
+      from = <舊位址>
+      to   = <新位址>
+    }
+    ```
 
 2. 修改 `.tf` 檔案中的資源宣告名稱，並更新**所有內部引用**。
 3. 執行 `terraform validate` 確認語法正確。
@@ -111,12 +111,12 @@ terraform apply
 - 若同時重新命名多個彼此引用的資源，**每個都需要各自的 `moved` block**，不能省略。
 - `moved` block 也可跨模組搬移資源，例如從根模組搬入子模組：
 
-  ```hcl
-  moved {
-    from = aws_instance.nat
-    to   = module.network.aws_instance.nat
-  }
-  ```
+    ```hcl
+    moved {
+      from = aws_instance.nat
+      to   = module.network.aws_instance.nat
+    }
+    ```
 
 - 重新命名**只是改變 Terraform 的識別位址**，不會更動 AWS 端的實體屬性（例如 Name tag）。若想同步更新 Name tag，需另外修改 `tags` 區塊；這是真實異動，會被 plan 反映出來。
 

@@ -13,17 +13,17 @@ Ansible 提供控制流程，可以讓你根據條件來決定是否執行某個
   hosts: web_servers
   become: true
   tasks:
-    - name: Install Nginx on Ubuntu
-      ansible.builtin.apt:
-        name: nginx
-        state: latest
-      when: ansible_distribution == 'Ubuntu'
+      - name: Install Nginx on Ubuntu
+        ansible.builtin.apt:
+            name: nginx
+            state: latest
+        when: ansible_distribution == 'Ubuntu'
 
-    - name: Install Nginx on CentOS
-      ansible.builtin.yum:
-        name: nginx
-        state: latest
-      when: ansible_distribution == 'CentOS'
+      - name: Install Nginx on CentOS
+        ansible.builtin.yum:
+            name: nginx
+            state: latest
+        when: ansible_distribution == 'CentOS'
 ```
 
 ### or 與 and
@@ -35,17 +35,17 @@ Ansible 提供控制流程，可以讓你根據條件來決定是否執行某個
   hosts: web_servers
   become: true
   tasks:
-    - name: Install Nginx on Ubuntu
-      ansible.builtin.apt:
-        name: nginx
-        state: latest
-      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+      - name: Install Nginx on Ubuntu
+        ansible.builtin.apt:
+            name: nginx
+            state: latest
+        when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
 
-    - name: Install Nginx on CentOS
-      ansible.builtin.yum:
-        name: nginx
-        state: latest
-      when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+      - name: Install Nginx on CentOS
+        ansible.builtin.yum:
+            name: nginx
+            state: latest
+        when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
 ```
 
 ## loop
@@ -57,14 +57,14 @@ Ansible 提供控制流程，可以讓你根據條件來決定是否執行某個
   hosts: web_servers
   become: true
   tasks:
-    - name: Install packages
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: latest
-      loop:
-        - nginx
-        - apache2
-        - php
+      - name: Install packages
+        ansible.builtin.apt:
+            name: '{{ item }}'
+            state: latest
+        loop:
+            - nginx
+            - apache2
+            - php
 ```
 
 你可以結合剛剛的 `when` 一起使用，例如：
@@ -73,20 +73,20 @@ Ansible 提供控制流程，可以讓你根據條件來決定是否執行某個
 - name: Install Software
   hosts: all
   vars:
-    - packages:
-        - name: nginx
-          required: true
-        - name: apache2
-          required: false
-        - name: php
-          required: true
+      - packages:
+            - name: nginx
+              required: true
+            - name: apache2
+              required: false
+            - name: php
+              required: true
   tasks:
-    - name: Install  "{{ item.name }}"
-      ansible.builtin.apt:
-        name: "{{ item.name }}"
-        state: latest
-      loop: "{{ packages }}"
-      when: item.required == true
+      - name: Install  "{{ item.name }}"
+        ansible.builtin.apt:
+            name: '{{ item.name }}'
+            state: latest
+        loop: '{{ packages }}'
+        when: item.required == true
 ```
 
 ## register
@@ -97,12 +97,12 @@ Ansible 提供控制流程，可以讓你根據條件來決定是否執行某個
 - name: Check status of a service and email if its down
   hosts: localhost
   tasks:
-    - ansible.builtin.command: service httpd status
-      register: result
+      - ansible.builtin.command: service httpd status
+        register: result
 
-    - community.general.mail:
-        to: example@mail.com
-        subject: "Service is down"
-        body: "{{ result.stdout }}"
-      when: result.stdout.find('down') != -1
+      - community.general.mail:
+            to: example@mail.com
+            subject: 'Service is down'
+            body: '{{ result.stdout }}'
+        when: result.stdout.find('down') != -1
 ```

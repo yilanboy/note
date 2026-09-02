@@ -682,8 +682,8 @@ use std::pin::{Pin, pin};
 ### 實際應用場景
 
 - 在日常開發中，你通常不需要手動處理 Pin，因為 `await` 會隱式的處理它。但在以下情況你會遇到它：
-  - 動態集合中的 Future：當你想將多個不同類型的 Future 放入 `Vec<Box<dyn Future>>` 並使用 `join_all()` 時，編譯器會報錯，因為 `dyn Future` 沒有實作 Unpin。
-  - 解決方法：你需要使用 `pin!` 巨集或 `Box::pin` 將這些 Future 轉換為 Pin 形式，確保它們在集合中時不會被非法移動。
+    - 動態集合中的 Future：當你想將多個不同類型的 Future 放入 `Vec<Box<dyn Future>>` 並使用 `join_all()` 時，編譯器會報錯，因為 `dyn Future` 沒有實作 Unpin。
+    - 解決方法：你需要使用 `pin!` 巨集或 `Box::pin` 將這些 Future 轉換為 Pin 形式，確保它們在集合中時不會被非法移動。
 
 ## 執行緒與非同步，該選誰？
 

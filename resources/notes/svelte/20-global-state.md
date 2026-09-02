@@ -15,7 +15,7 @@ export const counter = $state({
 
 ```svelte
 <script lang="ts">
-    import { counter } from "./shared.svelte.js";
+    import { counter } from './shared.svelte.js';
 
     function increment() {
         counter.count += 1;

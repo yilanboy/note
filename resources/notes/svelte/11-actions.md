@@ -34,11 +34,11 @@ Actions 也可以傳入變數。下方是一個整合 tippy.js 的例子：
 
 ```svelte
 <script>
-    import tippy from "tippy.js";
-    import "tippy.js/dist/tippy.css";
-    import "tippy.js/themes/material.css";
+    import tippy from 'tippy.js';
+    import 'tippy.js/dist/tippy.css';
+    import 'tippy.js/themes/material.css';
 
-    let content = "Hello!";
+    let content = 'Hello!';
 
     function tooltip(node, options) {
         // { content: 'Hello!', theme: 'material'}
@@ -56,5 +56,5 @@ Actions 也可以傳入變數。下方是一個整合 tippy.js 的例子：
 
 <input bind:value={content} />
 
-<button use:tooltip={{ content, theme: "material" }}> Hover me </button>
+<button use:tooltip={{ content, theme: 'material' }}> Hover me </button>
 ```

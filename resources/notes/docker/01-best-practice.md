@@ -217,38 +217,38 @@ Overall, using /dev/stdout and /dev/stderr to output logs in Docker containers c
 > nginx 的官方映像，預設即使用軟連結 (symbolic link) 把 log 連結到 `/dev/stdout` 和 `/dev/stderr`，所以下面設定 log driver 是可以接到 nginx 的 log 的
 
 ```yaml
-version: "3"
+version: '3'
 
 services:
-  nginx:
-    logging:
-      # 我們在這裡設定 nginx 的 log driver 為 fluentd
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        tag: nginx
-    image: nginx
-    ports:
-      - "8080:80"
-    depends_on:
-      - fluent-bit
-    hostname: nginx
+    nginx:
+        logging:
+            # 我們在這裡設定 nginx 的 log driver 為 fluentd
+            driver: fluentd
+            options:
+                fluentd-address: localhost:24224
+                tag: nginx
+        image: nginx
+        ports:
+            - '8080:80'
+        depends_on:
+            - fluent-bit
+        hostname: nginx
 
-  # 使用 fluent-bit 去接 nginx 的 log
-  fluent-bit:
-    image: fluent/fluent-bit
-    # 你可以自己寫一個 fluent-bit 的設定檔案，看要如何處理接收到的 log，你可以把 log 轉傳送到自己搭建，或是雲端的日誌分析平台進行分析
-    volumes:
-      - ./conf:/fluent-bit/etc
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-    hostname: fluent-bit
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 100m
-        max-file: "5"
+    # 使用 fluent-bit 去接 nginx 的 log
+    fluent-bit:
+        image: fluent/fluent-bit
+        # 你可以自己寫一個 fluent-bit 的設定檔案，看要如何處理接收到的 log，你可以把 log 轉傳送到自己搭建，或是雲端的日誌分析平台進行分析
+        volumes:
+            - ./conf:/fluent-bit/etc
+        ports:
+            - '24224:24224'
+            - '24224:24224/udp'
+        hostname: fluent-bit
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: 100m
+                max-file: '5'
 ```
 
 ## 參考資料

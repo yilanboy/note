@@ -12,32 +12,32 @@ TypeScript 提供了一些內建的 Utility Types，可以幫助我們更方便�
 
 ```typescript
 interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
+    title: string;
+    description: string;
+    completed: boolean;
 }
 
 // 只選擇 description 和 completed 屬性
-type TodoPreview = Pick<Todo, "description" | "completed">;
+type TodoPreview = Pick<Todo, 'description' | 'completed'>;
 
 function updateTodo(todo: Todo, fieldsToUpdate: TodoPreview) {
-  return {
-    ...todo,
-    ...fieldsToUpdate,
-  };
+    return {
+        ...todo,
+        ...fieldsToUpdate,
+    };
 }
 
 const todo1 = updateTodo(
-  {
-    title: "Old Title",
-    description: "Old Description",
-    completed: false,
-  },
-  // 只需要傳入 description 和 completed 屬性
-  {
-    description: "New Description",
-    completed: true,
-  },
+    {
+        title: 'Old Title',
+        description: 'Old Description',
+        completed: false,
+    },
+    // 只需要傳入 description 和 completed 屬性
+    {
+        description: 'New Description',
+        completed: true,
+    },
 );
 
 console.log(todo1);
@@ -51,31 +51,31 @@ console.log(todo1);
 
 ```typescript
 interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
+    title: string;
+    description: string;
+    completed: boolean;
 }
 
 // 排除 description 和 completed 屬性
-type TodoPreview = Omit<Todo, "description" | "completed">;
+type TodoPreview = Omit<Todo, 'description' | 'completed'>;
 
 function updateTodo(todo: Todo, fieldsToUpdate: TodoPreview) {
-  return {
-    ...todo,
-    ...fieldsToUpdate,
-  };
+    return {
+        ...todo,
+        ...fieldsToUpdate,
+    };
 }
 
 const todo1 = updateTodo(
-  {
-    title: "Old Title",
-    description: "Old Description",
-    completed: false,
-  },
-  // 只需要傳入 title 屬性
-  {
-    title: "New Title",
-  },
+    {
+        title: 'Old Title',
+        description: 'Old Description',
+        completed: false,
+    },
+    // 只需要傳入 title 屬性
+    {
+        title: 'New Title',
+    },
 );
 
 console.log(todo1);
@@ -89,30 +89,30 @@ console.log(todo1);
 
 ```typescript
 interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
+    title: string;
+    description: string;
+    completed: boolean;
 }
 
 // 將所有屬性都轉換為可選的
 function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
-  return {
-    ...todo,
-    ...fieldsToUpdate,
-  };
+    return {
+        ...todo,
+        ...fieldsToUpdate,
+    };
 }
 
 const todo1 = updateTodo(
-  {
-    title: "Old Title",
-    description: "Old Description",
-    completed: false,
-  },
-  // 只需要傳入 title 和 description 屬性
-  {
-    title: "New Title",
-    description: "New Description",
-  },
+    {
+        title: 'Old Title',
+        description: 'Old Description',
+        completed: false,
+    },
+    // 只需要傳入 title 和 description 屬性
+    {
+        title: 'New Title',
+        description: 'New Description',
+    },
 );
 
 console.log(todo1);
@@ -126,33 +126,33 @@ Interface 有些屬性可能為可選的 (optional)，使用 `Required` Utility 
 
 ```typescript
 interface Todo {
-  title: string;
-  // description 是可選的
-  description?: string;
-  completed: boolean;
+    title: string;
+    // description 是可選的
+    description?: string;
+    completed: boolean;
 }
 
 // 將所有屬性都轉換為必填的
 function updateTodo(todo: Todo, fieldsToUpdate: Required<Todo>) {
-  return {
-    ...todo,
-    ...fieldsToUpdate,
-  };
+    return {
+        ...todo,
+        ...fieldsToUpdate,
+    };
 }
 
 const todo1 = updateTodo(
-  {
-    title: "Old Title",
-    description: "Old Description",
-    completed: false,
-  },
-  // 只需要傳入 title 和 description 屬性
-  {
-    title: "New Title",
-    // description 變成必填的
-    description: "New Description",
-    completed: true,
-  },
+    {
+        title: 'Old Title',
+        description: 'Old Description',
+        completed: false,
+    },
+    // 只需要傳入 title 和 description 屬性
+    {
+        title: 'New Title',
+        // description 變成必填的
+        description: 'New Description',
+        completed: true,
+    },
 );
 
 console.log(todo1);
@@ -166,22 +166,22 @@ console.log(todo1);
 
 ```typescript
 interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
+    title: string;
+    description: string;
+    completed: boolean;
 }
 
 type T = Readonly<Todo>;
 
 const todo1: T = {
-  title: "Old Title",
-  description: "Old Description",
-  completed: false,
+    title: 'Old Title',
+    description: 'Old Description',
+    completed: false,
 };
 
 // 下面這行會出現錯誤，因為 title 是只讀的
 // Cannot assign to 'title' because it is a read-only property.(2540)
-todo1.title = "New Title";
+todo1.title = 'New Title';
 ```
 
 ### Record
@@ -190,41 +190,41 @@ todo1.title = "New Title";
 
 ```typescript
 type User = {
-  id: string;
-  name: string;
-  age: number;
+    id: string;
+    name: string;
+    age: number;
 };
 
 // 建立一個 key-value pair 的 type，key 是 string，value 是 User
 type T = Record<string, User>;
 
 const a: T = {
-  "1_allen": {
-    id: "1",
-    name: "Allen",
-    age: 25,
-  },
-  "2_bob": {
-    id: "2",
-    name: "Bob",
-    age: 30,
-  },
+    '1_allen': {
+        id: '1',
+        name: 'Allen',
+        age: 25,
+    },
+    '2_bob': {
+        id: '2',
+        name: 'Bob',
+        age: 30,
+    },
 };
 
 // 建立一個 key-value pair 的 type，key 是 "admin" 或 "user"，value 是 User
-type U = Record<"admin" | "user", User>;
+type U = Record<'admin' | 'user', User>;
 
 const b: U = {
-  admin: {
-    id: "1",
-    name: "Allen",
-    age: 25,
-  },
-  user: {
-    id: "2",
-    name: "Bob",
-    age: 30,
-  },
+    admin: {
+        id: '1',
+        name: 'Allen',
+        age: 25,
+    },
+    user: {
+        id: '2',
+        name: 'Bob',
+        age: 30,
+    },
 };
 ```
 
@@ -233,12 +233,12 @@ const b: U = {
 可以從 Type 中提取出符合條件的 Type。
 
 ```typescript
-type Role = "admin" | "user" | "guest";
-type Permission = "read" | "write" | "delete";
-type OtherRole = "testing" | "admin" | "user" | "guest" | "moderator";
+type Role = 'admin' | 'user' | 'guest';
+type Permission = 'read' | 'write' | 'delete';
+type OtherRole = 'testing' | 'admin' | 'user' | 'guest' | 'moderator';
 
-type AdminRole = Extract<Role, "admin">;
-type UserPermission = Extract<Permission, "read" | "write">;
+type AdminRole = Extract<Role, 'admin'>;
+type UserPermission = Extract<Permission, 'read' | 'write'>;
 // 類似交集，只提取 Role 在 OtherRole 中的共通部分
 type T = Extract<Role, OtherRole>;
 ```
@@ -248,12 +248,12 @@ type T = Extract<Role, OtherRole>;
 可以從 Type 中排除出不符合條件的 Type。
 
 ```typescript
-type Role = "admin" | "user" | "guest";
-type Permission = "read" | "write" | "delete";
-type OtherRole = "testing" | "admin" | "user" | "guest" | "moderator";
+type Role = 'admin' | 'user' | 'guest';
+type Permission = 'read' | 'write' | 'delete';
+type OtherRole = 'testing' | 'admin' | 'user' | 'guest' | 'moderator';
 
-type AdminRole = Exclude<Role, "admin">;
-type UserPermission = Exclude<Permission, "read" | "write">;
+type AdminRole = Exclude<Role, 'admin'>;
+type UserPermission = Exclude<Permission, 'read' | 'write'>;
 // 類似差集，排除 Role 在 OtherRole 中的共通部分
 type T = Exclude<Role, OtherRole>;
 ```
@@ -264,15 +264,15 @@ type T = Exclude<Role, OtherRole>;
 
 ```typescript
 function getUser() {
-  return { id: 1, name: "Allen", age: 25 };
+    return { id: 1, name: 'Allen', age: 25 };
 }
 
 type T = ReturnType<typeof getUser>;
 
 const user: T = {
-  id: 1,
-  name: "Allen",
-  age: 25,
+    id: 1,
+    name: 'Allen',
+    age: 25,
 };
 ```
 
@@ -284,7 +284,7 @@ const user: T = {
 
 ```typescript
 function getUser(id: number) {
-  return { id, name: "Allen", age: 25 };
+    return { id, name: 'Allen', age: 25 };
 }
 
 type T = Parameters<typeof getUser>;
@@ -298,16 +298,16 @@ const id: T = [1];
 
 ```typescript
 class User {
-  constructor(
-    public id: number,
-    public name: string,
-    public age: number,
-  ) {}
+    constructor(
+        public id: number,
+        public name: string,
+        public age: number,
+    ) {}
 }
 
 type T = ConstructorParameters<typeof User>;
 
-const user: T = [1, "Allen", 25];
+const user: T = [1, 'Allen', 25];
 ```
 
 ### InstanceType
@@ -318,11 +318,11 @@ const user: T = [1, "Allen", 25];
 
 ```typescript
 class User {
-  constructor(
-    public id: number,
-    public name: string,
-    public age: number,
-  ) {}
+    constructor(
+        public id: number,
+        public name: string,
+        public age: number,
+    ) {}
 }
 
 type T = InstanceType<typeof User>;
@@ -347,7 +347,7 @@ type T = NonNullable<A>;
 
 ```typescript
 function getUser() {
-  return Promise.resolve({ id: 1, name: "Allen", age: 25 });
+    return Promise.resolve({ id: 1, name: 'Allen', age: 25 });
 }
 
 // T 會提取出 Promise 的返回值的 Type
@@ -358,10 +358,10 @@ type T = Awaited<ReturnType<typeof getUser>>;
 ### 字串相關的 Utility Type
 
 ```typescript
-type T = Uppercase<"hello">; // "HELLO"
-type T = Lowercase<"HELLO">; // "hello"
-type T = Capitalize<"hello">; // "Hello"
-type T = Uncapitalize<"Hello">; // "hello"
+type T = Uppercase<'hello'>; // "HELLO"
+type T = Lowercase<'HELLO'>; // "hello"
+type T = Capitalize<'hello'>; // "Hello"
+type T = Uncapitalize<'Hello'>; // "hello"
 ```
 
 ## 參考資料

@@ -19,6 +19,7 @@ Evals 測試預設情況下會被跳過，以保持主要測試套件的快速�
 ### 安裝
 
 1.  **安裝 Evals Plugin:**
+
     ```bash
     composer require pestphp/pest-plugin-evals --dev
     ```
@@ -59,6 +60,7 @@ it('能正確回答首都問題', function (): void {
 ### 確定性斷言 (Deterministic Expectations)
 
 這些檢查直接檢視 LLM 的輸出，無需額外的 AI 呼叫。
+
 - `->toContain('substring')`
 - `->toMatch('/regex/')`
 - `->toBe('exact value')`
@@ -67,6 +69,7 @@ it('能正確回答首都問題', function (): void {
 ### AI 驅動的評分器 (AI-Powered Scorers)
 
 這些評分器需要一個裁判模型，並將 AI 的輸出評為 0.0 到 1.0 之間的分數。
+
 - `->toBeRelevant()`: 斷言回應與提示相關。
 - `->toBeSafe()`: 檢查回應是否包含有害內容。
 - `->toBeCorrect(expected: '東京')`: 斷言回應在事實上與參考答案一致。
@@ -81,6 +84,7 @@ it('能正確回答首都問題', function (): void {
 ### 取樣 (Sampling)
 
 為了確保一致性，你可以使用 `repeat()` 多次運行同一個提示，後續的斷言將會檢查所有生成的回應樣本。
+
 ```php
 expect(CapitalCityAgent::class)
     ->prompt('澳大利亞的首都是哪裡？')

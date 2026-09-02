@@ -8,10 +8,10 @@
 
 - Docker 可以使用不同類型的日誌驅動程式，預設是 `json-file`。
 
-  ```bash
-  # 檢查預設的日誌驅動程式
-  docker info --format '{{.LoggingDriver}}'
-  ```
+    ```bash
+    # 檢查預設的日誌驅動程式
+    docker info --format '{{.LoggingDriver}}'
+    ```
 
 - 除了 `json-file`，Docker 也支援 `awslogs`、`fluentd`、`journald`、`syslog` 等。
 
@@ -44,15 +44,15 @@ Fluent Bit 可以從 syslog 收集日誌。
 
 ```yaml
 pipeline:
-  inputs:
-    - name: syslog
-      mode: udp # 使用 UDP 可以將日誌驅動程式與其他容器解耦
-      listen: 0.0.0.0
-      port: 5140
-      parser: frr # Syslog 必須指定一個解析器
-      buffer_chunk_size: 1M
-      buffer_max_size: 6M
-      tag: docker-syslog-driver
+    inputs:
+        - name: syslog
+          mode: udp # 使用 UDP 可以將日誌驅動程式與其他容器解耦
+          listen: 0.0.0.0
+          port: 5140
+          parser: frr # Syslog 必須指定一個解析器
+          buffer_chunk_size: 1M
+          buffer_max_size: 6M
+          tag: docker-syslog-driver
 ```
 
 ## 解析器外掛程式
@@ -85,14 +85,14 @@ Fluent Bit 可以將日誌發送到 AWS S3。
 
 ```yaml
 outputs:
-  - name: s3
-    match: "*" # 所有輸入都會發送到 S3
-    bucket: log-collection
-    region: us-west-2
-    total_file_size: 1M
-    upload_timeout: 1m
-    s3_key_format: /$TAG/%Y/%m/%d/%H-%M-%S-$UUID.json
-    s3_key_format_tag_delimiters: .-
+    - name: s3
+      match: '*' # 所有輸入都會發送到 S3
+      bucket: log-collection
+      region: us-west-2
+      total_file_size: 1M
+      upload_timeout: 1m
+      s3_key_format: /$TAG/%Y/%m/%d/%H-%M-%S-$UUID.json
+      s3_key_format_tag_delimiters: .-
 ```
 
 `s3_key_format` 可以設定上傳到 S3 的路徑，在路徑中可以使用一些特殊語法。

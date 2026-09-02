@@ -29,13 +29,17 @@
 你也可以將其拆開成兩個屬性：
 
 ```svelte
-<button type="button" class="button" class:active on:click={toggle}> I'm a button </button>
+<button type="button" class="button" class:active on:click={toggle}>
+    I'm a button
+</button>
 ```
 
 如果變數的名稱與 class 的名稱相同，你可以使用 `class:active` 來簡化：
 
 ```svelte
-<button type="button" class="button" class:active on:click={toggle}> I'm a button </button>
+<button type="button" class="button" class:active on:click={toggle}>
+    I'm a button
+</button>
 ```
 
 ## Class Attributes
@@ -67,8 +71,8 @@ Svelte 在 5.16 加入了 Class Attributes 這個新功能，
     type="button"
     class={{
         button: true,
-        "active bg-green-500": active,
-        "deactive bg-gray-200": !active,
+        'active bg-green-500': active,
+        'deactive bg-gray-200': !active,
     }}
     on:click={toggle}
 >
@@ -81,7 +85,11 @@ Svelte 在 5.16 加入了 Class Attributes 這個新功能，
 ```svelte
 <button
     type="button"
-    class={[true && "button", active && "active bg-green-500", !active && "deactive bg-gray-200"]}
+    class={[
+        true && 'button',
+        active && 'active bg-green-500',
+        !active && 'deactive bg-gray-200',
+    ]}
     on:click={toggle}
 >
     I'm a button
@@ -101,7 +109,7 @@ Svelte 在 5.16 加入了 Class Attributes 這個新功能，
 
 <div style="color: {isRed ? 'red' : ''}">This will be red</div>
 
-<div style:color={isRed ? "red" : ""}>This will be red too</div>
+<div style:color={isRed ? 'red' : ''}>This will be red too</div>
 ```
 
 ## Component Styles

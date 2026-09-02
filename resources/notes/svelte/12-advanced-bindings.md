@@ -6,7 +6,7 @@
 
 ```svelte
 <script>
-    let html = "<p>hello world!</p>";
+    let html = '<p>hello world!</p>';
 </script>
 
 <div bind:innerHTML={html} contenteditable />
@@ -55,7 +55,7 @@ Svelte 在 `<audio>` 和 `<video>` 元素上提供了 7 個唯讀性綁定：
     let w;
     let h;
     let size = 42;
-    let text = "edit this text";
+    let text = 'edit this text';
 </script>
 
 <label>
@@ -81,7 +81,7 @@ Svelte 在 `<audio>` 和 `<video>` 元素上提供了 7 個唯讀性綁定：
 
     onMount(() => {
         // "hi"
-        console.log(canvas.getAttribute("say"));
+        console.log(canvas.getAttribute('say'));
     });
 
     // ...
@@ -103,7 +103,7 @@ Svelte 在 `<audio>` 和 `<video>` 元素上提供了 7 個唯讀性綁定：
 ```svelte
 <!-- Keypad.svelte -->
 <script>
-    export let value = "";
+    export let value = '';
 
     // ...
 </script>
@@ -131,7 +131,7 @@ Svelte 在 `<audio>` 和 `<video>` 元素上提供了 7 個唯讀性綁定：
 ```svelte
 <!-- App.svelte -->
 <script>
-    import Canvas from "./Canvas.svelte";
+    import Canvas from './Canvas.svelte';
 
     let canvas;
 

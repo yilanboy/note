@@ -268,4 +268,3 @@ fn main() -> Result<(), Box<dyn Error>> {
 這清楚表明這個函式是有可能會發生錯誤的，呼叫之後應該要考慮錯誤發生的情況並進行處理。
 
 詳細請參考這篇 [Stack Overflow 提問](https://stackoverflow.com/questions/70855252/is-it-a-good-practice-to-always-return-a-resultt-e-from-functions)。
-

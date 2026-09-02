@@ -1,6 +1,6 @@
 /* Latin text hits Inter, CJK falls back to Noto Sans TC; code uses JetBrains Mono. */
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+TC:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+TC:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -14,7 +14,11 @@
     --color-zinc-25: oklch(99.2% 0 0);
     /* Dark-mode content surface: sits between zinc-800 and zinc-900 so content
        reads a touch lighter than the zinc-900 sidebar/header (mirrors light mode). */
-    --color-zinc-850: color-mix(in oklch, var(--color-zinc-800), var(--color-zinc-900));
+    --color-zinc-850: color-mix(
+        in oklch,
+        var(--color-zinc-800),
+        var(--color-zinc-900)
+    );
 
     --color-lividus-50: oklch(0.9397 0.0149 251.16);
     --color-lividus-100: oklch(0.8927 0.0286 246.5);
@@ -29,16 +33,16 @@
     --color-lividus-950: oklch(0.1867 0.0472 262.91);
 
     /* Feeds --default-font-family (body) and --default-mono-font-family (code/pre). */
-    --font-sans: "Inter", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, "Noto Sans TC", monospace;
+    --font-sans: 'Inter', 'Noto Sans TC', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'Noto Sans TC', monospace;
 }
 
 :not(pre) > code::before {
-    content: "";
+    content: '';
 }
 
 :not(pre) > code::after {
-    content: "";
+    content: '';
 }
 
 :not(pre) > code {
@@ -56,17 +60,18 @@
 }
 
 blockquote p:first-of-type::before {
-    content: "" !important;
+    content: '' !important;
 }
 
 blockquote p:last-of-type::after {
-    content: "" !important;
+    content: '' !important;
 }
 
 /* Shiki dual-theme code blocks: dark palette kicks in under the `.dark` class.
    `!important` is required to beat the inline light-theme styles. */
 .dark .shiki,
 .dark .shiki span {
+    font-size: 1rem;
     color: var(--shiki-dark) !important;
     background-color: var(--shiki-dark-bg) !important;
 }
@@ -106,4 +111,3 @@ blockquote p:last-of-type::after {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
-

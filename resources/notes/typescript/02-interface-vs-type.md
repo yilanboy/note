@@ -4,13 +4,13 @@
 
 ```typescript
 interface Person {
-  name: string;
-  age: number;
+    name: string;
+    age: number;
 }
 
 const person: Person = {
-  name: "John",
-  age: 30,
+    name: 'John',
+    age: 30,
 };
 ```
 
@@ -18,13 +18,13 @@ const person: Person = {
 
 ```typescript
 type Person = {
-  name: string;
-  age: number;
+    name: string;
+    age: number;
 };
 
 const person: Person = {
-  name: "John",
-  age: 30,
+    name: 'John',
+    age: 30,
 };
 ```
 
@@ -38,19 +38,19 @@ const person: Person = {
 
 ```typescript
 interface Foo {
-  id: number;
+    id: number;
 }
 
 interface Bar {
-  name: string;
+    name: string;
 }
 
 // 組合不同介面形成一個新的介面
 interface FooBar extends Foo, Bar {}
 
 const foobar: FooBar = {
-  id: 1,
-  name: "John",
+    id: 1,
+    name: 'John',
 };
 ```
 
@@ -58,18 +58,18 @@ const foobar: FooBar = {
 
 ```typescript
 type Foo = {
-  id: number;
+    id: number;
 };
 
 type Bar = {
-  name: string;
+    name: string;
 };
 
 type FooBar = Foo & Bar;
 
 const foobar: FooBar = {
-  id: 1,
-  name: "John",
+    id: 1,
+    name: 'John',
 };
 ```
 
@@ -78,11 +78,11 @@ const foobar: FooBar = {
 
 ```typescript
 interface Foo {
-  id: number;
+    id: number;
 }
 
 interface Bar {
-  id: string;
+    id: string;
 }
 
 // Foo 與 Bar 有著同樣的屬性 id，但類型卻不相同
@@ -102,18 +102,18 @@ Named property 'id' of types 'Foo' and 'Bar' are not identical.
 
 ```typescript
 type Foo = {
-  id: number;
+    id: number;
 };
 
 type Bar = {
-  id: string;
+    id: string;
 };
 
 // 這裡不會報錯
 type FooBar = Foo & Bar;
 
 // 但是 id 的類型會變成 never
-type Id = FooBar["id"];
+type Id = FooBar['id'];
 ```
 
 雖然貼心，但這麼做顯然是不對的。為什麼 interface 可以偵測到笨笨的行為，而 type 卻不行呢？

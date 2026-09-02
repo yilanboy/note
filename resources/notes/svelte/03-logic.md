@@ -15,7 +15,7 @@
 
 <button onclick={increment}>
     Clicked {count}
-    {count === 1 ? "time" : "times"}
+    {count === 1 ? 'time' : 'times'}
 </button>
 
 {#if count > 10}
@@ -61,7 +61,7 @@
 
 ```svelte
 <script>
-    const color = ["red", "green", "blue"];
+    const color = ['red', 'green', 'blue'];
     let selected = color[0];
 </script>
 

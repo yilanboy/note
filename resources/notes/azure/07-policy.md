@@ -20,23 +20,23 @@ Policy 可以使用 Azure 預設提供的，也可以自己定義。
 
 ```json
 {
-  "policyRule": {
-    "if": {
-      "allOf": [
-        {
-          "field": "type",
-          "equals": "Microsoft.Compute/virtualMachines"
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                    "field": "Microsoft.Compute/virtualMachines/sku.name",
+                    "like": "Standard_G*"
+                }
+            ]
         },
-        {
-          "field": "Microsoft.Compute/virtualMachines/sku.name",
-          "like": "Standard_G*"
+        "then": {
+            "effect": "deny"
         }
-      ]
-    },
-    "then": {
-      "effect": "deny"
     }
-  }
 }
 ```
 
@@ -47,33 +47,33 @@ Policy 可以使用 Azure 預設提供的，也可以自己定義。
 
 ```json
 {
-  "properties": {
-    "parameters": {
-      "daysToExpire": {
-        "type": "Integer",
-        "metadata": {
-          "displayName": "Days to expire",
-          "description": "The number of days for a certificate to expire."
+    "properties": {
+        "parameters": {
+            "daysToExpire": {
+                "type": "Integer",
+                "metadata": {
+                    "displayName": "Days to expire",
+                    "description": "The number of days for a certificate to expire."
+                }
+            },
+            "effect": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "'Audit' allows a non-compliant resource to be created, but flags it as non-compliant. 'Deny' blocks the resource creation. 'Disable' turns off the policy."
+                },
+                "allowedValues": [
+                    "audit",
+                    "Audit",
+                    "deny",
+                    "Deny",
+                    "disabled",
+                    "Disabled"
+                ],
+                "defaultValue": "Audit"
+            }
         }
-      },
-      "effect": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "'Audit' allows a non-compliant resource to be created, but flags it as non-compliant. 'Deny' blocks the resource creation. 'Disable' turns off the policy."
-        },
-        "allowedValues": [
-          "audit",
-          "Audit",
-          "deny",
-          "Deny",
-          "disabled",
-          "Disabled"
-        ],
-        "defaultValue": "Audit"
-      }
     }
-  }
 }
 ```
 

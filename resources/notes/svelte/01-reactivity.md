@@ -17,7 +17,7 @@ Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大
 
 <button onclick={increment}>
     Clicked {count}
-    {count === 1 ? "time" : "times"}
+    {count === 1 ? 'time' : 'times'}
 </button>
 ```
 
@@ -27,10 +27,10 @@ Svelte 5 引入了 **runes** 來控制即時反應，使其更加明確和強大
 
 ```svelte
 <script>
-// 如果不使用 `$state`，則 `count` 不是反應性的
-let count = 0;
+    // 如果不使用 `$state`，則 `count` 不是反應性的
+    let count = 0;
 
-// ...
+    // ...
 </script>
 
 <!-- 點擊按鈕將不再更新 DOM，因為 `count` 不是 `$state` 創建的訊號 -->
@@ -50,32 +50,30 @@ Svelte: This reference only captures the initial value of `userName`. Did you me
 
 ```svelte
 <script>
-    let userName = $state("訪客");
+    let userName = $state('訪客');
     let greeting = userName;
 
     function updateUserName() {
-        userName = "小明";
+        userName = '小明';
     }
 </script>
 
-<button onclick={updateUserName}>更新使用者名稱</button>
-<p>{greeting}</p>
+<button onclick={updateUserName}>更新使用者名稱</button><p>{greeting}</p>
 ```
 
 如果希望 `greeting` 始終反映 `userName` 的最新值，請使用 `$derived`：
 
 ```svelte
 <script>
-    let userName = $state("訪客");
+    let userName = $state('訪客');
     let greeting = $derived(userName);
 
     function updateUserName() {
-        userName = "小明";
+        userName = '小明';
     }
 </script>
 
-<button onclick={updateUserName}>更新使用者名稱</button>
-<p>{greeting}</p>
+<button onclick={updateUserName}>更新使用者名稱</button><p>{greeting}</p>
 ```
 
 詳細說明請參考：[state_referenced_locally](https://svelte.dev/e/state_referenced_locally)。
@@ -145,7 +143,7 @@ Svelte: This reference only captures the initial value of `userName`. Did you me
 
 <button onclick={removeLast}> Remove last number </button>
 
-<p>Numbers: {numbers.join(", ")}</p>
+<p>Numbers: {numbers.join(', ')}</p>
 ```
 
 與舊版 Svelte 相比，這大大簡化了狀態管理。

@@ -24,9 +24,9 @@
 - **提升全域容錯時間**：
   在 `tests/Pest.php` 中將瀏覽器超時從 10 秒提升至 20 秒，為 CI 負載波動提供緩衝。
 
-  ```php
-  pest()->browser()->timeout(20000);
-  ```
+    ```php
+    pest()->browser()->timeout(20000);
+    ```
 
 - **使用 `assertVisible()` 代替 `wait()`**：
   確保元素在 DOM 中出現且對使用者可見後，再進行下一個動作（如填寫表單）。

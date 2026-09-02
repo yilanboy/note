@@ -38,17 +38,17 @@ sudo cat /proc/$(sudo docker inspect <容器名稱> --format '{{.State.Pid}}')/s
 **指令拆解說明：**
 
 1. `sudo docker inspect <容器名稱> --format '{{.State.Pid}}'`
-   - `docker inspect` — 取得容器的詳細設定與狀態資訊（JSON 格式）
-   - `--format '{{.State.Pid}}'` — 使用 Go template 語法，只擷取容器主行程的 PID（行程 ID）
+    - `docker inspect` — 取得容器的詳細設定與狀態資訊（JSON 格式）
+    - `--format '{{.State.Pid}}'` — 使用 Go template 語法，只擷取容器主行程的 PID（行程 ID）
 
 2. `$( ... )` — Shell 的指令替換（command substitution），將括號內指令的輸出作為外層指令的參數
 
 3. `/proc/<PID>/status` — Linux 核心為每個行程提供的虛擬檔案，記錄該行程的記憶體使用詳情
 
 4. `grep -E 'Name|VmRSS|VmPeak|VmSwap'`
-   - `grep` — 篩選符合條件的行
-   - `-E` — 啟用擴展正規表示式（Extended Regex），允許用 `|` 表示「或」
-   - `'Name|VmRSS|VmPeak|VmSwap'` — 只顯示包含這四個關鍵字的行
+    - `grep` — 篩選符合條件的行
+    - `-E` — 啟用擴展正規表示式（Extended Regex），允許用 `|` 表示「或」
+    - `'Name|VmRSS|VmPeak|VmSwap'` — 只顯示包含這四個關鍵字的行
 
 **輸出範例：**
 

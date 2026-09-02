@@ -53,8 +53,8 @@ Action 不應該包含任何 HTTP 特有的邏輯或物件（例如 `Request` �
 
 - **為什麼？** 這樣可以確保 Action 能夠在其他層級被重複使用，例如 Console 命令（Artisan Commands）、佇列任務（Queued Jobs）或是測試中。
 - **如何劃分邊界？** 以「刪除帳號」為例：
-  - **Action 的範疇**：刪除使用者的歷史紀錄、刪除資料庫中的 User 資料、發送 goodbye 電子郵件。
-  - **Controller 的範疇**：登出使用者（`Auth::logout()`）、失效 Session（`$request->session()->invalidate()`）與重新生成 CSRF Token。因為登出與 Session 操作是逆向的 HTTP 層級的關注點。
+    - **Action 的範疇**：刪除使用者的歷史紀錄、刪除資料庫中的 User 資料、發送 goodbye 電子郵件。
+    - **Controller 的範疇**：登出使用者（`Auth::logout()`）、失效 Session（`$request->session()->invalidate()`）與重新生成 CSRF Token。因為登出與 Session 操作是逆向的 HTTP 層級的關注點。
 
 ### 2. 資料驗證的邊界
 
@@ -117,12 +117,12 @@ final readonly class UpdateUserAction
 2.  **Array shapes (陣列形狀)**：
     - _優點_：輕量，不需建立額外檔案，藉由 PHPStan 提供的 `@param array{...}` 註解即可支援靜態分析與型別提示。
     - _做法_：
-      ```php
-      /**
-       * @param array{name: string, email: string} $data
-       */
-      public function handle(User $user, array $data): void
-      ```
+        ```php
+        /**
+         * @param array{name: string, email: string} $data
+         */
+        public function handle(User $user, array $data): void
+        ```
 
 這兩者都是被廣泛採用的做法，可根據團隊對型別嚴格度與專案結構簡潔度來做選擇。
 
@@ -152,7 +152,7 @@ Nuno Maduro 推薦採用**平坦的資料夾結構**，即全部存放在 `app/A
 
 - **Actions** 通常用於**寫入/變更系統狀態（Write Operations）**。
 - 對於**讀取/查詢（Read Operations）**（例如獲取產品列表）：
-  - 部分開發者會使用 `ListProductsAction`。
-  - 部分開發者會建立 `app/Queries` 資料夾（如 `ListProductsQuery.php`）。
-  - 部分開發者則偏好直接在 Controller 中寫 inline query（例如 `Product::latest()->get()`）。
-  - 這部分業界尚無統一標準，可依專案複雜度調整。
+    - 部分開發者會使用 `ListProductsAction`。
+    - 部分開發者會建立 `app/Queries` 資料夾（如 `ListProductsQuery.php`）。
+    - 部分開發者則偏好直接在 Controller 中寫 inline query（例如 `Product::latest()->get()`）。
+    - 這部分業界尚無統一標準，可依專案複雜度調整。

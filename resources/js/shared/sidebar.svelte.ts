@@ -1,9 +1,9 @@
-import { MediaQuery } from "svelte/reactivity";
+import { MediaQuery } from 'svelte/reactivity';
 
 // Must stay in sync with Tailwind's `lg` breakpoint (1024px). Using matchMedia
 // means we share the same breakpoint engine as the `lg:` utility classes.
 // The `true` fallback is only used during SSR, where the viewport is unknown.
-export const isDesktop = new MediaQuery("min-width: 1024px", true);
+export const isDesktop = new MediaQuery('min-width: 1024px', true);
 
 /**
  * Sidebar visibility. `preference` is the user's explicit choice; `null` means

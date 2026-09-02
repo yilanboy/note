@@ -66,58 +66,58 @@ docker buildx build --platform linux/arm64 --push -t nella0128/mysql-backup-to-s
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  namespace: docfunc
-  name: mysql-backup-cronjob
+    namespace: docfunc
+    name: mysql-backup-cronjob
 spec:
-  # 設定每小時執行一次
-  schedule: "0 * * * *"
-  jobTemplate:
-    spec:
-      template:
+    # 設定每小時執行一次
+    schedule: '0 * * * *'
+    jobTemplate:
         spec:
-          containers:
-            - name: mysql-backup-cronjob
-              image: nella0128/mysql-backup-to-s3:latest
-              imagePullPolicy: "Always"
-              # 執行 mysqldump 指令，並將備份檔案上傳到 S3 上
-              command:
-                - "/bin/bash"
-                - "-c"
-                - |
-                  mysqldump --no-tablespaces -h $DATABASE_HOST -P $DATABASE_PORT -u $DATABASE_USER --password=$DATABASE_PASSWORD $DATABASE_NAME > $BACKUP_FILE_NAME
-                  aws s3 cp $BACKUP_FILE_NAME s3://$S3_BUCKET_NAME/$(date +'%Y%m%d%H%M%S')_$BACKUP_FILE_NAME
-              # 設定需要的環境變數
-              env:
-                - name: DATABASE_HOST
-                  value: mysql-service
-                - name: DATABASE_PORT
-                  value: "3306"
-                - name: DATABASE_USER
-                  value: blog_admin
-                - name: DATABASE_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: mysql_password
-                      name: secrets
-                - name: DATABASE_NAME
-                  value: blog
-                - name: BACKUP_FILE_NAME
-                  value: blog.sql
-                - name: S3_BUCKET_NAME
-                  value: docfunc-backups
-                - name: AWS_ACCESS_KEY_ID
-                  valueFrom:
-                    secretKeyRef:
-                      key: aws_access_key_id
-                      name: secrets
-                - name: AWS_SECRET_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      key: aws_secret_access_key
-                      name: secrets
-                - name: AWS_DEFAULT_REGION
-                  value: ap-northeast-1
-          restartPolicy: OnFailure
+            template:
+                spec:
+                    containers:
+                        - name: mysql-backup-cronjob
+                          image: nella0128/mysql-backup-to-s3:latest
+                          imagePullPolicy: 'Always'
+                          # 執行 mysqldump 指令，並將備份檔案上傳到 S3 上
+                          command:
+                              - '/bin/bash'
+                              - '-c'
+                              - |
+                                  mysqldump --no-tablespaces -h $DATABASE_HOST -P $DATABASE_PORT -u $DATABASE_USER --password=$DATABASE_PASSWORD $DATABASE_NAME > $BACKUP_FILE_NAME
+                                  aws s3 cp $BACKUP_FILE_NAME s3://$S3_BUCKET_NAME/$(date +'%Y%m%d%H%M%S')_$BACKUP_FILE_NAME
+                          # 設定需要的環境變數
+                          env:
+                              - name: DATABASE_HOST
+                                value: mysql-service
+                              - name: DATABASE_PORT
+                                value: '3306'
+                              - name: DATABASE_USER
+                                value: blog_admin
+                              - name: DATABASE_PASSWORD
+                                valueFrom:
+                                    secretKeyRef:
+                                        key: mysql_password
+                                        name: secrets
+                              - name: DATABASE_NAME
+                                value: blog
+                              - name: BACKUP_FILE_NAME
+                                value: blog.sql
+                              - name: S3_BUCKET_NAME
+                                value: docfunc-backups
+                              - name: AWS_ACCESS_KEY_ID
+                                valueFrom:
+                                    secretKeyRef:
+                                        key: aws_access_key_id
+                                        name: secrets
+                              - name: AWS_SECRET_ACCESS_KEY
+                                valueFrom:
+                                    secretKeyRef:
+                                        key: aws_secret_access_key
+                                        name: secrets
+                              - name: AWS_DEFAULT_REGION
+                                value: ap-northeast-1
+                    restartPolicy: OnFailure
 ```
 
 使用 ArgoCD 部署上去之後，就可以看到 CronJob 開始執行了。

@@ -28,8 +28,8 @@ Svelte 有提供一些特別元素，用來幫助你更好的建置前端應用�
 
 ```svelte
 <script>
-    import Foo from "./Foo.svelte";
-    import Bar from "./Bar.svelte";
+    import Foo from './Foo.svelte';
+    import Bar from './Bar.svelte';
 
     let component = Foo;
 </script>
@@ -44,7 +44,7 @@ Svelte 有提供一些特別元素，用來幫助你更好的建置前端應用�
 
 ```svelte
 <script>
-    let element = "div";
+    let element = 'div';
 </script>
 
 <!-- 這邊會顯示 div 元素 -->
@@ -83,7 +83,10 @@ Svelte 有提供一些特別元素，用來幫助你更好的建置前端應用�
 `<svelte:body>` 可以讓你將事件監聽器加到 `document.body` 物件上。
 
 ```svelte
-<svelte:body on:mouseenter={() => (showCat = true)} on:mouseleave={() => (showCat = false)} />
+<svelte:body
+    on:mouseenter={() => (showCat = true)}
+    on:mouseleave={() => (showCat = false)}
+/>
 ```
 
 ## `<svelte:document>`

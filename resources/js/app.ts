@@ -1,4 +1,4 @@
-import { createInertiaApp } from "@inertiajs/svelte";
-import "@tailwindplus/elements";
+import { createInertiaApp } from '@inertiajs/svelte';
+import '@tailwindplus/elements';
 
 createInertiaApp();

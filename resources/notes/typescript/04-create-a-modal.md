@@ -6,7 +6,7 @@
 /* 因為這個 CSS 設定，當某一行程式碼字數太多導致程式碼區塊的寬度超過文章的寬度時，超過出來的部分就會被隱藏起來，需要透過左右滾動捲軸來查看程式碼 */
 /* 我故意把上面那一行打得很長，可以感受一下 😉 */
 pre code.hljs {
-  overflow-x: auto;
+    overflow-x: auto;
 }
 ```
 
@@ -21,7 +21,7 @@ pre code.hljs {
 ```typescript
 // 建立一個 Modal 實例
 const modal = new Modal({
-  innerHtml: "<pre>我要顯示的程式碼</pre>",
+    innerHtml: '<pre>我要顯示的程式碼</pre>',
 });
 
 // 打開 Modal
@@ -43,9 +43,9 @@ modal.open();
 // 待會需要透過這些 id 來達成幾個目的:
 // - 調整 Class Name 來顯示與隱藏互動視窗
 // - 加上事件監聽，例如按鈕需要加上一個 click 事件來關閉互動視窗
-const BACKGROUND_BACKDROP_ID: string = "modal-background-backdrop";
-const MODAL_PANEL_ID: string = "modal-panel";
-const CLOSE_MODAL_BUTTON_ID: string = "close-modal-button";
+const BACKGROUND_BACKDROP_ID: string = 'modal-background-backdrop';
+const MODAL_PANEL_ID: string = 'modal-panel';
+const CLOSE_MODAL_BUTTON_ID: string = 'close-modal-button';
 
 // 關閉互動視窗按鈕的 SVG Icon (來自 BootStrap Icon)
 const X_CIRCLE_FILL_ICON_SVG: string = `
@@ -56,29 +56,29 @@ const X_CIRCLE_FILL_ICON_SVG: string = `
 
 // Tailwind UI 的互動視窗可以透過新增與移除 Class Name 來顯示與隱藏互動視窗
 const SHOW_BACKGROUND_BACKDROP_CLASS_NAME: string[] = [
-  "ease-out",
-  "duration-300",
-  "opacity-100",
+    'ease-out',
+    'duration-300',
+    'opacity-100',
 ];
 const HIDE_BACKGROUND_BACKDROP_CLASS_NAME: string[] = [
-  "ease-in",
-  "duration-200",
-  "opacity-0",
+    'ease-in',
+    'duration-200',
+    'opacity-0',
 ];
 const SHOW_MODAL_PANEL_CLASS_NAME: string[] = [
-  "ease-out",
-  "duration-300",
-  "opacity-100",
-  "translate-y-0",
-  "sm:scale-100",
+    'ease-out',
+    'duration-300',
+    'opacity-100',
+    'translate-y-0',
+    'sm:scale-100',
 ];
 const HIDE_MODAL_PANEL_CLASS_NAME: string[] = [
-  "ease-in",
-  "duration-200",
-  "opacity-0",
-  "translate-y-4",
-  "sm:translate-y-0",
-  "sm:scale-95",
+    'ease-in',
+    'duration-200',
+    'opacity-0',
+    'translate-y-4',
+    'sm:translate-y-0',
+    'sm:scale-95',
 ];
 ```
 
@@ -86,16 +86,16 @@ const HIDE_MODAL_PANEL_CLASS_NAME: string[] = [
 
 ```typescript
 export class Modal {
-  public element: HTMLDivElement;
+    public element: HTMLDivElement;
 
-  public constructor({ innerHtml }: { innerHtml: string }) {
-    // 建立一個 div 元素，用來放置互動視窗的樣板
-    this.element = document.createElement("div");
-    this.element.id = "dynamic-content-modal";
-    this.element.innerHTML = this.modalInnerHtmlTemplate(innerHtml);
-  }
+    public constructor({ innerHtml }: { innerHtml: string }) {
+        // 建立一個 div 元素，用來放置互動視窗的樣板
+        this.element = document.createElement('div');
+        this.element.id = 'dynamic-content-modal';
+        this.element.innerHTML = this.modalInnerHtmlTemplate(innerHtml);
+    }
 
-  // ...
+    // ...
 }
 ```
 
@@ -103,17 +103,17 @@ export class Modal {
 
 ```typescript
 export class Modal {
-  // ...
+    // ...
 
-  public modalInnerHtmlTemplate(innerHtml: string): string {
-    // 樣板內容來自 Tailwind UI 的 Modal Dialog
-    return `<div class="relative z-30">
+    public modalInnerHtmlTemplate(innerHtml: string): string {
+        // 樣板內容來自 Tailwind UI 的 Modal Dialog
+        return `<div class="relative z-30">
             <!-- 互動視窗預設為隱藏狀態 -->
             <!-- 將剛剛設定用來隱藏互動視窗的 Class Name 加上去 -->
             <div
                 id="${BACKGROUND_BACKDROP_ID}"
                 class="fixed inset-0 bg-gray-500/75 backdrop-blur-md transition-opacity ${HIDE_BACKGROUND_BACKDROP_CLASS_NAME.join(
-                  " "
+                    ' ',
                 )}"
             ></div>
 
@@ -122,7 +122,7 @@ export class Modal {
                     <div
                         id="${MODAL_PANEL_ID}"
                         class="relative transform overflow-hidden rounded-xl text-left transition-all sm:w-fit sm:max-w-6xl ${HIDE_MODAL_PANEL_CLASS_NAME.join(
-                          " "
+                            ' ',
                         )}"
                     >
                         <!-- 互動視窗的內容 -->
@@ -142,7 +142,7 @@ export class Modal {
                 </button>
             </div>
         </div>`;
-  }
+    }
 }
 ```
 
@@ -150,39 +150,43 @@ export class Modal {
 
 ```typescript
 export class Modal {
-  // ...
+    // ...
 
-  public open() {
-    // 將互動視窗元素塞到 <body> 中
-    // 注意此時互動視窗還是看不到的，因為樣式預設是隱藏的狀態
-    document.body.appendChild(this.element);
-    // 在 body 加上樣式來隱藏捲軸，讓互動視窗打開後無法滾動主視窗的捲軸
-    document.body.style.overflow = "hidden";
+    public open() {
+        // 將互動視窗元素塞到 <body> 中
+        // 注意此時互動視窗還是看不到的，因為樣式預設是隱藏的狀態
+        document.body.appendChild(this.element);
+        // 在 body 加上樣式來隱藏捲軸，讓互動視窗打開後無法滾動主視窗的捲軸
+        document.body.style.overflow = 'hidden';
 
-    // 使用剛剛設定的 id 取得互動視窗中各個元素
-    // 利用調整元素 Class Name 的方式來顯示互動視窗
-    const backgroundBackdrop = document.getElementById(BACKGROUND_BACKDROP_ID);
-    const modalPanel = document.getElementById(MODAL_PANEL_ID);
+        // 使用剛剛設定的 id 取得互動視窗中各個元素
+        // 利用調整元素 Class Name 的方式來顯示互動視窗
+        const backgroundBackdrop = document.getElementById(
+            BACKGROUND_BACKDROP_ID,
+        );
+        const modalPanel = document.getElementById(MODAL_PANEL_ID);
 
-    if (!backgroundBackdrop || !modalPanel) {
-      return;
+        if (!backgroundBackdrop || !modalPanel) {
+            return;
+        }
+
+        // 為了顯示 CSS Transition 的演示效果，這裡需要將其放在 setTimeout 中
+        // 確保 Class Name 的調整是在互動視窗放入 body 後過段時間才執行
+        setTimeout(() => {
+            backgroundBackdrop.classList.remove(
+                ...HIDE_BACKGROUND_BACKDROP_CLASS_NAME,
+            );
+            backgroundBackdrop.classList.add(
+                ...SHOW_BACKGROUND_BACKDROP_CLASS_NAME,
+            );
+
+            modalPanel.classList.remove(...HIDE_MODAL_PANEL_CLASS_NAME);
+            modalPanel.classList.add(...SHOW_MODAL_PANEL_CLASS_NAME);
+        }, 100);
+
+        // 互動視窗打開後，我們就要來設定如何關閉視窗了
+        this.setupCloseHandlers();
     }
-
-    // 為了顯示 CSS Transition 的演示效果，這裡需要將其放在 setTimeout 中
-    // 確保 Class Name 的調整是在互動視窗放入 body 後過段時間才執行
-    setTimeout(() => {
-      backgroundBackdrop.classList.remove(
-        ...HIDE_BACKGROUND_BACKDROP_CLASS_NAME
-      );
-      backgroundBackdrop.classList.add(...SHOW_BACKGROUND_BACKDROP_CLASS_NAME);
-
-      modalPanel.classList.remove(...HIDE_MODAL_PANEL_CLASS_NAME);
-      modalPanel.classList.add(...SHOW_MODAL_PANEL_CLASS_NAME);
-    }, 100);
-
-    // 互動視窗打開後，我們就要來設定如何關閉視窗了
-    this.setupCloseHandlers();
-  }
 }
 ```
 
@@ -198,29 +202,29 @@ export class Modal {
 // ❌ 注意！這是含有錯誤的寫法！
 
 export class Modal {
-  // ...
+    // ...
 
-  private setupCloseHandlers() {
-    // 取得關閉按鈕的元素
-    const closeButton = document.getElementById(CLOSE_MODAL_BUTTON_ID);
+    private setupCloseHandlers() {
+        // 取得關閉按鈕的元素
+        const closeButton = document.getElementById(CLOSE_MODAL_BUTTON_ID);
 
-    // 在按鈕上綁定 click 事件，點擊後就呼叫 close 方法關閉互動視窗
-    closeButton?.addEventListener("click", () => this.close(), {
-      // 設定事件只能被觸發一次，避免事件繼續留著佔用資源
-      once: true,
-    });
+        // 在按鈕上綁定 click 事件，點擊後就呼叫 close 方法關閉互動視窗
+        closeButton?.addEventListener('click', () => this.close(), {
+            // 設定事件只能被觸發一次，避免事件繼續留著佔用資源
+            once: true,
+        });
 
-    // 綁定 Keydown 的事件，透過按下 Esc 按鍵來關閉互動視窗
-    document.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.key === "Escape") {
-          this.close();
-        }
-      },
-      { once: true }
-    );
-  }
+        // 綁定 Keydown 的事件，透過按下 Esc 按鍵來關閉互動視窗
+        document.addEventListener(
+            'keydown',
+            (event) => {
+                if (event.key === 'Escape') {
+                    this.close();
+                }
+            },
+            { once: true },
+        );
+    }
 }
 ```
 
@@ -228,50 +232,56 @@ export class Modal {
 
 ```typescript
 export class Modal {
-  // ...
+    // ...
 
-  private close() {
-    const backgroundBackdrop = document.getElementById(BACKGROUND_BACKDROP_ID);
+    private close() {
+        const backgroundBackdrop = document.getElementById(
+            BACKGROUND_BACKDROP_ID,
+        );
 
-    const modalPanel = document.getElementById(MODAL_PANEL_ID);
+        const modalPanel = document.getElementById(MODAL_PANEL_ID);
 
-    if (!backgroundBackdrop || !modalPanel) {
-      return;
+        if (!backgroundBackdrop || !modalPanel) {
+            return;
+        }
+
+        backgroundBackdrop.classList.remove(
+            ...SHOW_BACKGROUND_BACKDROP_CLASS_NAME,
+        );
+        backgroundBackdrop.classList.add(
+            ...HIDE_BACKGROUND_BACKDROP_CLASS_NAME,
+        );
+
+        modalPanel.classList.remove(...SHOW_MODAL_PANEL_CLASS_NAME);
+        modalPanel.classList.add(...HIDE_MODAL_PANEL_CLASS_NAME);
+
+        // 將元素從 body 中移除
+        // 放在 setTimeout 中執行的原因是為了確保 CSS 的 Transition 有演示效果
+        setTimeout(() => {
+            document.body.removeChild(this.element);
+            document.body.style.overflow = '';
+        }, 300);
     }
-
-    backgroundBackdrop.classList.remove(...SHOW_BACKGROUND_BACKDROP_CLASS_NAME);
-    backgroundBackdrop.classList.add(...HIDE_BACKGROUND_BACKDROP_CLASS_NAME);
-
-    modalPanel.classList.remove(...SHOW_MODAL_PANEL_CLASS_NAME);
-    modalPanel.classList.add(...HIDE_MODAL_PANEL_CLASS_NAME);
-
-    // 將元素從 body 中移除
-    // 放在 setTimeout 中執行的原因是為了確保 CSS 的 Transition 有演示效果
-    setTimeout(() => {
-      document.body.removeChild(this.element);
-      document.body.style.overflow = "";
-    }, 300);
-  }
 }
 ```
 
 大功告成！這個時候我們就可以透過下面的方式來打開這個互動視窗。
 
 ```typescript
-import { Modal } from "./modal";
+import { Modal } from './modal';
 
 const openModalButton = document.getElementById(
-  "open-modal"
+    'open-modal',
 ) as HTMLButtonElement | null;
 
 const modal = new Modal({
-  innerHtml: `<div class="w-64 h-40 text-2xl bg-gray-200 text-gray-900 flex items-center justify-center">
+    innerHtml: `<div class="w-64 h-40 text-2xl bg-gray-200 text-gray-900 flex items-center justify-center">
         Hello World!
     </div>`,
 });
 
-openModalButton?.addEventListener("click", function (this: HTMLButtonElement) {
-  modal.open();
+openModalButton?.addEventListener('click', function (this: HTMLButtonElement) {
+    modal.open();
 });
 ```
 
@@ -323,20 +333,20 @@ document.body.removeChild(this.element);
 
 ```typescript
 export class Modal {
-  public element: HTMLDivElement;
-  // 加上一個私有屬性，用來存放 AbortController
-  private abortController: AbortController;
+    public element: HTMLDivElement;
+    // 加上一個私有屬性，用來存放 AbortController
+    private abortController: AbortController;
 
-  public constructor({ innerHtml }: { innerHtml: string }) {
-    this.element = document.createElement("div");
-    this.element.id = "dynamic-content-modal";
-    this.element.innerHTML = this.modalInnerHtmlTemplate(innerHtml);
+    public constructor({ innerHtml }: { innerHtml: string }) {
+        this.element = document.createElement('div');
+        this.element.id = 'dynamic-content-modal';
+        this.element.innerHTML = this.modalInnerHtmlTemplate(innerHtml);
 
-    // 在建立實例時，建立一個新的 AbortController 物件
-    this.abortController = new AbortController();
-  }
+        // 在建立實例時，建立一個新的 AbortController 物件
+        this.abortController = new AbortController();
+    }
 
-  // ...
+    // ...
 }
 ```
 

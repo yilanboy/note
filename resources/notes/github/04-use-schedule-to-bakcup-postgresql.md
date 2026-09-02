@@ -13,52 +13,52 @@ Neon 免費版本提供一天內的備份，但感覺這個時間有點太短了
 name: Database Backup and Upload
 
 on:
-  # 設定定時執行該 workflow
-  schedule:
-    # 一天備份一次，在世界標準時間每天下午 4:00 運行（台灣地區為午夜 12:00）
-    - cron: "0 16 * * *"
-  # 如果不想等到時間到才備份資料庫，也可以加入手動觸發的機制
-  workflow_dispatch:
-    inputs:
-      name:
-        description: Who to greet
-        default: Allen
+    # 設定定時執行該 workflow
+    schedule:
+        # 一天備份一次，在世界標準時間每天下午 4:00 運行（台灣地區為午夜 12:00）
+        - cron: '0 16 * * *'
+    # 如果不想等到時間到才備份資料庫，也可以加入手動觸發的機制
+    workflow_dispatch:
+        inputs:
+            name:
+                description: Who to greet
+                default: Allen
 
 permissions:
-  id-token: write
-  contents: read
+    id-token: write
+    contents: read
 
 jobs:
-  backup-and-upload:
-    runs-on: ubuntu-latest
+    backup-and-upload:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Install postgresql client
-        run: |
-          sudo apt install -y postgresql-common
-          yes '' | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
-          sudo apt install -y postgresql-client-16
+            - name: Install postgresql client
+              run: |
+                  sudo apt install -y postgresql-common
+                  yes '' | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+                  sudo apt install -y postgresql-client-16
 
-      - name: Set timestamp
-        run: echo "TIMESTAMP=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+            - name: Set timestamp
+              run: echo "TIMESTAMP=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Dump database
-        run: |
-          /usr/lib/postgresql/16/bin/pg_dump -d ${{ secrets.DB_CONNECTION_STRING }} --column-inserts --no-owner -f "${TIMESTAMP}.sql"
+            - name: Dump database
+              run: |
+                  /usr/lib/postgresql/16/bin/pg_dump -d ${{ secrets.DB_CONNECTION_STRING }} --column-inserts --no-owner -f "${TIMESTAMP}.sql"
 
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::154471991214:role/github_action
-          aws-region: us-west-2
+            - name: Configure aws credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: arn:aws:iam::154471991214:role/github_action
+                  aws-region: us-west-2
 
-      - name: Upload backup to S3
-        run: |
-          YEAR_MONTH=$(date -u +"%Y/%m")
-          aws s3 cp "${TIMESTAMP}.sql" s3://backup.docfunc.com/database/${YEAR_MONTH}/
+            - name: Upload backup to S3
+              run: |
+                  YEAR_MONTH=$(date -u +"%Y/%m")
+                  aws s3 cp "${TIMESTAMP}.sql" s3://backup.docfunc.com/database/${YEAR_MONTH}/
 ```
 
 ## 參考資料

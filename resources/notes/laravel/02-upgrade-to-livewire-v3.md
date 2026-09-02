@@ -15,13 +15,13 @@
 假設我用 v3 提供的事件 `Livewire.hook("commit")` 來做一些事情。
 
 ```js
-Livewire.hook("commit", ({ component, commit, respond, succeed, fail }) => {
-  succeed(() => {
-    // 當 livewire 更新 DOM 之後就會觸發，等同於 v2 的 'message.processed' 事件
-    queueMicrotask(() => {
-      console.log("hello");
+Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+    succeed(() => {
+        // 當 livewire 更新 DOM 之後就會觸發，等同於 v2 的 'message.processed' 事件
+        queueMicrotask(() => {
+            console.log('hello');
+        });
     });
-  });
 });
 ```
 
@@ -30,15 +30,15 @@ Livewire.hook("commit", ({ component, commit, respond, succeed, fail }) => {
 如果你只想要讓事件只在特定頁面觸發，就要特別處理，例如我只想要在 `say-hello-page` 這個 component 中觸發事件。
 
 ```js
-Livewire.hook("commit", ({ component, commit, respond, succeed, fail }) => {
-  succeed(() => {
-    queueMicrotask(() => {
-      // 指定只在 say-hello-page 頁面觸發
-      if (component.name === "say-hello-page") {
-        console.log("hello");
-      }
+Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+    succeed(() => {
+        queueMicrotask(() => {
+            // 指定只在 say-hello-page 頁面觸發
+            if (component.name === 'say-hello-page') {
+                console.log('hello');
+            }
+        });
     });
-  });
 });
 ```
 
@@ -50,14 +50,14 @@ Livewire.hook("commit", ({ component, commit, respond, succeed, fail }) => {
 
 ```ts
 // 載入 tagify
-import Tagify from "@yaireo/tagify";
+import Tagify from '@yaireo/tagify';
 
 // 尋找要套用 tagify 的 input element
-let tagsInput: InputElement = document.setElementById("tags");
+let tagsInput: InputElement = document.setElementById('tags');
 
 // 如果 input element 存在，就套用 tagify
 if (tagsInput) {
-  new Tagify(tagsInput);
+    new Tagify(tagsInput);
 }
 ```
 
@@ -65,14 +65,14 @@ if (tagsInput) {
 
 ```html
 <div>
-  <!-- tagify 會在 input 的前方加上一個新的元素 -->
-  <!-- 為了避免 component 更新後刪除新的元素，可以使用 wire:ignore -->
-  <div wire:ignore>
-    <input type="text" id="tags" />
-  </div>
+    <!-- tagify 會在 input 的前方加上一個新的元素 -->
+    <!-- 為了避免 component 更新後刪除新的元素，可以使用 wire:ignore -->
+    <div wire:ignore>
+        <input type="text" id="tags" />
+    </div>
 
-  <!-- 會轉換成 <script> 標籤載入 tagify -->
-  @vite('resources/ts/tagify.ts')
+    <!-- 會轉換成 <script> 標籤載入 tagify -->
+    @vite('resources/ts/tagify.ts')
 </div>
 ```
 
@@ -88,13 +88,13 @@ if (tagsInput) {
 
 ```ts
 // 載入 tagify
-import Tagify from "@yaireo/tagify";
+import Tagify from '@yaireo/tagify';
 
 // typescript 比較囉唆點，所以要先宣告一下我們想在 window 物件中放的東西
 declare global {
-  interface Window {
-    Tagify: any;
-  }
+    interface Window {
+        Tagify: any;
+    }
 }
 
 // 因為 @vite 是使用模組化的方式載入，任何變數都無法在外部使用。
@@ -108,8 +108,8 @@ window.Tagify = Tagify;
 
 ```html
 <head>
-  <!-- ... -->
-  @vite('resources/ts/tagify.ts')
+    <!-- ... -->
+    @vite('resources/ts/tagify.ts')
 </head>
 ```
 
@@ -117,17 +117,17 @@ window.Tagify = Tagify;
 
 ```html
 <div>
-  <div wire:ignore>
-    <input type="text" id="tags" />
-  </div>
+    <div wire:ignore>
+        <input type="text" id="tags" />
+    </div>
 
-  <script>
-    let tagsInput: InputElement = document.setElementById("tags");
+    <script>
+        let tagsInput: InputElement = document.setElementById("tags");
 
-    if (tagsInput) {
-      new Tagify(tagsInput);
-    }
-  </script>
+        if (tagsInput) {
+          new Tagify(tagsInput);
+        }
+    </script>
 </div>
 ```
 
@@ -135,9 +135,9 @@ window.Tagify = Tagify;
 
 ```html
 <div x-data x-init="new Tagify($refs.tags);">
-  <div wire:ignore>
-    <input type="text" x-ref="tags" />
-  </div>
+    <div wire:ignore>
+        <input type="text" x-ref="tags" />
+    </div>
 </div>
 ```
 
@@ -147,10 +147,10 @@ window.Tagify = Tagify;
 
 ```html
 <div wire:ignore>
-  <!-- tagify.ts 會新增一個新的元素 -->
-  <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
+    <!-- tagify.ts 會新增一個新的元素 -->
+    <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
 
-  <input type="text" x-ref="tags" />
+    <input type="text" x-ref="tags" />
 </div>
 ```
 
@@ -165,13 +165,13 @@ v3 預設會 cache 你訪問過的頁面。假設你離開頁面後再按上一�
 
 ```html
 <div wire:ignore>
-  <!-- 剛剛 tagify.ts 新增的元素 -->
-  <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
+    <!-- 剛剛 tagify.ts 新增的元素 -->
+    <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
 
-  <!-- 離開頁面後，點選上一頁重新回來，tagify.ts 又會新增一個新的元素 -->
-  <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
+    <!-- 離開頁面後，點選上一頁重新回來，tagify.ts 又會新增一個新的元素 -->
+    <tags class="tagify tagify--noTags tagify--empty" tabindex="-1"> ... </tags>
 
-  <input type="text" x-ref="tags" />
+    <input type="text" x-ref="tags" />
 </div>
 ```
 
@@ -182,8 +182,8 @@ v3 預設會 cache 你訪問過的頁面。假設你離開頁面後再按上一�
 `livewire:navigating` 讓你可以在離開頁面時，對即將要被 cache 的頁面做一些處理。
 
 ```js
-document.addEventListener("livewire:navigating", () => {
-  // Mutate the HTML before the page is navigated away...
+document.addEventListener('livewire:navigating', () => {
+    // Mutate the HTML before the page is navigated away...
 });
 ```
 
@@ -192,14 +192,14 @@ document.addEventListener("livewire:navigating", () => {
 ```js
 let tagify = new Tagify(tagsInput);
 
-document.addEventListener("livewire:navigating", () => {
-  if (tagify !== null) {
-    console.log("destroy tagify before navigating away");
-    // 使用 tagify 的 destroy 方法，移除掉 tagify 新增的元素
-    tagify.destroy();
-    // 在 SPA mode 中，除非你重新整理頁面，否則事件一註冊就會一直存在
-    // 這裡將 tagify 變數設為 null，是為了避免之後一離開頁面，就會執行 tagify.destroy() 造成錯誤
-    tagify = null;
-  }
+document.addEventListener('livewire:navigating', () => {
+    if (tagify !== null) {
+        console.log('destroy tagify before navigating away');
+        // 使用 tagify 的 destroy 方法，移除掉 tagify 新增的元素
+        tagify.destroy();
+        // 在 SPA mode 中，除非你重新整理頁面，否則事件一註冊就會一直存在
+        // 這裡將 tagify 變數設為 null，是為了避免之後一離開頁面，就會執行 tagify.destroy() 造成錯誤
+        tagify = null;
+    }
 });
 ```

@@ -6,7 +6,7 @@
 
 ```svelte
 <script>
-    import { flip } from "svelte/transition";
+    import { flip } from 'svelte/transition';
 
     // ...
 </script>

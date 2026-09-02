@@ -72,7 +72,7 @@ $this->clearHistory = session()->pull('inertia.clear_history', false);
 
 ```json
 {
-  "clearHistory": true
+    "clearHistory": true
 }
 ```
 
@@ -81,7 +81,7 @@ $this->clearHistory = session()->pull('inertia.clear_history', false);
 ```typescript
 // packages/core/src/page.ts
 if (page.clearHistory) {
-  history.clear();
+    history.clear();
 }
 ```
 
@@ -114,26 +114,26 @@ Inertia.js 使用 Crypto API 對頁面紀錄進行加密。
 // packages/core/src/encryption.ts
 
 export const encryptHistory = async (data: any): Promise<ArrayBuffer> => {
-  // ...
+    // ...
 
-  const encrypted = await encryptData(iv, key, data);
+    const encrypted = await encryptData(iv, key, data);
 
-  return encrypted;
+    return encrypted;
 };
 
 // ...
 
 const encryptData = async (iv: Uint8Array, key: CryptoKey, data: any) => {
-  // ...
+    // ...
 
-  return window.crypto.subtle.encrypt(
-    {
-      name: "AES-GCM",
-      iv,
-    },
-    key,
-    encoded.subarray(0, result.written)
-  );
+    return window.crypto.subtle.encrypt(
+        {
+            name: 'AES-GCM',
+            iv,
+        },
+        key,
+        encoded.subarray(0, result.written),
+    );
 };
 ```
 
@@ -143,24 +143,24 @@ const encryptData = async (iv: Uint8Array, key: CryptoKey, data: any) => {
 // packages/core/src/encryption.ts
 
 export const decryptHistory = async (data: any): Promise<any> => {
-  // ...
+    // ...
 
-  return await decryptData(iv, storedKey, data);
+    return await decryptData(iv, storedKey, data);
 };
 
 const decryptData = async (iv: Uint8Array, key: CryptoKey, data: any) => {
-  // ...
+    // ...
 
-  const decrypted = await window.crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      iv,
-    },
-    key,
-    data
-  );
+    const decrypted = await window.crypto.subtle.decrypt(
+        {
+            name: 'AES-GCM',
+            iv,
+        },
+        key,
+        data,
+    );
 
-  return JSON.parse(new TextDecoder().decode(decrypted));
+    return JSON.parse(new TextDecoder().decode(decrypted));
 };
 ```
 

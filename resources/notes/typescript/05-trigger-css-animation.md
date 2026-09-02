@@ -7,12 +7,12 @@
 ```html
 <!-- 互動視窗預設的 display 是 none -->
 <div id="zoom-in-modal" style="display: none;">
-  <!-- ... -->
+    <!-- ... -->
 </div>
 
 <!-- 用戶開啟互動視窗，在互動視窗上將 display 改成 block -->
 <div id="zoom-in-modal" style="display: block;">
-  <!-- ... -->
+    <!-- ... -->
 </div>
 ```
 
@@ -27,15 +27,15 @@
 ```html
 <!-- 用戶開啟互動視窗，在互動視窗上將 `display` 改成 `block` -->
 <div id="zoom-in-modal" style="display: none;">
-  <!-- 用戶開啟動視窗，將背景從透明改成不透明 -->
-  <!-- 也就是將 opacity-0 改成 opacity-100 -->
-  <!-- 這裡有使用 transition-opacity 來做 CSS 轉場動畫 -->
-  <div
-    id="modal-background-backdrop"
-    class="transition-opacity ease-out duration-300 opacity-0 ..."
-  ></div>
+    <!-- 用戶開啟動視窗，將背景從透明改成不透明 -->
+    <!-- 也就是將 opacity-0 改成 opacity-100 -->
+    <!-- 這裡有使用 transition-opacity 來做 CSS 轉場動畫 -->
+    <div
+        id="modal-background-backdrop"
+        class="transition-opacity ease-out duration-300 opacity-0 ..."
+    ></div>
 
-  <!-- ... -->
+    <!-- ... -->
 </div>
 ```
 
@@ -47,17 +47,17 @@
 下面是範例程式碼：
 
 ```typescript
-let modal = document.getElementById("zoom-in-modal") as HTMLDivElement;
+let modal = document.getElementById('zoom-in-modal') as HTMLDivElement;
 let backdrop = document.getElementById(
-  "modal-background-backdrop"
+    'modal-background-backdrop',
 ) as HTMLDivElement;
 
 // 將互動視窗的 display 改為 block
-modal.style.display = "block";
+modal.style.display = 'block';
 
 // 將背景的 Class Name 從 opacity-0 改為 opacity-100
-backdrop.classList.remove("opacity-0");
-backdrop.classList.add("opacity-100");
+backdrop.classList.remove('opacity-0');
+backdrop.classList.add('opacity-100');
 ```
 
 原本我以為將互動視窗的 `display` 改為 `block` 後，後續對背景 Class Name 的修改會有完整的 CSS 轉場動畫，然而實際上並沒有，互動視窗會像是突然出現一樣直接顯示在畫面上，並不會有一個從透明變成不透明的漸變動畫。
@@ -69,19 +69,19 @@ backdrop.classList.add("opacity-100");
 這個時候你可以使用一個方式來觸發回流，讀取元素的 `offsetHeight`。
 
 ```typescript
-let modal = document.getElementById("zoom-in-modal") as HTMLDivElement;
+let modal = document.getElementById('zoom-in-modal') as HTMLDivElement;
 let backdrop = document.getElementById(
-  "modal-background-backdrop"
+    'modal-background-backdrop',
 ) as HTMLDivElement;
 
-modal.style.display = "block";
+modal.style.display = 'block';
 
 // 利用讀取 modal 的 offsetHeight 來觸發回流;
 modal.offsetHeight;
 
 // 後續 Class Name 的變化就會有完整的轉場動畫
-backdrop.classList.remove("opacity-0");
-backdrop.classList.add("opacity-100");
+backdrop.classList.remove('opacity-0');
+backdrop.classList.add('opacity-100');
 ```
 
 使用 `offsetHeight` 觸發回流後，背景的 CSS 轉場動畫能夠正常演示了，還真是意想不到的一招。
@@ -93,17 +93,17 @@ backdrop.classList.add("opacity-100");
 關掉的程式碼與開啟的程式碼相比，順序是反過來的，下面是簡單的範例程式碼。
 
 ```typescript
-let modal = document.getElementById("zoom-in-modal") as HTMLDivElement;
+let modal = document.getElementById('zoom-in-modal') as HTMLDivElement;
 let backdrop = document.getElementById(
-  "modal-background-backdrop"
+    'modal-background-backdrop',
 ) as HTMLDivElement;
 
 // 將背景的 Class Name 從 opacity-100 改為 opacity-0
-backdrop.classList.remove("opacity-100");
-backdrop.classList.add("opacity-0");
+backdrop.classList.remove('opacity-100');
+backdrop.classList.add('opacity-0');
 
 // 將互動視窗的 display 改為 none
-modal.style.display = "none";
+modal.style.display = 'none';
 ```
 
 這段程式碼也不會觸發 CSS 轉場動畫，或者應該說，**在觸發動畫後就立刻被隱藏了**，畫面上根本看不出來背景漸變成透明的效果。
@@ -111,21 +111,21 @@ modal.style.display = "none";
 我想要在背景 CSS 轉場動畫結束後才隱藏互動視窗，可以怎麼做呢？這時候就要介紹一個神奇的事件 `transitionend`。沒錯！轉場動畫結束也會觸發事件，所以我們就可以透過監聽 `transitionend` 事件來隱藏互動視窗。
 
 ```typescript
-let modal = document.getElementById("zoom-in-modal") as HTMLDivElement;
+let modal = document.getElementById('zoom-in-modal') as HTMLDivElement;
 let backdrop = document.getElementById(
-  "modal-background-backdrop"
+    'modal-background-backdrop',
 ) as HTMLDivElement;
 
-backdrop.addEventListener("transitionend", (event: TransitionEvent) => {
-  if (event.propertyName === "opacity") {
-    // 將互動視窗的 display 改為 none
-    modal.style.display = "none";
-  }
+backdrop.addEventListener('transitionend', (event: TransitionEvent) => {
+    if (event.propertyName === 'opacity') {
+        // 將互動視窗的 display 改為 none
+        modal.style.display = 'none';
+    }
 });
 
 // 將背景的 Class Name 從 opacity-100 改為 opacity-0
-backdrop.classList.remove("opacity-100");
-backdrop.classList.add("opacity-0");
+backdrop.classList.remove('opacity-100');
+backdrop.classList.add('opacity-0');
 ```
 
 如此一來，互動視窗的開啟與關閉都會有一個完整的 CSS 轉場動畫。

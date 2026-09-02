@@ -4,7 +4,7 @@ Svelte 的 `transition` 可以為元素的變化提供一個簡單的效果。
 
 ```svelte
 <script>
-    import { fade } from "svelte/transition";
+    import { fade } from 'svelte/transition';
     let visible = true;
 </script>
 
@@ -25,7 +25,7 @@ Svelte 的 `transition` 可以為元素的變化提供一個簡單的效果。
 
 ```svelte
 <script>
-    import { fly } from "svelte/transition";
+    import { fly } from 'svelte/transition';
     let visible = true;
 </script>
 
@@ -46,7 +46,7 @@ Svelte 的 `transition` 可以為元素的變化提供一個簡單的效果。
 
 ```svelte
 <script>
-    import { fade, fly } from "svelte/transition";
+    import { fade, fly } from 'svelte/transition';
     let visible = true;
 </script>
 
@@ -97,10 +97,13 @@ function fade(node, { delay = 0, duration = 400 }) {
 
     function typewriter(node, { speed = 1 }) {
         const valid =
-            node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE;
+            node.childNodes.length === 1 &&
+            node.childNodes[0].nodeType === Node.TEXT_NODE;
 
         if (!valid) {
-            throw new Error(`This transition only works on elements with a single text node child`);
+            throw new Error(
+                `This transition only works on elements with a single text node child`,
+            );
         }
 
         const text = node.textContent;
@@ -133,10 +136,10 @@ function fade(node, { delay = 0, duration = 400 }) {
 ```svelte
 <p
     transition:fly={{ y: 200, duration: 2000 }}
-    on:introstart={() => (status = "intro started")}
-    on:outrostart={() => (status = "outro started")}
-    on:introend={() => (status = "intro ended")}
-    on:outroend={() => (status = "outro ended")}
+    on:introstart={() => (status = 'intro started')}
+    on:outrostart={() => (status = 'outro started')}
+    on:introend={() => (status = 'intro ended')}
+    on:outroend={() => (status = 'outro ended')}
 >
     Flies in and out
 </p>
@@ -151,7 +154,7 @@ Key blocks 可以讓你追蹤值的變化，來摧毀並重新建立元素。
 <!-- 只要 i 發生變化，key block 中的元素就會被刪除並重新建立 -->
 {#key i}
     <p in:typewriter={{ speed: 5 }}>
-        {messages[i] || ""}
+        {messages[i] || ''}
     </p>
 {/key}
 ```
@@ -164,15 +167,15 @@ Key blocks 可以讓你追蹤值的變化，來摧毀並重新建立元素。
 
 ```javascript
 // transition.js
-import { crossfade } from "svelte/transition";
-import { quintOut } from "svelte/easing";
+import { crossfade } from 'svelte/transition';
+import { quintOut } from 'svelte/easing';
 
 export const [send, receive] = crossfade({
     duration: (d) => Math.sqrt(d * 200),
 
     fallback(node, params) {
         const style = getComputedStyle(node);
-        const transform = style.transform === "none" ? "" : style.transform;
+        const transform = style.transform === 'none' ? '' : style.transform;
 
         return {
             duration: 600,
@@ -190,7 +193,7 @@ export const [send, receive] = crossfade({
 
 ```svelte
 <script>
-    import { send, receive } from "./transition.js";
+    import { send, receive } from './transition.js';
 
     // ...
 </script>

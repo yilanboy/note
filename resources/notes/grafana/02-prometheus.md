@@ -93,18 +93,18 @@ sudo systemctl start prometheus
 
 ```yaml
 global:
-  scrape_interval: 60s
+    scrape_interval: 60s
 
 scrape_configs:
-  - job_name: k3s
-    static_configs:
-      - targets: ["10.0.1.10:9100", "10.0.1.11:9100", "10.0.1.12:9100"]
+    - job_name: k3s
+      static_configs:
+          - targets: ['10.0.1.10:9100', '10.0.1.11:9100', '10.0.1.12:9100']
 
 remote_write:
-  - url: "<grafana cloud prometheus>"
-    basic_auth:
-      username: <username>
-      password: <password>
+    - url: '<grafana cloud prometheus>'
+      basic_auth:
+          username: <username>
+          password: <password>
 ```
 
 這樣 prometheus 就可以收集到 node exporter 的資料，並將 node exporter 的資料送往 Grafana Cloud 的 Prometheus。
@@ -113,14 +113,14 @@ remote_write:
 
 ```yaml
 scrape_configs:
-  - job_name: k3s
-    static_configs:
-      - targets: ["10.0.1.10:9100", "10.0.1.11:9100", "10.0.1.12:9100"]
+    - job_name: k3s
+      static_configs:
+          - targets: ['10.0.1.10:9100', '10.0.1.11:9100', '10.0.1.12:9100']
 
-    metric_relabel_configs:
-      - source_labels: [__name__]
-        regex: "^(go_).*"
-        action: drop
+      metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: '^(go_).*'
+            action: drop
 ```
 
 ## 參考資料

@@ -10,7 +10,7 @@
 <!-- livewire-component.blade.php -->
 
 <div>
-  <!-- 只能有一個根元素 -->
+    <!-- 只能有一個根元素 -->
 </div>
 ```
 
@@ -20,11 +20,11 @@
 <!-- livewire-wrong-component.blade.php -->
 
 <div>
-  <!-- 我是第一個根元素 -->
+    <!-- 我是第一個根元素 -->
 </div>
 
 <div>
-  <!-- 我是第二個根元素 -->
+    <!-- 我是第二個根元素 -->
 </div>
 ```
 
@@ -36,9 +36,9 @@ Laravel livewire 有一個 DOM (Document Object Model) diffing/patching 系統�
 
 ```html
 <ul>
-  @foreach ($items as $item)
-  <li>{{ $item }}</li>
-  @endforeach
+    @foreach ($items as $item)
+    <li>{{ $item }}</li>
+    @endforeach
 </ul>
 ```
 
@@ -46,9 +46,9 @@ Laravel livewire 有一個 DOM (Document Object Model) diffing/patching 系統�
 
 ```html
 <ul>
-  @foreach ($items as $item)
-  <li wire:key="item-{{ $item->id }}">{{ $item }}</li>
-  @endforeach
+    @foreach ($items as $item)
+    <li wire:key="item-{{ $item->id }}">{{ $item }}</li>
+    @endforeach
 </ul>
 ```
 
@@ -127,14 +127,14 @@ class CommentList extends Component
 <!-- comment-list.blade.php -->
 
 <div class="space-y-6 w-1/2">
-  @foreach ($comments as $comment)
-  <livewire:comment-item
-    :comment-id="$comment->id"
-    :body="$comment->body"
-    :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
-    :wire:key="'comment-'.$comment->id"
-  />
-  @endforeach
+    @foreach ($comments as $comment)
+    <livewire:comment-item
+        :comment-id="$comment->id"
+        :body="$comment->body"
+        :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
+        :wire:key="'comment-'.$comment->id"
+    />
+    @endforeach
 </div>
 ```
 
@@ -175,19 +175,19 @@ class CommentItem extends Component
 <!-- comment-item.blade.php -->
 
 <div class="ml-5">
-  <div class="flex items-center justify-between border border-blue-400 p-5">
-    <div>{{ $body }}</div>
+    <div class="flex items-center justify-between border border-blue-400 p-5">
+        <div>{{ $body }}</div>
 
-    <div>{{ $createAt }}</div>
+        <div>{{ $createAt }}</div>
 
-    <!-- 點擊這個按鈕可以觸發 CommentList.php 中的 refreshCommentGroup 事件 -->
-    <button
-      wire:click="$emit('refreshCommentList')"
-      class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
-    >
-      重新整理
-    </button>
-  </div>
+        <!-- 點擊這個按鈕可以觸發 CommentList.php 中的 refreshCommentGroup 事件 -->
+        <button
+            wire:click="$emit('refreshCommentList')"
+            class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
+        >
+            重新整理
+        </button>
+    </div>
 </div>
 ```
 
@@ -211,13 +211,13 @@ class CommentItem extends Component
 <!-- comment-list.blade.php -->
 
 <div class="space-y-6 w-1/2">
-  @foreach ($comments as $comment)
-  <livewire:comment-item
-    :body="$comment->body"
-    :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
-    :wire:key="'comment-'.$comment->id.'-'.$comment->body"
-  />
-  @endforeach
+    @foreach ($comments as $comment)
+    <livewire:comment-item
+        :body="$comment->body"
+        :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
+        :wire:key="'comment-'.$comment->id.'-'.$comment->body"
+    />
+    @endforeach
 </div>
 ```
 
@@ -229,13 +229,13 @@ class CommentItem extends Component
 <!-- comment-list.blade.php -->
 
 <div class="space-y-6 w-1/2">
-  @foreach ($comments as $comment)
-  <livewire:comment-item
-    :body="$comment->body"
-    :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
-    :wire:key="now()->toString()"
-  />
-  @endforeach
+    @foreach ($comments as $comment)
+    <livewire:comment-item
+        :body="$comment->body"
+        :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
+        :wire:key="now()->toString()"
+    />
+    @endforeach
 </div>
 ```
 
@@ -310,18 +310,18 @@ class EditComment extends Component
 <!-- edit-comment.blade.php -->
 
 <div>
-  <form wire:submit.prevent="update">
-    <label for="body"></label>
+    <form wire:submit.prevent="update">
+        <label for="body"></label>
 
-    <!-- 與後端的屬性 body 資料綁定在一起 -->
-    <textarea
-      wire:model="body"
-      id="body"
-      placeholder="寫下你的新留言"
-    ></textarea>
+        <!-- 與後端的屬性 body 資料綁定在一起 -->
+        <textarea
+            wire:model="body"
+            id="body"
+            placeholder="寫下你的新留言"
+        ></textarea>
 
-    <button type="submit">更新</button>
-  </form>
+        <button type="submit">更新</button>
+    </form>
 </div>
 ```
 
@@ -331,16 +331,16 @@ class EditComment extends Component
 <!-- comment-list.blade.php -->
 
 <div class="space-y-6 w-1/2">
-  @foreach ($comments as $comment)
-  <livewire:comment-item
-    :body="$comment->body"
-    :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
-    :wire:key="'comment-'.$comment->id.'-'.$comment->body"
-  />
-  @endforeach
+    @foreach ($comments as $comment)
+    <livewire:comment-item
+        :body="$comment->body"
+        :created-at="$comment->created_at->format('Y 年 m 月 d 日')"
+        :wire:key="'comment-'.$comment->id.'-'.$comment->body"
+    />
+    @endforeach
 
-  <!-- 將 edit-comment 加在這裡 -->
-  <livewire:edit-comment />
+    <!-- 將 edit-comment 加在這裡 -->
+    <livewire:edit-comment />
 </div>
 ```
 
@@ -386,33 +386,33 @@ class CommentItem extends Component
 <!-- comment-item.blade.php -->
 
 <div class="ml-5">
-  <div class="flex items-center justify-between border border-blue-400 p-5">
-    <div>{{ $body }}</div>
+    <div class="flex items-center justify-between border border-blue-400 p-5">
+        <div>{{ $body }}</div>
 
-    <div>{{ $createAt }}</div>
+        <div>{{ $createAt }}</div>
 
-    <button
-      wire:click="$emit('refreshCommentList')"
-      class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
-    >
-      重新整理
-    </button>
+        <button
+            wire:click="$emit('refreshCommentList')"
+            class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
+        >
+            重新整理
+        </button>
 
-    <!-- 點擊這個按鈕可以觸發 EditComment.php 中的 setEditComment 事件 -->
-    <button
-      wire:click="$emit('setEditComment', {{ $commentId }})"
-      class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
-    >
-      修改
-    </button>
+        <!-- 點擊這個按鈕可以觸發 EditComment.php 中的 setEditComment 事件 -->
+        <button
+            wire:click="$emit('setEditComment', {{ $commentId }})"
+            class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
+        >
+            修改
+        </button>
 
-    <button
-      wire:click="destroy({{ $commentId }})"
-      class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
-    >
-      刪除
-    </button>
-  </div>
+        <button
+            wire:click="destroy({{ $commentId }})"
+            class="text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-2 px-4"
+        >
+            刪除
+        </button>
+    </div>
 </div>
 ```
 

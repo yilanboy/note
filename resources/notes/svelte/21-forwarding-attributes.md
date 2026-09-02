@@ -24,7 +24,7 @@
 
 ```svelte
 <script lang="ts">
-    import type { HTMLInputAttributes } from "svelte/elements";
+    import type { HTMLInputAttributes } from 'svelte/elements';
 
     // 建立一個 interface，繼承 HTMLInputAttributes，並新增 label 和 id
     // 這代表 label 和 id 是必填的，其他屬性則繼承 HTMLInputAttributes
@@ -37,7 +37,14 @@
     }
 
     // 接收所有 props，並解構出 label、id、type、value 和其他屬性
-    let { label, id, name, type = "text", value = $bindable(""), ...rest }: Props = $props();
+    let {
+        label,
+        id,
+        name,
+        type = 'text',
+        value = $bindable(''),
+        ...rest
+    }: Props = $props();
 </script>
 
 <div>

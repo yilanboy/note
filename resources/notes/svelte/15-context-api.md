@@ -7,14 +7,14 @@ Context API 為元件提供了一種相互「對話」的機制，無需將資�
 ```svelte
 <!-- ComponentA.svelte -->
 <script>
-    import { setContext } from "svelte";
+    import { setContext } from 'svelte';
 
-    setContext("componentA", {
+    setContext('componentA', {
         sayHello,
     });
 
     function sayHello() {
-        alert("hello!");
+        alert('hello!');
     }
 </script>
 ```
@@ -22,10 +22,10 @@ Context API 為元件提供了一種相互「對話」的機制，無需將資�
 ```svelte
 <!-- ComponentB.svelte -->
 <script>
-    import { getContext } from "svelte";
+    import { getContext } from 'svelte';
 
     function useAnotherComponentSayHello() {
-        getContext("componentA").sayHello();
+        getContext('componentA').sayHello();
     }
 </script>
 

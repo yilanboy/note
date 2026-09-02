@@ -15,8 +15,8 @@ Svelte 是一個新穎的現代前端框架。
 
 ```vue
 <script setup>
-import { ref } from "vue";
-const name = ref("John");
+import { ref } from 'vue';
+const name = ref('John');
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const name = ref("John");
 
 ```svelte
 <script>
-    let name = "John";
+    let name = 'John';
 </script>
 
 <h1>Hello {name}</h1>
@@ -48,7 +48,7 @@ Component 間是相互獨立的，彼此不會互相干擾。
 
 ```svelte
 <script>
-    let name = "Svelte";
+    let name = 'Svelte';
 </script>
 
 <!-- 大括號代表要使用 svelte 中的變數 --><h1>Hello {name}!</h1>
@@ -66,7 +66,7 @@ Component 間是相互獨立的，彼此不會互相干擾。
 
 ```svelte
 <script>
-    let src = "/image.gig";
+    let src = '/image.gig';
 </script>
 
 <img {src} alt="Just a image" />
@@ -78,7 +78,7 @@ Component 間是相互獨立的，彼此不會互相干擾。
 
 ```svelte
 <script>
-    let src = "/image.gig";
+    let src = '/image.gig';
 </script>
 
 <img {src} alt="Just a image" />
@@ -112,7 +112,7 @@ Component 間是相互獨立的，彼此不會互相干擾。
 ```svelte
 <!-- App.svelte -->
 <script>
-    import Nested from "./Nested.svelte";
+    import Nested from './Nested.svelte';
 </script>
 
 <p>This is a paragraph.</p>

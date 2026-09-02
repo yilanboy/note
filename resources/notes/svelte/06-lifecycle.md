@@ -8,10 +8,10 @@
 
 ```svelte
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount } from 'svelte';
 
     onMount(() => {
-        console.log("onMount");
+        console.log('onMount');
     });
 </script>
 ```
@@ -20,13 +20,13 @@
 
 ```svelte
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount } from 'svelte';
 
     onMount(() => {
-        console.log("onMount");
+        console.log('onMount');
 
         return () => {
-            console.log("onDestroy");
+            console.log('onDestroy');
         };
     });
 </script>
@@ -38,10 +38,10 @@
 
 ```svelte
 <script lang="ts">
-    import { onDestroy } from "svelte";
+    import { onDestroy } from 'svelte';
 
     onDestroy(() => {
-        console.log("onDestroy");
+        console.log('onDestroy');
     });
 </script>
 ```
@@ -56,13 +56,15 @@ Svelte 中並沒有 "after update" 的 Hook，但是你可以使用 `tick` 來�
 
 ```svelte
 <script>
-    import { tick } from "svelte";
+    import { tick } from 'svelte';
 
-    let text = $state(`Select some text and hit the tab key to toggle uppercase`);
+    let text = $state(
+        `Select some text and hit the tab key to toggle uppercase`,
+    );
 
     // you have to use async functions
     async function handleKeydown(event) {
-        if (event.key !== "Tab") return;
+        if (event.key !== 'Tab') return;
 
         event.preventDefault();
 
@@ -74,7 +76,10 @@ Svelte 中並沒有 "after update" 的 Hook，但是你可以使用 `tick` 來�
             ? selection.toUpperCase()
             : selection.toLowerCase();
 
-        text = value.slice(0, selectionStart) + replacement + value.slice(selectionEnd);
+        text =
+            value.slice(0, selectionStart) +
+            replacement +
+            value.slice(selectionEnd);
 
         // use tick to make sure the DOM has updated
         await tick();

@@ -10,36 +10,36 @@
 
 ```html
 <div id="parent">
-  <button id="child">點擊我</button>
+    <button id="child">點擊我</button>
 </div>
 
 <script>
-  const parent = document.getElementById("parent");
-  const child = document.getElementById("child");
+    const parent = document.getElementById('parent');
+    const child = document.getElementById('child');
 
-  parent.addEventListener(
-    "click",
-    function (event) {
-      console.log("父元素捕獲階段");
-    },
-    { capture: true }
-  );
+    parent.addEventListener(
+        'click',
+        function (event) {
+            console.log('父元素捕獲階段');
+        },
+        { capture: true },
+    );
 
-  child.addEventListener(
-    "click",
-    function (event) {
-      console.log("子元素捕獲階段");
-    },
-    { capture: true }
-  );
+    child.addEventListener(
+        'click',
+        function (event) {
+            console.log('子元素捕獲階段');
+        },
+        { capture: true },
+    );
 
-  parent.addEventListener("click", function (event) {
-    console.log("父元素冒泡階段");
-  });
+    parent.addEventListener('click', function (event) {
+        console.log('父元素冒泡階段');
+    });
 
-  child.addEventListener("click", function (event) {
-    console.log("子元素冒泡階段");
-  });
+    child.addEventListener('click', function (event) {
+        console.log('子元素冒泡階段');
+    });
 </script>
 ```
 
@@ -68,20 +68,20 @@
 
 ```javascript
 // 範例：阻止連結的預設導航行為
-const link = document.querySelector("a");
+const link = document.querySelector('a');
 
-link.addEventListener("click", function (event) {
-  event.preventDefault(); // 阻止跳轉頁面
-  console.log("連結被點擊，但沒有跳轉");
+link.addEventListener('click', function (event) {
+    event.preventDefault(); // 阻止跳轉頁面
+    console.log('連結被點擊，但沒有跳轉');
 });
 
 // 範例：阻止表單的預設提交行為
-const form = document.querySelector("form");
+const form = document.querySelector('form');
 
-form.addEventListener("submit", function (event) {
-  event.preventDefault(); // 阻止表單提交和頁面重新載入
-  console.log("表單被提交，但沒有重新載入頁面");
-  // 在這裡可以執行 AJAX 提交或其他操作
+form.addEventListener('submit', function (event) {
+    event.preventDefault(); // 阻止表單提交和頁面重新載入
+    console.log('表單被提交，但沒有重新載入頁面');
+    // 在這裡可以執行 AJAX 提交或其他操作
 });
 ```
 
@@ -93,37 +93,37 @@ form.addEventListener("submit", function (event) {
 
 ```html
 <div id="parent">
-  <button id="child">點擊我</button>
+    <button id="child">點擊我</button>
 </div>
 
 <script>
-  const parent = document.getElementById("parent");
-  const child = document.getElementById("child");
+    const parent = document.getElementById('parent');
+    const child = document.getElementById('child');
 
-  parent.addEventListener(
-    "click",
-    function (event) {
-      console.log("父元素捕獲階段");
-    },
-    { capture: true }
-  );
+    parent.addEventListener(
+        'click',
+        function (event) {
+            console.log('父元素捕獲階段');
+        },
+        { capture: true },
+    );
 
-  child.addEventListener(
-    "click",
-    function (event) {
-      console.log("子元素捕獲階段");
-      event.stopPropagation(); // 在捕獲階段停止事件傳播
-    },
-    { capture: true }
-  );
+    child.addEventListener(
+        'click',
+        function (event) {
+            console.log('子元素捕獲階段');
+            event.stopPropagation(); // 在捕獲階段停止事件傳播
+        },
+        { capture: true },
+    );
 
-  parent.addEventListener("click", function (event) {
-    console.log("父元素冒泡階段"); // 這行不會被執行，因為事件在子元素的捕獲階段就被停止了
-  });
+    parent.addEventListener('click', function (event) {
+        console.log('父元素冒泡階段'); // 這行不會被執行，因為事件在子元素的捕獲階段就被停止了
+    });
 
-  child.addEventListener("click", function (event) {
-    console.log("子元素冒泡階段"); // 這行不會被執行
-  });
+    child.addEventListener('click', function (event) {
+        console.log('子元素冒泡階段'); // 這行不會被執行
+    });
 </script>
 ```
 
@@ -143,28 +143,28 @@ form.addEventListener("submit", function (event) {
 
 ```html
 <ul id="myList">
-  <li>項目 1</li>
-  <li>項目 2</li>
-  <li>項目 3</li>
+    <li>項目 1</li>
+    <li>項目 2</li>
+    <li>項目 3</li>
 </ul>
 
 <script>
-  const list = document.getElementById("myList");
+    const list = document.getElementById('myList');
 
-  // 在父元素上附加一個點擊事件監聽器
-  list.addEventListener("click", function (event) {
-    // 檢查實際觸發事件的元素是否是 LI
-    if (event.target.tagName === "LI") {
-      console.log("點擊了:", event.target.textContent);
-      // 在這裡可以根據點擊的具體 LI 元素執行不同的操作
-    }
-  });
+    // 在父元素上附加一個點擊事件監聽器
+    list.addEventListener('click', function (event) {
+        // 檢查實際觸發事件的元素是否是 LI
+        if (event.target.tagName === 'LI') {
+            console.log('點擊了:', event.target.textContent);
+            // 在這裡可以根據點擊的具體 LI 元素執行不同的操作
+        }
+    });
 
-  // 動態新增一個 LI 元素
-  const newItem = document.createElement("li");
-  newItem.textContent = "新增的項目";
-  list.appendChild(newItem);
-  // 新增的項目也會被父元素上的監聽器處理
+    // 動態新增一個 LI 元素
+    const newItem = document.createElement('li');
+    newItem.textContent = '新增的項目';
+    list.appendChild(newItem);
+    // 新增的項目也會被父元素上的監聽器處理
 </script>
 ```
 

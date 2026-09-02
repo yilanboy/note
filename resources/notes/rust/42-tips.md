@@ -528,29 +528,29 @@ name: CI Pipeline
 on: [push, pull_request]
 
 jobs:
-  build-test-deploy:
-    runs-on: ubuntu-latest
+    build-test-deploy:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Install cargo-audit, cargo-deny, cargo-tarpaulin, cargo-chef
-        run: cargo install cargo-audit cargo-deny cargo-tarpaulin cargo-chef
+            - name: Install cargo-audit, cargo-deny, cargo-tarpaulin, cargo-chef
+              run: cargo install cargo-audit cargo-deny cargo-tarpaulin cargo-chef
 
-      - name: Security check
-        run: cargo audit
+            - name: Security check
+              run: cargo audit
 
-      - name: Dependency policy check
-        run: cargo deny check
+            - name: Dependency policy check
+              run: cargo deny check
 
-      - name: Test coverage gate
-        run: cargo tarpaulin --fail-under 80
+            - name: Test coverage gate
+              run: cargo tarpaulin --fail-under 80
 
-      - name: Build using cargo chef
-        run: |
-          cargo chef prepare --recipe-path recipe.json
-          cargo chef cook --recipe-path recipe.json
-          cargo build --release
+            - name: Build using cargo chef
+              run: |
+                  cargo chef prepare --recipe-path recipe.json
+                  cargo chef cook --recipe-path recipe.json
+                  cargo build --release
 ```
 
 ## 參考資料

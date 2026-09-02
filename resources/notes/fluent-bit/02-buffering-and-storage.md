@@ -29,13 +29,13 @@ Fluent Bit 提供兩種緩衝模式來處理資料，分別是**記憶體緩衝�
 
 ```yaml
 pipeline:
-  inputs:
-    - name: tcp
-      listen: 0.0.0.0
-      port: 5170
-      format: none
-      tag: tcp-logs
-      mem_buf_limit: 50MB
+    inputs:
+        - name: tcp
+          listen: 0.0.0.0
+          port: 5170
+          format: none
+          tag: tcp-logs
+          mem_buf_limit: 50MB
 ```
 
 如果輸入的資料量達到了 `mem_buf_limit`，那麼 Fluent Bit 就不會在輸入更多的資料。並印出 `[warn] [input] {input name or alias} paused (mem buf overlimit)` 日誌。
@@ -60,21 +60,21 @@ Fluent Bit 預設記憶體內可以有 128 個狀態為 `up` 的 Chunk，每個 
 
 ```yaml
 service:
-  flush: 1
-  log_level: info
-  storage.path: /var/log/flb-storage/
-  storage.sync: normal
-  storage.checksum: off
-  storage.max_chunks_up: 128
-  storage.backlog.mem_limit: 5M
+    flush: 1
+    log_level: info
+    storage.path: /var/log/flb-storage/
+    storage.sync: normal
+    storage.checksum: off
+    storage.max_chunks_up: 128
+    storage.backlog.mem_limit: 5M
 
 pipeline:
-  inputs:
-    - name: cpu
-      storage.type: filesystem
+    inputs:
+        - name: cpu
+          storage.type: filesystem
 
-    - name: mem
-      storage.type: memory
+        - name: mem
+          storage.type: memory
 ```
 
 ## 參考資料

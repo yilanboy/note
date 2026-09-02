@@ -44,32 +44,32 @@ VLAN 可以有不同的設置和安全性要求。這使得網路管理更靈活
 
 ```yaml
 network:
-  version: 2
-  tunnels:
-    vxlan1:
-      mode: vxlan
-      id: 1000
-      local: 10.0.1.10
-      remote: 10.0.0.10
-      port: 8472
-      addresses:
-        - 192.168.150.1/30
+    version: 2
+    tunnels:
+        vxlan1:
+            mode: vxlan
+            id: 1000
+            local: 10.0.1.10
+            remote: 10.0.0.10
+            port: 8472
+            addresses:
+                - 192.168.150.1/30
 ```
 
 而 EC2 B 的 `/etc/netplan/01-vxlan.yaml` 則是：
 
 ```yaml
 network:
-  version: 2
-  tunnels:
-    vxlan1:
-      mode: vxlan
-      id: 1000
-      local: 10.0.0.10
-      remote: 10.0.1.10
-      port: 8472
-      addresses:
-        - 192.168.150.2/30
+    version: 2
+    tunnels:
+        vxlan1:
+            mode: vxlan
+            id: 1000
+            local: 10.0.0.10
+            remote: 10.0.1.10
+            port: 8472
+            addresses:
+                - 192.168.150.2/30
 ```
 
 然後記得兩台 EC2 都要重啟 Netplan 服務：

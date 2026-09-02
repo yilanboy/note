@@ -7,8 +7,8 @@
 1. 憑證管理軟體 (certbot) 會向 Let's Encrypt CA 發起申請
 2. 憑證管理軟體會產生一組公私鑰，並將公鑰交給 CA
 3. CA 會提供兩種挑戰，擇一即可，用來讓 Server 證明其確實擁有網域所有權
-   - 在 `example.com` 下設定 DNS 紀錄 (dns-01)
-   - 在 `http://example.com` 的特定路徑底下提供 HTTP 文件 (http-01)
+    - 在 `example.com` 下設定 DNS 紀錄 (dns-01)
+    - 在 `http://example.com` 的特定路徑底下提供 HTTP 文件 (http-01)
 4. 以 http-01 挑戰為例，CA 產生一組隨機數 (nonce) 交給憑證管理軟體，請它將這組隨機數使用私鑰簽名後寫入文件，並將文件放在網站上的特定路徑
 5. 憑證管理軟體完成後會通知 CA 進行檢查
 6. CA 會從網站上的特定路徑下載文件並確認內容
