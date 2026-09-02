@@ -10,30 +10,14 @@ AWS Athena 的 **Federated Query（聯合查詢）** 功能正好解決這個問
 
 ## 架構概覽
 
-```text
-使用者送出 SQL 查詢
-        │
-        ▼
-┌───────────────────────────────┐
-│  Athena Workgroup             │  ← 執行 SQL，結果存到 S3
-└──────────────┬────────────────┘
-               │
-               ▼
-┌───────────────────────────────┐
-│  Athena Data Catalog          │  ← FEDERATED 類型，橋接 DynamoDB
-│  (dynamodb-connector-catalog) │
-└──────────────┬────────────────┘
-               │
-               ▼
-┌───────────────────────────────┐
-│  Lambda Connector             │  ← 由 SAR 部署，實際呼叫 DynamoDB API
-│  (AthenaDynamoDBConnector)    │
-└──────────────┬────────────────┘
-               │
-       ┌───────┴────────┐
-       ▼                ▼
- DynamoDB Tables    S3 Spill Bucket
- (原始資料來源)      (溢出暫存，超過 Lambda 記憶體時使用)
+```mermaid
+flowchart TD
+    User([使用者送出 SQL 查詢]) --> Workgroup["Athena Workgroup<br/>(執行 SQL，結果存到 S3)"]
+    Workgroup --> Catalog["Athena Data Catalog<br/>(dynamodb-connector-catalog)<br/>FEDERATED 類型，橋接 DynamoDB"]
+    Catalog --> Lambda["Lambda Connector<br/>(AthenaDynamoDBConnector)<br/>由 SAR 部署，實際呼叫 DynamoDB API"]
+
+    Lambda --> DynamoDB[("DynamoDB Tables<br/>(原始資料來源)")]
+    Lambda -.-> SpillBucket[("S3 Spill Bucket<br/>(溢出暫存，超過 Lambda 記憶體時使用)")]
 ```
 
 整個流程如下：
