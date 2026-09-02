@@ -3,6 +3,7 @@
   import Sidebar from "@/components/layouts/main/partials/Sidebar.svelte";
   import Header from "@/components/layouts/main/partials/Header.svelte";
   import SearchModal from "@/components/layouts/main/partials/SearchModal.svelte";
+  import ZoomModal from "@/components/layouts/main/partials/ZoomModal.svelte";
   import { sidebar } from "@/shared/sidebar.svelte";
 
   interface Props {
@@ -31,4 +32,5 @@
   </div>
 
   <SearchModal />
+  <ZoomModal />
 </div>

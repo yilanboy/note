@@ -5,6 +5,7 @@
 <script lang="ts">
   import { highlightCodeBlocks } from "@/shared/highlight";
   import { renderMermaidDiagrams } from "@/shared/mermaid";
+  import { enhanceImages } from "@/shared/image";
 
   interface Props {
     title: string;
@@ -13,11 +14,12 @@
 
   let { title, html }: Props = $props();
 
-  // Highlights code blocks and renders Mermaid diagrams after mount.
+  // Highlights code blocks, renders Mermaid diagrams, and enhances images after mount.
   // This runs when the note changes because the attachment reads `html`.
   function processContent(article: HTMLElement) {
     highlightCodeBlocks(article);
     renderMermaidDiagrams(article);
+    enhanceImages(article);
   }
 </script>
 

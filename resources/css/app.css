@@ -96,3 +96,14 @@ blockquote p:last-of-type::after {
     background-color: var(--shiki-dark-bg) !important;
     border-color: var(--color-zinc-700);
 }
+
+.code-block-wrapper pre.shiki {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.image-zoom-wrapper img {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
