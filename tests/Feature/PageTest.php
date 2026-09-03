@@ -2,8 +2,12 @@
 
 use App\Services\NoteRepository;
 
+beforeEach(function () {
+    config(['notes.path' => resource_path('notes')]);
+});
+
 it('can visit all category pages and returns 200', function () {
-    $paths = glob(config('notes.path').'/*', GLOB_ONLYDIR);
+    $paths = glob(resource_path('notes').'/*', GLOB_ONLYDIR);
 
     foreach ($paths as $path) {
         $category = basename($path);

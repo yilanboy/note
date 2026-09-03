@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'path' => resource_path('notes'),
+    'path' => env('NOTES_PATH') ? base_path(env('NOTES_PATH')) : resource_path('notes'),
 
     /*
     |--------------------------------------------------------------------------

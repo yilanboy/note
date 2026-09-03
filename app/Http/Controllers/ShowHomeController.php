@@ -17,7 +17,7 @@ class ShowHomeController extends Controller
      */
     public function __invoke(): Response
     {
-        $path = resource_path('notes/README.md');
+        $path = config('notes.path').'/README.md';
 
         abort_unless(file_exists($path), 404);
 

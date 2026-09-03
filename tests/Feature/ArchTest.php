@@ -12,13 +12,13 @@ it('should contains README.md under root directory', function () {
 });
 
 it('must contains README.md under all categories', function () {
-    foreach (glob(config('notes.path').'/*', GLOB_ONLYDIR) as $path) {
+    foreach (glob(resource_path('notes').'/*', GLOB_ONLYDIR) as $path) {
         expect(file_exists($path.'/README.md'))->toBeTrue();
     }
 });
 
 it('must contains number at the beginning of the note file name', function () {
-    collect(glob(config('notes.path').'/*/*.md'))
+    collect(glob(resource_path('notes').'/*/*.md'))
         ->reject(fn (string $path): bool => basename($path) === 'README.md')
         ->each(function (string $path) {
             $number = explode('-', basename($path))[0];
@@ -28,13 +28,13 @@ it('must contains number at the beginning of the note file name', function () {
 });
 
 test('slug names cannot be duplicated within the same category', function () {
-    $categories = collect(glob(config('notes.path').'/*', GLOB_ONLYDIR))
+    $categories = collect(glob(resource_path('notes').'/*', GLOB_ONLYDIR))
         ->map(fn (string $path): string => basename($path))
         ->values()
         ->all();
 
     foreach ($categories as $category) {
-        $slugs = collect(glob(config('notes.path')."/{$category}/*.md"))
+        $slugs = collect(glob(resource_path('notes')."/{$category}/*.md"))
             ->reject(fn (string $path): bool => basename($path) === 'README.md')
             ->map(function (string $path): string {
                 $name = basename($path, '.md');
