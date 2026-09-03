@@ -6,9 +6,9 @@
 
 ---
 
-## 1. 什麼是 Test Fixture？
+## 什麼是 Test Fixture？
 
-「Fixture」一詞原本來自機械製造業，指的是**「夾具」或「定位治具」**。
+「Fixture」一詞原本來自機械製造業，**指的是「夾具」或「定位治具」**。
 
 在工廠生產線上，如果工人想要精準加工或檢驗某個零件，會先用特製的夾具將零件**固定在已知且穩固的位置**，確保每一次測量或加工都在完全相同的基準條件下進行。
 
@@ -19,7 +19,7 @@
 
 ---
 
-## 2. 為什麼需要 Test Fixture？（解決真實資料測試的痛點）
+## 為什麼需要 Test Fixture？（解決真實資料測試的痛點）
 
 如果直接拿正式資料進行測試，常會面臨以下問題：
 
@@ -31,7 +31,7 @@
 
 ---
 
-## 3. 常見的 Test Fixture 形式
+## 常見的 Test Fixture 形式
 
 在 Web 與 Laravel / Pest 測試中，Fixture 主要有以下三種常見形式：
 
@@ -50,7 +50,7 @@ tests/
             └── 03-images.md       # 專門測試圖片放大
 ```
 
-### 2. Database Fixtures
+### Database Fixtures
 
 透過 Laravel 的 **Model Factories** 或專屬的 **Test Database Seeder**，在每個測試前建立乾淨且符合特定狀態的模型實例。
 
@@ -59,7 +59,7 @@ tests/
 $user = User::factory()->admin()->create();
 ```
 
-### 3. Lifecycle Fixtures
+### Lifecycle Fixtures
 
 利用 Pest 的 `beforeEach()`、`afterEach()` 或是設定測試專屬的環境變數，建立隔離的運行環境。
 
@@ -72,7 +72,7 @@ beforeEach(function () {
 
 ---
 
-## 4. 實戰案例：將 Markdown 筆記渲染測試徹底解耦
+## 案例：將 Markdown 筆記渲染測試與真正的筆記內容解耦
 
 以本專案為例，原本瀏覽器測試（Pest Browser Testing）為了驗證 Mermaid 圖表是否有成功渲染，直接造訪了正式筆記庫中的文章：
 
@@ -137,7 +137,7 @@ test('it leaves mermaid code intact and renders mermaid svg diagram', function (
 
 ---
 
-## 5. 最佳實踐守則
+## 最佳實踐守則
 
 1. **最小必要原則（Minimalism）**：Fixture 檔案或資料只放測試必需的內容，避免冗餘文字干擾焦點。
 2. **語意明確（Self-documenting）**：檔案名稱與測試路由應能直接表達測試目的（例如 `02-mermaid.md`、`sample-invoice.pdf`）。
