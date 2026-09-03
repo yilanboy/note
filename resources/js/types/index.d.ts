@@ -1,6 +1,7 @@
 export interface NoteSummary {
     slug: string;
     title: string;
+    order?: number | null;
 }
 
 export interface NoteCategory {

@@ -119,19 +119,31 @@
                                     >
                                         {#each category.notes as note (note.slug)}
                                             {@const href = `/${category.slug}/${note.slug}`}
+                                            {@const noteTitle =
+                                                note.order !== null &&
+                                                note.order !== undefined
+                                                    ? `${note.order}. ${note.title}`
+                                                    : note.title}
                                             <li>
                                                 <a
                                                     id={href}
                                                     use:inertia
                                                     {href}
                                                     class={{
-                                                        'block truncate rounded-lg p-2 text-sm text-zinc-600 transition-colors duration-200 hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:bg-zinc-800': true,
+                                                        'flex items-center rounded-lg p-2 text-sm text-zinc-600 transition-colors duration-200 hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:bg-zinc-800': true,
                                                         'pointer-events-none bg-zinc-200/50 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100':
                                                             href === activePath,
                                                     }}
-                                                    title={note.title}
+                                                    title={noteTitle}
                                                 >
-                                                    {note.title}
+                                                    {#if note.order !== null && note.order !== undefined}
+                                                        <span
+                                                            class="mr-2 w-6 shrink-0 text-right font-mono text-xs font-semibold tabular-nums text-emerald-600 dark:text-lividus-400"
+                                                        >
+                                                            {note.order}.
+                                                        </span>
+                                                    {/if}
+                                                    <span class="min-w-0 truncate">{note.title}</span>
                                                 </a>
                                             </li>
                                         {/each}

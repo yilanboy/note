@@ -13,7 +13,7 @@ class NoteRepository
     /**
      * Get all categories with their notes, ordered by category slug.
      *
-     * @return array<int, array{slug: string, displayName: string, notes: array<int, array{slug: string, title: string}>}>
+     * @return array<int, array{slug: string, displayName: string, notes: array<int, array{slug: string, title: string, order: ?int}>}>
      */
     public function tree(): array
     {
@@ -36,7 +36,7 @@ class NoteRepository
     /**
      * Get the notes of a category, ordered by file name (numeric prefix first).
      *
-     * @return array<int, array{slug: string, title: string}>
+     * @return array<int, array{slug: string, title: string, order: ?int}>
      */
     public function notes(string $category): array
     {
@@ -45,6 +45,7 @@ class NoteRepository
             ->map(fn (string $path): array => [
                 'slug' => $this->slug($path),
                 'title' => $this->title($path),
+                'order' => $this->order($path),
             ])
             ->values()
             ->all();
@@ -56,7 +57,7 @@ class NoteRepository
      * The slug is matched against the scanned files of the category, so URL
      * input never touches the filesystem path directly.
      *
-     * @return array{path: string, slug: string, title: string}|null
+     * @return array{path: string, slug: string, title: string, order: ?int}|null
      */
     public function find(string $category, string $slug): ?array
     {
@@ -66,6 +67,7 @@ class NoteRepository
                     'path' => $path,
                     'slug' => $slug,
                     'title' => $this->title($path),
+                    'order' => $this->order($path),
                 ];
             }
         }
@@ -317,6 +319,20 @@ class NoteRepository
         $slug = preg_replace('/^\d+[-.]?/', '', $name);
 
         return $slug === '' ? $name : $slug;
+    }
+
+    /**
+     * Extract the numeric sort prefix of a note file, if present.
+     */
+    private function order(string $path): ?int
+    {
+        $name = basename($path, '.md');
+
+        if (preg_match('/^(\d+)[-.]?/', $name, $matches)) {
+            return (int) $matches[1];
+        }
+
+        return null;
     }
 
     /**
